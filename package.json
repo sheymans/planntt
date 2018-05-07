@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "author": "Stijn Heymans <stijn.heymans@gmail.com>",
   "description": "An Automatic Scheduler.",
-  "license": null,
+  "license": "UNLICENSED",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -20,7 +20,7 @@
   },
   "build": {
     "productName": "planntt",
-    "appId": "org.simulatedgreg.electron-vue",
+    "appId": "com.planntt",
     "directories": {
       "output": "build"
     },
