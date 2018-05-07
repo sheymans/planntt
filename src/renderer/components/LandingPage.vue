@@ -1,5 +1,6 @@
 <template>
   <div id="wrapper">
+    <router-link to="/main">go say hello</router-link>
     <img id="logo" src="~@/assets/logo.png" alt="electron-vue">
     <main>
       <div class="left-side">
