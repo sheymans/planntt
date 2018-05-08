@@ -7,14 +7,15 @@ import Vue from 'vue'
             <span @click="toggle">
                 <font-awesome-icon :icon="getFolderIcon"/>
             </span>
-            <span @contextmenu.prevent="$refs.ctxMenu.open">{{ project.name }} {{project.id}}</span>
+            <span @contextmenu.prevent="$refs.ctxMenu.open">{{ project.name }}</span>
         </div>
         <ul v-show="open" v-if="isNonEmptyFolder">
             <Project
                     class="project"
                     v-for="(project, index) in project.children"
                     :key="index"
-                    :project="project">
+                    :project="project"
+                    @remove="removeChild">
             </Project>
         </ul>
         <context-menu id="context-menu" ref="ctxMenu">
@@ -79,6 +80,10 @@ import Vue from 'vue'
           name: 'new project',
           id: this.uuidv4()
         })
+      },
+      removeChild: function (uuid) {
+        let filtered = this.project.children.filter(p => p.id !== uuid)
+        this.$set(this.project, 'children', filtered)
       },
       // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
       uuidv4: function () {
