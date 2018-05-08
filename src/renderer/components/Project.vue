@@ -3,31 +3,35 @@ import Vue from 'vue'
 <template>
     <li>
 
-        <div :class="{bold: isFolder}"
-             @click="toggle"
-             @dblclick="changeType">
-            <font-awesome-icon :icon="getFolderIcon" />
-            {{ project.name }}
-            <span v-if="isFolder">[{{ open ? '-' : '+' }}]</span>
+        <div>
+            <span @click="toggle">
+                <font-awesome-icon :icon="getFolderIcon"/>
+            </span>
+            <span @contextmenu.prevent="$refs.ctxMenu.open">{{ project.name }}</span>
         </div>
-        <ul v-show="open" v-if="isFolder">
+        <ul v-show="open" v-if="isNonEmptyFolder">
             <Project
                     class="project"
                     v-for="(project, index) in project.children"
                     :key="index"
                     :project="project">
             </Project>
-            <li class="add" @click="addChild">+</li>
         </ul>
+        <context-menu id="context-menu" ref="ctxMenu">
+    <li @click="addSubProject">Add subproject</li>
+    </context-menu>
     </li>
+
+
 </template>
 
 <script>
   import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+  import contextMenu from 'vue-context-menu'
 
   export default {
     name: 'Project',
-    components: {FontAwesomeIcon},
+    components: {FontAwesomeIcon, contextMenu},
     props: {
       project: {
         type: Object,
@@ -40,30 +44,34 @@ import Vue from 'vue'
       }
     },
     computed: {
-      isFolder: function () {
+      isNonEmptyFolder: function () {
         return this.project.children &&
           this.project.children.length
       },
       getFolderIcon: function () {
-        if (this.open) {
+        if (this.open && this.isNonEmptyFolder) {
           return 'folder-open'
-        } else {
+        } else if (!this.open && this.isNonEmptyFolder) {
           return 'folder'
+        } else {
+          return ['far', 'folder']
         }
       }
     },
     methods: {
       toggle: function () {
-        if (this.isFolder) {
+        if (this.isNonEmptyFolder) {
           this.open = !this.open
         }
       },
-      changeType: function () {
-        if (!this.isFolder) {
+      addSubProject: function () {
+        if (this.isNonEmptyFolder) {
+          this.addChild()
+        } else {
           this.$set(this.project, 'children', [])
           this.addChild()
-          this.open = true
         }
+        this.open = true
       },
       addChild: function () {
         this.project.children.push({

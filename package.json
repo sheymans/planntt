@@ -54,11 +54,13 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.7",
+    "@fortawesome/fontawesome-free-regular": "^5.0.12",
     "@fortawesome/fontawesome-free-solid": "^5.0.12",
     "@fortawesome/vue-fontawesome": "0.0.22",
     "axios": "^0.16.1",
     "bulma": "^0.7.1",
     "vue": "^2.3.3",
+    "vue-context-menu": "^2.0.6",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
     "vuex": "^2.3.1"
