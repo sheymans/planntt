@@ -7,7 +7,16 @@ import Vue from 'vue'
             <span @click="toggle">
                 <font-awesome-icon :icon="getFolderIcon"/>
             </span>
-            <span @contextmenu.prevent="$refs.ctxMenu.open">{{ project.name }}</span>
+            <span v-show="!editing"
+                  @contextmenu.prevent="$refs.ctxMenu.open"
+                  @dblclick="startEdit">
+                {{ project.name }}</span>
+            <input v-show="editing"
+                   type="text"
+                   v-model="project.name"
+                   @blur="doneEdit"
+                   @keyup.enter="doneEdit"
+                   @keyup.esc="cancelEdit"/>
         </div>
         <ul v-show="open" v-if="isNonEmptyFolder">
             <Project
@@ -42,7 +51,8 @@ import Vue from 'vue'
     },
     data: function () {
       return {
-        open: false
+        open: false,
+        editing: false
       }
     },
     computed: {
@@ -77,13 +87,31 @@ import Vue from 'vue'
       },
       addChild: function () {
         this.project.children.push({
-          name: 'new project',
+          name: '<double click to rename>',
           id: this.uuidv4()
         })
       },
       removeChild: function (uuid) {
         let filtered = this.project.children.filter(p => p.id !== uuid)
         this.$set(this.project, 'children', filtered)
+      },
+      startEdit: function () {
+        console.log('starting to edit: ' + this.project.name)
+        this.projectNameBeforeEdit = this.project.name
+        this.editing = true
+      },
+      doneEdit: function () {
+        if (!this.editing) {
+          return
+        }
+        this.project.name = this.project.name.trim()
+        this.editing = false
+        this.projectNameBeforeEdit = null
+      },
+      cancelEdit: function () {
+        this.project.name = this.projectNameBeforeEdit
+        this.projectNameBeforeEdit = null
+        this.editing = false
       },
       // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
       uuidv4: function () {
@@ -98,10 +126,6 @@ import Vue from 'vue'
 </script>
 
 <style scoped>
-
-    .project {
-        cursor: pointer;
-    }
 
     ul {
         padding-left: 1em;
