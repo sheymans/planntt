@@ -7,7 +7,7 @@ import Vue from 'vue'
             <span @click="toggle">
                 <font-awesome-icon :icon="getFolderIcon"/>
             </span>
-            <span @contextmenu.prevent="$refs.ctxMenu.open">{{ project.name }}</span>
+            <span @contextmenu.prevent="$refs.ctxMenu.open">{{ project.name }} {{project.id}}</span>
         </div>
         <ul v-show="open" v-if="isNonEmptyFolder">
             <Project
@@ -19,6 +19,7 @@ import Vue from 'vue'
         </ul>
         <context-menu id="context-menu" ref="ctxMenu">
     <li @click="addSubProject">Add subproject</li>
+    <li @click="$emit('remove', project.id)">Remove</li>
     </context-menu>
     </li>
 
@@ -75,7 +76,16 @@ import Vue from 'vue'
       },
       addChild: function () {
         this.project.children.push({
-          name: 'new stuff'
+          name: 'new project',
+          id: this.uuidv4()
+        })
+      },
+      // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+      uuidv4: function () {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+          let r = Math.random() * 16 | 0
+          let v = c === 'x' ? r : (r & 0x3 | 0x8)
+          return v.toString(16)
         })
       }
     }
@@ -86,10 +96,6 @@ import Vue from 'vue'
 
     .project {
         cursor: pointer;
-    }
-
-    .bold {
-        font-weight: bold;
     }
 
     ul {
