@@ -1,11 +1,11 @@
 <template>
-    <ul v-if="projects.length">
+    <ol v-if="projects.length">
         <Project
                 v-for="project in projects"
                 :key="project.id"
                 :project="project"
         />
-    </ul>
+    </ol>
 </template>
 
 <script>
@@ -19,15 +19,30 @@
     data () {
       return {
         projects: [
+          {name: 'INBOX', id: 11},
           {
-            id: 1,
-            name: 'Test Project1'
-          },
-          {
-            id: 2,
-            name: 'Test Project2'
-          }
-        ]
+            name: 'All Projects',
+            children: [
+              {
+                id: 1,
+                name: 'Test Project1',
+                children: [
+                  {
+                    id: 4,
+                    name: 'Child Project 1'
+                  }
+                ]
+              },
+              {
+                id: 2,
+                name: 'Test Project2'
+              },
+              {
+                id: 3,
+                name: 'Test Project3'
+              }
+            ]
+          }]
       }
     }
   }

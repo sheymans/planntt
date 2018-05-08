@@ -5,7 +5,7 @@
                 <ProjectList/>
             </div>
             <div class="column">
-                TODO: list of things in selected project for {{person}}
+                TODO: list of things in selected project for <b>{{person2}}</b> and <b>{{person}}</b>
             </div>
             <div class="column">
                 TODO: detail of selected item in list
@@ -24,7 +24,8 @@
     },
     data () {
       return {
-        person: 'stijn'
+        person: 'molly heymans',
+        person2: 'charlie heymans'
       }
     }
   }
