@@ -2,9 +2,11 @@ import Vue from 'vue'
 
 <template>
     <li>
+
         <div :class="{bold: isFolder}"
              @click="toggle"
              @dblclick="changeType">
+            <font-awesome-icon :icon="getFolderIcon" />
             {{ project.name }}
             <span v-if="isFolder">[{{ open ? '-' : '+' }}]</span>
         </div>
@@ -21,8 +23,11 @@ import Vue from 'vue'
 </template>
 
 <script>
+  import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+
   export default {
     name: 'Project',
+    components: {FontAwesomeIcon},
     props: {
       project: {
         type: Object,
@@ -38,6 +43,13 @@ import Vue from 'vue'
       isFolder: function () {
         return this.project.children &&
           this.project.children.length
+      },
+      getFolderIcon: function () {
+        if (this.open) {
+          return 'folder-open'
+        } else {
+          return 'folder'
+        }
       }
     },
     methods: {

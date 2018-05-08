@@ -6,6 +6,13 @@ import router from './router'
 import store from './store'
 import 'bulma/css/bulma.css'
 
+import fontawesome from '@fortawesome/fontawesome'
+import faSpinner from '@fortawesome/fontawesome-free-solid/faSpinner'
+import faFolder from '@fortawesome/fontawesome-free-solid/faFolder'
+import faFolderOpen from '@fortawesome/fontawesome-free-solid/faFolderOpen'
+
+fontawesome.library.add(faSpinner, faFolder, faFolderOpen)
+
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
