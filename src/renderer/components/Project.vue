@@ -9,7 +9,9 @@ import Vue from 'vue'
             </span>
             <span v-show="!editing"
                   @contextmenu.prevent="$refs.ctxMenu.open"
-                  @dblclick="startEdit">
+                  @click="selectProject"
+                  @dblclick="startEdit"
+            :class="{selected: isSelectedProject}">
                 {{ project.name }}</span>
             <input v-show="editing"
                    type="text"
@@ -68,6 +70,10 @@ import Vue from 'vue'
         } else {
           return ['far', 'folder']
         }
+      },
+      isSelectedProject: function () {
+        let currentlySelected = this.$store.getters.getSelectedProject
+        return (currentlySelected === this.project.id)
       }
     },
     methods: {
@@ -75,6 +81,10 @@ import Vue from 'vue'
         if (this.isNonEmptyFolder) {
           this.open = !this.open
         }
+      },
+      selectProject: function () {
+        // See store/modules/Projects.js for this Vuex store.
+        this.$store.commit('setSelectedProject', this.project.id)
       },
       addSubProject: function () {
         if (this.isNonEmptyFolder) {
@@ -131,6 +141,11 @@ import Vue from 'vue'
         padding-left: 1em;
         line-height: 1.5em;
         list-style-type: dot;
+    }
+
+    .selected {
+        background-color: black;
+        color: white;
     }
 
 </style>
