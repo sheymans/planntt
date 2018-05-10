@@ -18,7 +18,8 @@ import Vue from 'vue'
                    v-model="project.name"
                    @blur="doneEdit"
                    @keyup.enter="doneEdit"
-                   @keyup.esc="cancelEdit"/>
+                   @keyup.esc="cancelEdit"
+                   v-focus="editing"/>
         </div>
         <ul v-show="open" v-if="isNonEmptyFolder">
             <Project
@@ -119,6 +120,9 @@ import Vue from 'vue'
           return
         }
         this.project.name = this.project.name.trim()
+        if (!this.project.name) {
+          this.cancelEdit()
+        }
         this.editing = false
         this.projectNameBeforeEdit = null
         this.updateProjects()
@@ -140,6 +144,14 @@ import Vue from 'vue'
           let v = c === 'x' ? r : (r & 0x3 | 0x8)
           return v.toString(16)
         })
+      }
+    },
+    // https://vuejs.org/v2/guide/custom-directive.html
+    directives: {
+      focus: function (el, binding) {
+        if (binding.value) {
+          el.focus()
+        }
       }
     }
   }
