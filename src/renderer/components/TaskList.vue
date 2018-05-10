@@ -1,12 +1,17 @@
 <template>
     <div>
-        <ul v-if="tasks.length">
+        <input
+               autofocus autocomplete="off"
+               placeholder="Add a task to this project"
+               v-model="newTaskText"
+               @keyup.enter="addTask">
+        <ul v-if="projectTasks.length">
             <Task
-                    v-for="task in tasks"
+                    v-for="task in projectTasks"
                     :key="task.id"
-                    :project="task"/>
+                    :task="task"/>
         </ul>
-        <div v-if="!tasks.length">No tasks in this project. Right-click on the project to add a task.</div>
+        <div v-if="!projectTasks.length">No tasks in this project.</div>
     </div>
 </template>
 
@@ -20,7 +25,35 @@
     },
     data () {
       return {
+        newTaskText: '',
         tasks: []
+      }
+    },
+    computed: {
+      projectTasks: function () {
+        // TODO pick up all subfolders and filter on those; so we need to store subfolders in the state
+        let currentlySelectedProject = this.$store.getters.getSelectedProject
+        return this.tasks.filter(task => task.project === currentlySelectedProject)
+      }
+    },
+    methods: {
+      addTask: function () {
+        let taskName = this.newTaskText && this.newTaskText.trim()
+        if (!taskName) {
+          return
+        }
+        let currentlySelectedProject = this.$store.getters.getSelectedProject
+        let newTask = {id: this.uuidv4(), name: taskName, project: currentlySelectedProject}
+        this.tasks.push(newTask)
+        this.newTaskText = ''
+      },
+      // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+      uuidv4: function () {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+          let r = Math.random() * 16 | 0
+          let v = c === 'x' ? r : (r & 0x3 | 0x8)
+          return v.toString(16)
+        })
       }
     }
   }

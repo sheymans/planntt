@@ -1,5 +1,6 @@
 const state = {
-  selected: 'some node is selected by default'
+  // INBOX is by default selected
+  selected: 1
 }
 
 const getters = {
