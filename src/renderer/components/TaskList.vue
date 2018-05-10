@@ -31,9 +31,8 @@
     },
     computed: {
       projectTasks: function () {
-        // TODO pick up all subfolders and filter on those; so we need to store subfolders in the state
-        let currentlySelectedProject = this.$store.getters.getSelectedProject
-        return this.tasks.filter(task => task.project === currentlySelectedProject)
+        let projectsToConsider = this.$store.getters.getStoredDescendantProjectIdsOfSelected
+        return this.tasks.filter(task => projectsToConsider.includes(task.project))
       }
     },
     methods: {

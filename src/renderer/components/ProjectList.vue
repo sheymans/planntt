@@ -21,6 +21,11 @@
         projects: []
       }
     },
+    mounted () {
+      // Should be called after created hopefully. We're creating the project dependencies here.
+      this.$store.commit('createProjectDependencies', this.projects)
+      console.log('created project dependencies')
+    },
     created () {
       // Load the data
       let self = this
@@ -50,6 +55,8 @@
         console.log('writing to Project DB')
         this.$projectDb.update({id: 1}, this.projects[0])
         this.$projectDb.update({id: 2}, this.projects[1])
+        console.log('updating project dependencies in store')
+        this.$store.commit('createProjectDependencies', this.projects)
       }
     }
   }
