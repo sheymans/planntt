@@ -1,11 +1,11 @@
 <template>
-    <ol v-if="projects.length">
+    <ul v-if="projects.length">
         <Project
                 v-for="project in projects"
                 :key="project.id"
                 :project="project"
                 @updateProjects="updateProjectDb"/>
-    </ol>
+    </ul>
 </template>
 
 <script>
@@ -56,5 +56,10 @@
 </script>
 
 <style scoped>
+    ul {
+        padding-left: 1em;
+        line-height: 1.5em;
+        list-style-type: dot;
+    }
 
 </style>
