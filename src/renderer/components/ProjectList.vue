@@ -17,32 +17,28 @@
     },
     data () {
       return {
-        projects: [
-          {name: 'INBOX', id: 11},
-          {
-            name: 'All Projects',
-            children: [
-              {
-                id: 1,
-                name: 'Test Project1',
-                children: [
-                  {
-                    id: 4,
-                    name: 'Child Project 1'
-                  }
-                ]
-              },
-              {
-                id: 2,
-                name: 'Test Project2'
-              },
-              {
-                id: 3,
-                name: 'Test Project3'
-              }
-            ]
-          }]
+        projects: []
       }
+    },
+    mounted () {
+      let self = this
+      this.$projectDb.find({}, function (err, docs) {
+        if (err) {
+          console.log(err.stack)
+          return
+        }
+        if (!docs || docs.length === 0) {
+          let inbox = {name: 'INBOX', id: 1}
+          let allProjects = {name: 'All Projects', id: 2}
+          self.projects = [inbox, allProjects]
+          self.$projectDb.insert(inbox)
+          self.$projectDb.insert(allProjects)
+          console.log('created new project list cause none was there: ' + self.projects)
+        } else {
+          self.projects = docs.sort({id: 1})
+          console.log('read existing project list from db:' + self.projects)
+        }
+      })
     }
   }
 </script>
