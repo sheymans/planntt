@@ -26,7 +26,8 @@ import Vue from 'vue'
                     v-for="(project, index) in project.children"
                     :key="index"
                     :project="project"
-                    @remove="removeChild">
+                    @remove="removeChild"
+                    @updateProjects="updateProjects">
             </Project>
         </ul>
         <context-menu id="context-menu" ref="ctxMenu">
@@ -100,10 +101,12 @@ import Vue from 'vue'
           name: '<double click to rename>',
           id: this.uuidv4()
         })
+        this.updateProjects()
       },
       removeChild: function (uuid) {
         let filtered = this.project.children.filter(p => p.id !== uuid)
         this.$set(this.project, 'children', filtered)
+        this.updateProjects()
       },
       startEdit: function () {
         console.log('starting to edit: ' + this.project.name)
@@ -117,11 +120,17 @@ import Vue from 'vue'
         this.project.name = this.project.name.trim()
         this.editing = false
         this.projectNameBeforeEdit = null
+        this.updateProjects()
       },
       cancelEdit: function () {
         this.project.name = this.projectNameBeforeEdit
         this.projectNameBeforeEdit = null
         this.editing = false
+      },
+      updateProjects: function () {
+        // Saves stuff to DB on any change
+        console.log('project with id ' + this.project.id + ' emitted an updateProjects save to DB')
+        this.$emit('updateProjects')
       },
       // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
       uuidv4: function () {
