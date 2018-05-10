@@ -21,11 +21,6 @@
         projects: []
       }
     },
-    mounted () {
-      // Should be called after created hopefully. We're creating the project dependencies here.
-      this.$store.commit('createProjectDependencies', this.projects)
-      console.log('created project dependencies')
-    },
     created () {
       // Load the data
       let self = this
@@ -45,6 +40,8 @@
           self.projects = docs
           self.projects.sort((project1, project2) => project1.id - project2.id)
           console.log('read existing project list from db')
+          self.$store.commit('createProjectDependencies', self.projects)
+          console.log('created project dependencies')
         }
       })
     },

@@ -31,6 +31,14 @@
     },
     computed: {
       projectTasks: function () {
+        // Clean up tasks (set as INBOX project if the project is gone)
+        let deletedProjects = this.$store.getters.getDeletedProjects
+        this.tasks.forEach(task => {
+          if (deletedProjects.includes(task.project)) {
+            console.log('set project of task with id' + task.id + ' to INBOX')
+            task.project = 1
+          }
+        })
         let projectsToConsider = this.$store.getters.getStoredDescendantProjectIdsOfSelected
         return this.tasks.filter(task => projectsToConsider.includes(task.project))
       }

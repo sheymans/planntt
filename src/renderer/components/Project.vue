@@ -106,7 +106,7 @@ import Vue from 'vue'
       removeChild: function (uuid) {
         let filtered = this.project.children.filter(p => p.id !== uuid)
         this.$set(this.project, 'children', filtered)
-        // TODO make sure that any tasks that have the uuid get updated to get the uuid of All Projects (2)
+        this.$store.commit('deleteProject', uuid)
         this.updateProjects()
       },
       startEdit: function () {
