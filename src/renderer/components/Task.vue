@@ -1,8 +1,11 @@
 import Vue from 'vue'
 
 <template>
-    <li>
-        <input type="checkbox" v-model="task.completed">{{ task.name }}</li>
+    <a class="panel-block">
+        <label class="checkbox">
+            <input type="checkbox" v-model="task.completed">{{ task.name }}
+        </label>
+    </a>
 </template>
 
 <script>

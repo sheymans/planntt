@@ -2,7 +2,6 @@ import Vue from 'vue'
 
 <template>
     <li>
-
         <div>
             <span @click="toggle">
                 <font-awesome-icon :icon="getFolderIcon"/>
@@ -36,8 +35,6 @@ import Vue from 'vue'
     <li @click="$emit('remove', project.id)">Remove</li>
     </context-menu>
     </li>
-
-
 </template>
 
 <script>
@@ -168,6 +165,8 @@ import Vue from 'vue'
     .selected {
         background-color: black;
         color: white;
+        border-radius: 10px;
+        padding: 2px;
     }
 
 </style>

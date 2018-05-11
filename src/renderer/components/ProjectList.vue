@@ -1,11 +1,16 @@
 <template>
-    <ul v-if="projects.length">
-        <Project
-                v-for="project in projects"
-                :key="project.id"
-                :project="project"
-                @updateProjects="updateProjectDb"/>
-    </ul>
+    <nav class="panel">
+        <p class="panel-heading">
+            projects
+        </p>
+        <ul v-if="projects.length">
+            <Project
+                    v-for="project in projects"
+                    :key="project.id"
+                    :project="project"
+                    @updateProjects="updateProjectDb"/>
+        </ul>
+    </nav>
 </template>
 
 <script>

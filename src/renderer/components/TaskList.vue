@@ -1,21 +1,35 @@
 <template>
-    <div>
-        <input
-               autofocus autocomplete="off"
-               placeholder="Add a task to this project"
-               v-model="newTaskText"
-               @keyup.enter="addTask">
-        <ul v-if="projectTasks.length">
-            <Task
-                    v-for="task in projectTasks"
-                    :key="task.id"
-                    :task="task"/>
-        </ul>
-        <div v-if="!projectTasks.length">No tasks in this project.</div>
-        <button @click="removeCompleted">
-            Clear completed
-        </button>
-    </div>
+    <nav class="panel">
+        <p class="panel-heading">
+            tasks
+        </p>
+        <div class="panel-block">
+            <input class="input is-rounded"
+                   autofocus autocomplete="off"
+                   placeholder="Add a task to this project"
+                   v-model="newTaskText"
+                   @keyup.enter="addTask">
+        </div>
+        <p class="panel-tabs">
+            <a class="is-active">all</a>
+            <a>today</a>
+            <a>this week</a>
+            <a>waiting for</a>
+        </p>
+        <div v-if="projectTasks.length">
+            <Task v-for="task in projectTasks"
+                  :key="task.id"
+                  :task="task"/>
+        </div>
+        <a class="panel-block" v-if="!projectTasks.length">
+            no tasks in this project
+        </a>
+        <div class="panel-block">
+            <button class="button is-link is-outlined is-fullwidth" @click="removeCompleted">
+                remove completed
+            </button>
+        </div>
+    </nav>
 </template>
 
 <script>
