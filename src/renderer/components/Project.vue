@@ -10,7 +10,7 @@ import Vue from 'vue'
                   @contextmenu.prevent="$refs.ctxMenu.open"
                   @click="selectProject"
                   @dblclick="startEdit"
-            :class="{selected: isSelectedProject}">
+                  :class="{selected: isSelectedProject}">
                 {{ project.name }}</span>
             <input v-show="editing"
                    type="text"
@@ -86,6 +86,8 @@ import Vue from 'vue'
         // We should combine this in 1 call maybe just emit the whole project
         this.$store.commit('setSelectedProject', this.project.id)
         this.$store.commit('setSelectedProjectName', this.project.name)
+        // Also reset the selected task when you switch project
+        this.$store.commit('setSelectedTask', {})
       },
       addSubProject: function () {
         if (this.isNonEmptyFolder) {

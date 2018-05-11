@@ -1,10 +1,11 @@
 import Vue from 'vue'
 
 <template>
-    <a class="panel-block">
+    <a class="panel-block" :class="{selected: isSelectedTask}">
         <label class="checkbox">
-            <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">{{ task.name }}
+            <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
         </label>
+        <span @click="selectTask">{{ task.name }}</span>
     </a>
 </template>
 
@@ -23,11 +24,20 @@ import Vue from 'vue'
         editing: false
       }
     },
+    computed: {
+      isSelectedTask: function () {
+        let currentlySelected = this.$store.getters.getSelectedTask
+        return (currentlySelected.id === this.task.id)
+      }
+    },
     methods: {
       toggleTaskCheckbox: function () {
         // save the task when checkbox toggled
         console.log('update task DB for task with id ' + this.task.id + ' to set completed state to ' + this.task.completed)
         this.$taskDb.update({id: this.task.id}, {$set: {completed: this.task.completed}}, {})
+      },
+      selectTask: function () {
+        this.$store.commit('setSelectedTask', this.task)
       },
       // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
       uuidv4: function () {
@@ -42,5 +52,8 @@ import Vue from 'vue'
 </script>
 
 <style scoped>
-
+    .selected {
+        background-color: black;
+        color: white;
+    }
 </style>

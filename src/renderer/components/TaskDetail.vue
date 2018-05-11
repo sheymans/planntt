@@ -1,7 +1,15 @@
 import Vue from 'vue'
 
 <template>
-    <div>blabla</div>
+    <nav class="panel">
+        <p class="panel-heading">
+            <span v-if="selectedTask.name">{{selectedTask.name}}</span>
+            <span v-if="!selectedTask.name">no task selected</span>
+        </p>
+        <div class="panel-block">
+            more details here.
+        </div>
+    </nav>
 </template>
 
 <script>
@@ -11,6 +19,11 @@ import Vue from 'vue'
     data: function () {
       return {
         task: {}
+      }
+    },
+    computed: {
+      selectedTask: function () {
+        return this.$store.getters.getSelectedTask
       }
     },
     methods: {
