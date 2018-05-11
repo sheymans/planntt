@@ -18,7 +18,7 @@
                         <TaskList/>
                     </div>
                     <div class="column">
-                        TODO: detail of selected item in list
+                        <TaskDetail/>
                     </div>
                 </div>
             </div>
@@ -30,10 +30,12 @@
   import ProjectList from './ProjectList.vue'
   import TaskList from './TaskList.vue'
   import Planntt from '../App'
+  import TaskDetail from './TaskDetail.vue'
 
   export default {
     name: 'MainPage',
     components: {
+      TaskDetail,
       Planntt,
       ProjectList,
       TaskList
