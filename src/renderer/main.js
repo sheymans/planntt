@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import projectDb from './datastore/projects'
+import taskDb from './datastore/tasks'
 import 'bulma/css/bulma.css'
 
 import fontawesome from '@fortawesome/fontawesome'
@@ -20,6 +21,7 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 Vue.prototype.$projectDb = projectDb
+Vue.prototype.$taskDb = taskDb
 
 /* eslint-disable no-new */
 new Vue({

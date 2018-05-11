@@ -1,7 +1,7 @@
 <template>
     <nav class="panel">
         <p class="panel-heading">
-            tasks
+            tasks in <b>{{selectedProjectName}}</b>
         </p>
         <div class="panel-block">
             <input class="input is-rounded"
@@ -54,6 +54,8 @@
           if (deletedProjects.includes(task.project)) {
             console.log('set project of task with id' + task.id + ' to INBOX')
             task.project = 1
+            // Update DB
+            this.$taskDb.update({id: task.id}, { $set: { project: task.project } }, {})
           }
         })
         let projectsToConsider = this.$store.getters.getStoredDescendantProjectIdsOfSelected
@@ -61,7 +63,24 @@
       },
       selectedProject: function () {
         return this.$store.getters.getSelectedProject
+      },
+      selectedProjectName: function () {
+        return this.$store.getters.getSelectedProjectName
       }
+    },
+    created () {
+      // Load the data (note we need the self, cause of the callback scope; we could try using an arrow function here)
+      let self = this
+      this.$taskDb.find({}, function (err, docs) {
+        if (err) {
+          console.log(err.stack)
+          return
+        }
+        if (docs && docs.length > 0) {
+          self.tasks = docs
+          console.log('read existing task list from db')
+        }
+      })
     },
     methods: {
       addTask: function () {
@@ -72,10 +91,21 @@
         let newTask = {id: this.uuidv4(), name: taskName, project: this.selectedProject}
         this.tasks.push(newTask)
         this.newTaskText = ''
+        // Add it to the DB as well
+        this.$taskDb.insert(newTask)
       },
       removeCompleted: function () {
         let projectsToConsiderForRemoval = this.$store.getters.getStoredDescendantProjectIdsOfSelected
-        this.tasks = this.tasks.filter(task => !projectsToConsiderForRemoval.includes(task.project) || !task.completed)
+        let newTasks = []
+        this.tasks.forEach(task => {
+          let keepTask = !projectsToConsiderForRemoval.includes(task.project) || !task.completed
+          if (keepTask) {
+            newTasks.push(task)
+          } else {
+            this.$taskDb.remove(task)
+          }
+        })
+        this.tasks = newTasks
       },
       // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
       uuidv4: function () {

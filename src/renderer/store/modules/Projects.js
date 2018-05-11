@@ -1,6 +1,7 @@
 const state = {
   // INBOX is by default selected
   selected: 1,
+  selectedProjectName: 'INBOX',
   subProjects: {},
   deletedProjects: []
 }
@@ -8,6 +9,9 @@ const state = {
 const getters = {
   getSelectedProject (state) {
     return state.selected
+  },
+  getSelectedProjectName (state) {
+    return state.selectedProjectName
   },
   getStoredDescendantProjectIdsOfSelected (state) {
     if (!state.selected) {
@@ -28,6 +32,9 @@ const getters = {
 const mutations = {
   setSelectedProject (state, uuid) {
     state.selected = uuid
+  },
+  setSelectedProjectName (state, name) {
+    state.selectedProjectName = name
   },
   deleteProject (state, projectId) {
     let storedIds = state.subProjects[projectId]

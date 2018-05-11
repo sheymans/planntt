@@ -83,7 +83,9 @@ import Vue from 'vue'
       },
       selectProject: function () {
         // See store/modules/Projects.js for this Vuex store.
+        // We should combine this in 1 call maybe just emit the whole project
         this.$store.commit('setSelectedProject', this.project.id)
+        this.$store.commit('setSelectedProjectName', this.project.name)
       },
       addSubProject: function () {
         if (this.isNonEmptyFolder) {
