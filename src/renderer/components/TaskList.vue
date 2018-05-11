@@ -1,43 +1,52 @@
 <template>
-    <nav class="panel">
-        <p class="panel-heading">
-            tasks in <b>{{selectedProjectName}}</b>
-        </p>
-        <div class="panel-block">
-            <input class="input is-rounded"
-                   autofocus autocomplete="off"
-                   placeholder="Add a task to this project"
-                   v-model="newTaskText"
-                   @keyup.enter="addTask">
+    <div class="columns">
+        <div class="column">
+            <nav class="panel">
+                <p class="panel-heading">
+                    tasks in <b>{{selectedProjectName}}</b>
+                </p>
+                <div class="panel-block">
+                    <input class="input is-rounded"
+                           autofocus autocomplete="off"
+                           placeholder="Add a task to this project"
+                           v-model="newTaskText"
+                           @keyup.enter="addTask">
+                </div>
+                <p class="panel-tabs">
+                    <a class="is-active">all</a>
+                    <a>today</a>
+                    <a>this week</a>
+                    <a>waiting for</a>
+                </p>
+                <div v-if="projectTasks.length">
+                    <Task v-for="task in projectTasks"
+                          :key="task.id"
+                          :task="task"/>
+                </div>
+                <a class="panel-block" v-if="!projectTasks.length">
+                    no tasks in this project
+                </a>
+                <div class="panel-block">
+                    <button class="button is-link is-outlined is-fullwidth" @click="removeCompleted">
+                        remove completed
+                    </button>
+                </div>
+            </nav>
         </div>
-        <p class="panel-tabs">
-            <a class="is-active">all</a>
-            <a>today</a>
-            <a>this week</a>
-            <a>waiting for</a>
-        </p>
-        <div v-if="projectTasks.length">
-            <Task v-for="task in projectTasks"
-                  :key="task.id"
-                  :task="task"/>
+        <div class="column">
+            <TaskDetail @updateTask="updateTask"/>
         </div>
-        <a class="panel-block" v-if="!projectTasks.length">
-            no tasks in this project
-        </a>
-        <div class="panel-block">
-            <button class="button is-link is-outlined is-fullwidth" @click="removeCompleted">
-                remove completed
-            </button>
-        </div>
-    </nav>
+    </div>
 </template>
 
 <script>
   import Task from './Task.vue'
+  import TaskDetail from './TaskDetail'
 
   export default {
     name: 'TaskList',
     components: {
+      TaskDetail,
       Task
     },
     data () {
@@ -106,6 +115,17 @@
           }
         })
         this.tasks = newTasks
+      },
+      updateTask: function (task) {
+        // First find the task to update in the task list
+        let index = this.tasks.findIndex(t => {
+          return t.id === task.id
+        })
+        // Use set rather than updating the array index to actually see the value
+        this.$set(this.tasks, index, task)
+        console.log('updated task in task list, new task is now ' + JSON.stringify(task))
+        // Also update the task database
+        this.$taskDb.update({id: task.id}, task, {})
       },
       // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
       uuidv4: function () {

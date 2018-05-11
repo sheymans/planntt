@@ -11,14 +11,11 @@
         <section>
             <div class="container">
                 <div class="columns">
-                    <div class="column">
+                    <div class="column is-one-fifth">
                         <ProjectList/>
                     </div>
                     <div class="column">
                         <TaskList/>
-                    </div>
-                    <div class="column">
-                        <TaskDetail/>
                     </div>
                 </div>
             </div>
@@ -30,12 +27,10 @@
   import ProjectList from './ProjectList.vue'
   import TaskList from './TaskList.vue'
   import Planntt from '../App'
-  import TaskDetail from './TaskDetail.vue'
 
   export default {
     name: 'MainPage',
     components: {
-      TaskDetail,
       Planntt,
       ProjectList,
       TaskList

@@ -3,30 +3,79 @@ import Vue from 'vue'
 <template>
     <nav class="panel">
         <p class="panel-heading">
-            <span v-if="selectedTask.name">{{selectedTask.name}}</span>
-            <span v-if="!selectedTask.name">no task selected</span>
+            task detail
         </p>
-        <div class="panel-block">
-            more details here.
+        <div v-if="selectedTask.name" class="panel-block">
+             <span v-show="!editingTaskName">
+                {{ task.name }} &nbsp;</span>
+            <input v-show="editingTaskName"
+                   type="text"
+                   v-model="task.name"
+                   @blur="doneEditTaskName"
+                   @keyup.enter="doneEditTaskName"
+                   @keyup.esc="cancelEditTaskName"
+                   v-focus="editingTaskName"/>
+            <font-awesome-icon v-show="!editingTaskName" pull="left" @click="startEditTaskName" icon="pencil-alt"/>
+        </div>
+        <div v-if="!selectedTask.name" class="panel-block">
+            no task selected
         </div>
     </nav>
 </template>
 
 <script>
+  import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+
   export default {
     name: 'TaskDetail',
-    components: {},
+    components: {FontAwesomeIcon},
     data: function () {
       return {
-        task: {}
+        task: {},
+        editingTaskName: false
       }
     },
     computed: {
       selectedTask: function () {
-        return this.$store.getters.getSelectedTask
+        let currentlySelected = this.$store.getters.getSelectedTask
+        // Make a copy into data cause we can't change the selected task as it is in a store directly
+        this.task = Object.assign({}, currentlySelected)
+        return this.task
       }
     },
     methods: {
+      startEditTaskName: function () {
+        console.log('starting to edit task name: ' + this.task.name)
+        this.taskNameBeforeEdit = this.task.name
+        this.editingTaskName = true
+      },
+      doneEditTaskName: function () {
+        if (!this.editingTaskName) {
+          return
+        }
+        this.task.name = this.task.name.trim()
+        if (!this.task.name) {
+          this.cancelEditTaskName()
+        }
+        this.editingTaskName = false
+        this.taskNameBeforeEdit = null
+        this.$store.commit('setSelectedTask', this.task)
+        // Also save this updated task in the task list
+        this.$emit('updateTask', this.task)
+      },
+      cancelEditTaskName: function () {
+        this.task.name = this.taskNameBeforeEdit
+        this.taskNameBeforeEdit = null
+        this.editingTaskName = false
+      }
+    },
+    // https://vuejs.org/v2/guide/custom-directive.html
+    directives: {
+      focus: function (el, binding) {
+        if (binding.value) {
+          el.focus()
+        }
+      }
     }
   }
 </script>
