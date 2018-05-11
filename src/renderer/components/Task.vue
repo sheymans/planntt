@@ -1,7 +1,8 @@
 import Vue from 'vue'
 
 <template>
-    <li>{{ task.name }}</li>
+    <li>
+        <input type="checkbox" v-model="task.completed">{{ task.name }}</li>
 </template>
 
 <script>

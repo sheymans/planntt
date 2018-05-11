@@ -12,6 +12,9 @@
                     :task="task"/>
         </ul>
         <div v-if="!projectTasks.length">No tasks in this project.</div>
+        <button @click="removeCompleted">
+            Clear completed
+        </button>
     </div>
 </template>
 
@@ -41,6 +44,9 @@
         })
         let projectsToConsider = this.$store.getters.getStoredDescendantProjectIdsOfSelected
         return this.tasks.filter(task => projectsToConsider.includes(task.project))
+      },
+      selectedProject: function () {
+        return this.$store.getters.getSelectedProject
       }
     },
     methods: {
@@ -49,10 +55,13 @@
         if (!taskName) {
           return
         }
-        let currentlySelectedProject = this.$store.getters.getSelectedProject
-        let newTask = {id: this.uuidv4(), name: taskName, project: currentlySelectedProject}
+        let newTask = {id: this.uuidv4(), name: taskName, project: this.selectedProject}
         this.tasks.push(newTask)
         this.newTaskText = ''
+      },
+      removeCompleted: function () {
+        let projectsToConsiderForRemoval = this.$store.getters.getStoredDescendantProjectIdsOfSelected
+        this.tasks = this.tasks.filter(task => !projectsToConsiderForRemoval.includes(task.project) || !task.completed)
       },
       // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
       uuidv4: function () {
