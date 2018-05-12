@@ -25,8 +25,8 @@ import Vue from 'vue'
             <div class="dropdown" :class="{'is-active': isWhenDropdownActive}">
                 <div class="dropdown-trigger">
                     <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" @click="setWhenDropdownActive">
-                        <span v-if="task.when">{{task.when | prettyWhen}}</span>
-                        <span v-if="!task.when">When</span>
+                        <span v-if="task.when !== 'all'">{{task.when | prettyWhen}}</span>
+                        <span v-if="task.when === 'all'">When</span>
                         <span class="icon is-small">
                             <font-awesome-icon icon="caret-down"/>
                         </span>
