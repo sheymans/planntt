@@ -15,8 +15,9 @@ import faFolderOpen from '@fortawesome/fontawesome-free-solid/faFolderOpen'
 import faFolderReg from '@fortawesome/fontawesome-free-regular/faFolder'
 import faFolderOpenReg from '@fortawesome/fontawesome-free-regular/faFolderOpen'
 import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
+import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
 
-fontawesome.library.add(faSpinner, faFolder, faFolderOpen, faFolderReg, faFolderOpenReg, faPencilAlt)
+fontawesome.library.add(faSpinner, faFolder, faFolderOpen, faFolderReg, faFolderOpenReg, faPencilAlt, faCaretDown)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios

@@ -17,6 +17,7 @@
                     <a>today</a>
                     <a>this week</a>
                     <a>waiting for</a>
+                    <a>someday</a>
                 </p>
                 <div v-if="projectTasks.length">
                     <Task v-for="task in projectTasks"
