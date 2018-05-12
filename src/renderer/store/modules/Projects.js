@@ -41,6 +41,11 @@ const mutations = {
     if (storedIds) {
       state.deletedProjects.push(...storedIds)
     }
+    // Unselect the project if it was deleted so it disappears from the middle pane
+    if (storedIds.includes(state.selected)) {
+      state.selected = 1
+      state.selectedProjectName = 'INBOX'
+    }
   },
   createProjectDependencies (state, projects) {
     let getDescendantProjectIds = (project) => {

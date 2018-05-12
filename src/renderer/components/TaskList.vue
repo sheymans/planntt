@@ -13,11 +13,11 @@
                            @keyup.enter="addTask">
                 </div>
                 <p class="panel-tabs">
-                    <a class="is-active">all</a>
-                    <a>today</a>
-                    <a>this week</a>
-                    <a>waiting for</a>
-                    <a>someday</a>
+                    <a :class="{'is-active': isTabActive('all')}" @click="setActiveTab('all')">all</a>
+                    <a :class="{'is-active': isTabActive('today')}" @click="setActiveTab('today')">today</a>
+                    <a :class="{'is-active': isTabActive('thisweek')}" @click="setActiveTab('thisweek')">this week</a>
+                    <a :class="{'is-active': isTabActive('waitingfor')}" @click="setActiveTab('waitingfor')">waiting for</a>
+                    <a :class="{'is-active': isTabActive('someday')}" @click="setActiveTab('someday')">someday</a>
                 </p>
                 <div v-if="projectTasks.length">
                     <Task v-for="task in projectTasks"
@@ -53,7 +53,8 @@
     data () {
       return {
         newTaskText: '',
-        tasks: []
+        tasks: [],
+        activeTab: 'all'
       }
     },
     computed: {
@@ -69,7 +70,18 @@
           }
         })
         let projectsToConsider = this.$store.getters.getStoredDescendantProjectIdsOfSelected
-        return this.tasks.filter(task => projectsToConsider.includes(task.project))
+        let allTasksToShow = this.tasks.filter(task => projectsToConsider.includes(task.project))
+        if (this.activeTab === 'all') {
+          return allTasksToShow
+        } else if (this.activeTab === 'today') {
+          return allTasksToShow.filter(t => t.when === 'today')
+        } else if (this.activeTab === 'thisweek') {
+          return allTasksToShow.filter(t => t.when === 'thisweek')
+        } else if (this.activeTab === 'waitingfor') {
+          return allTasksToShow.filter(t => t.when === 'waitingfor')
+        } else if (this.activeTab === 'someday') {
+          return allTasksToShow.filter(t => t.when === 'someday')
+        }
       },
       selectedProject: function () {
         return this.$store.getters.getSelectedProject
@@ -81,11 +93,19 @@
         return Object.assign({}, this.$store.getters.getSelectedTask)
       },
       numberOfCompletedProjectTasks: function () {
-        let completedTasks = this.projectTasks.filter(t => t.completed)
-        return completedTasks.length
+        if (this.projectTasks) {
+          let completedTasks = this.projectTasks.filter(t => t.completed)
+          return completedTasks.length
+        } else {
+          return 0
+        }
       },
       numberOfProjectTasks: function () {
-        return this.projectTasks.length
+        if (this.projectTasks) {
+          return this.projectTasks.length
+        } else {
+          return 0
+        }
       }
     },
     created () {
@@ -108,12 +128,22 @@
       }
     },
     methods: {
+      setActiveTab: function (tab) {
+        this.activeTab = tab
+        this.unsetSelectedTask()
+      },
+      unsetSelectedTask: function () {
+        this.$store.commit('setSelectedTask', {})
+      },
+      isTabActive: function (tab) {
+        return this.activeTab === tab
+      },
       addTask: function () {
         let taskName = this.newTaskText && this.newTaskText.trim()
         if (!taskName) {
           return
         }
-        let newTask = {id: this.uuidv4(), name: taskName, project: this.selectedProject}
+        let newTask = {id: this.uuidv4(), name: taskName, project: this.selectedProject, when: this.activeTab}
         this.tasks.push(newTask)
         this.newTaskText = ''
         // Add it to the DB as well
