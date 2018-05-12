@@ -34,7 +34,7 @@
             </nav>
         </div>
         <div class="column">
-            <TaskDetail @updateTask="updateTask"/>
+            <TaskDetail @updateTask="updateTask" :task="selectedTask"/>
         </div>
     </div>
 </template>
@@ -75,6 +75,9 @@
       },
       selectedProjectName: function () {
         return this.$store.getters.getSelectedProjectName
+      },
+      selectedTask: function () {
+        return Object.assign({}, this.$store.getters.getSelectedTask)
       }
     },
     created () {

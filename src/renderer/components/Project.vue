@@ -14,6 +14,7 @@ import Vue from 'vue'
                 {{ project.name }}</span>
             <input v-show="editing"
                    type="text"
+                   class="input is-rounded"
                    v-model="project.name"
                    @blur="doneEdit"
                    @keyup.enter="doneEdit"

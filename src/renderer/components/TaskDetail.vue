@@ -5,11 +5,12 @@ import Vue from 'vue'
         <p class="panel-heading">
             task detail
         </p>
-        <div v-if="selectedTask.name" class="panel-block">
+        <div v-if="task.name" class="panel-block">
              <span v-show="!editingTaskName">
                 {{ task.name }} &nbsp;</span>
             <input v-show="editingTaskName"
                    type="text"
+                   class="input is-rounded"
                    v-model="task.name"
                    @blur="doneEditTaskName"
                    @keyup.enter="doneEditTaskName"
@@ -17,7 +18,7 @@ import Vue from 'vue'
                    v-focus="editingTaskName"/>
             <font-awesome-icon v-show="!editingTaskName" pull="left" @click="startEditTaskName" icon="pencil-alt"/>
         </div>
-        <div v-if="!selectedTask.name" class="panel-block">
+        <div v-if="!task.name" class="panel-block">
             no task selected
         </div>
     </nav>
@@ -29,18 +30,15 @@ import Vue from 'vue'
   export default {
     name: 'TaskDetail',
     components: {FontAwesomeIcon},
-    data: function () {
-      return {
-        task: {},
-        editingTaskName: false
+    props: {
+      task: {
+        type: Object,
+        required: true
       }
     },
-    computed: {
-      selectedTask: function () {
-        let currentlySelected = this.$store.getters.getSelectedTask
-        // Make a copy into data cause we can't change the selected task as it is in a store directly
-        this.task = Object.assign({}, currentlySelected)
-        return this.task
+    data: function () {
+      return {
+        editingTaskName: false
       }
     },
     methods: {
