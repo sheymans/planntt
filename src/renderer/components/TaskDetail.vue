@@ -24,10 +24,10 @@ import Vue from 'vue'
         <div v-if="task.name" class="panel-block">
             <div class="dropdown" :class="{'is-active': isWhenDropdownActive}">
                 <div class="dropdown-trigger">
-                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" @click="setWhenDropdownActive">
                         <span v-if="task.when">{{task.when | prettyWhen}}</span>
                         <span v-if="!task.when">When</span>
-                        <span class="icon is-small" @click="setWhenDropdownActive">
+                        <span class="icon is-small">
                             <font-awesome-icon icon="caret-down"/>
                         </span>
                     </button>
