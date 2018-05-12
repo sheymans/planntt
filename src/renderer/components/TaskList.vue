@@ -3,7 +3,7 @@
         <div class="column">
             <nav class="panel">
                 <p class="panel-heading">
-                    tasks in <b>{{selectedProjectName}}</b>
+                    {{numberOfProjectTasks}} {{numberOfProjectTasks | pluralize }} in <b>{{selectedProjectName}}</b>
                 </p>
                 <div class="panel-block">
                     <input class="input is-rounded"
@@ -26,7 +26,7 @@
                 <a class="panel-block" v-if="!projectTasks.length">
                     no tasks in this project
                 </a>
-                <div class="panel-block">
+                <div v-show="numberOfCompletedProjectTasks > 0" class="panel-block">
                     <button class="button is-link is-outlined is-fullwidth" @click="removeCompleted">
                         remove completed
                     </button>
@@ -78,6 +78,13 @@
       },
       selectedTask: function () {
         return Object.assign({}, this.$store.getters.getSelectedTask)
+      },
+      numberOfCompletedProjectTasks: function () {
+        let completedTasks = this.projectTasks.filter(t => t.completed)
+        return completedTasks.length
+      },
+      numberOfProjectTasks: function () {
+        return this.projectTasks.length
       }
     },
     created () {
@@ -93,6 +100,11 @@
           console.log('read existing task list from db')
         }
       })
+    },
+    filters: {
+      pluralize: function (n) {
+        return n === 1 ? 'task' : 'tasks'
+      }
     },
     methods: {
       addTask: function () {
