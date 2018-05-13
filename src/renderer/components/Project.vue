@@ -83,6 +83,10 @@ import Vue from 'vue'
           this.open = !this.open
         }
       },
+      isSpecialProject: function () {
+        // INBOX or All Projects
+        return (this.project.id === 1 || this.project.id === 2)
+      },
       selectProject: function () {
         // See store/modules/Projects.js for this Vuex store.
         // We should combine this in 1 call maybe just emit the whole project
@@ -114,6 +118,11 @@ import Vue from 'vue'
         this.updateProjects()
       },
       startEdit: function () {
+        // You can't edit special projects
+        if (this.isSpecialProject()) {
+          console.log('you cannot edit special project: ' + this.project.id)
+          return
+        }
         console.log('starting to edit: ' + this.project.name)
         this.projectNameBeforeEdit = this.project.name
         this.editing = true
