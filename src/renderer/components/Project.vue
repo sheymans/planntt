@@ -10,7 +10,8 @@ import Vue from 'vue'
                   @contextmenu.prevent="$refs.ctxMenu.open"
                   @click="selectProject"
                   @dblclick="startEdit"
-                  :class="{selected: isSelectedProject}">
+                  v-droppable @drag-drop="handleDropTask" @drag-over="handleDragOverTask" @drag-leave="handleDragLeaveTask"
+                  :class="{selected: isSelectedProject, dragReady: dragHappening}">
                 {{ project.name }}</span>
             <input v-show="editing"
                    type="text"
@@ -55,7 +56,8 @@ import Vue from 'vue'
     data: function () {
       return {
         open: false,
-        editing: false
+        editing: false,
+        dragHappening: false
       }
     },
     computed: {
@@ -85,6 +87,25 @@ import Vue from 'vue'
       },
       isInbox: function () {
         return this.project.id === 1
+      },
+      handleDropTask: function (task) {
+        console.log('dropped task: ' + task.name + ' in project ' + this.project.name)
+        task.project = this.project.id
+        task.projectName = this.project.name
+        // If you're moving the selected task, unset the selection as you moved it.
+        if (task.id === this.$store.getters.getSelectedTask.id) {
+          this.$store.commit('setSelectedTask', {})
+        }
+      },
+      handleDragOverTask: function (task, draggingPossible) {
+        if (draggingPossible) {
+          this.dragHappening = true
+        }
+      },
+      handleDragLeaveTask: function (task, draggingPossible) {
+        if (draggingPossible) {
+          this.dragHappening = false
+        }
       },
       isSpecialProject: function () {
         // INBOX or All Projects
@@ -183,6 +204,14 @@ import Vue from 'vue'
 
     .selected {
         background-color: black;
+        color: white;
+        border-radius: 10px;
+        padding: 2px;
+    }
+
+    .dragReady {
+        background-color: black;
+        opacity: 0.5;
         color: white;
         border-radius: 10px;
         padding: 2px;

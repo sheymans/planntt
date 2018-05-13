@@ -60,6 +60,7 @@
     "axios": "^0.16.1",
     "bulma": "^0.7.1",
     "nedb": "^1.8.0",
+    "v-drag-drop": "^0.2.0",
     "vue": "^2.3.3",
     "vue-context-menu": "^2.0.6",
     "vue-electron": "^1.0.6",

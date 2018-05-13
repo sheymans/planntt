@@ -5,7 +5,7 @@ import Vue from 'vue'
         <label class="checkbox">
             <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
         </label>
-        <span @click="selectTask">{{ task.name }}</span>
+        <span v-draggable="task" @click="selectTask">{{ task.name }}</span>
     </a>
 </template>
 

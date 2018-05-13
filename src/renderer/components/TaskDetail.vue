@@ -51,6 +51,9 @@ import Vue from 'vue'
                 </div>
             </div>
         </div>
+        <div v-if="task.name" class="panel-block">
+           project: {{task.projectName}}
+        </div>
     </nav>
 </template>
 
@@ -70,6 +73,14 @@ import Vue from 'vue'
       return {
         editingTaskName: false,
         isWhenDropdownActive: false
+      }
+    },
+    computed: {
+      selectedProject: function () {
+        return this.$store.getters.getSelectedProject
+      },
+      selectedProjectName: function () {
+        return this.$store.getters.getSelectedProjectName
       }
     },
     filters: {

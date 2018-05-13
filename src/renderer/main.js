@@ -8,6 +8,10 @@ import projectDb from './datastore/projects'
 import taskDb from './datastore/tasks'
 import 'bulma/css/bulma.css'
 
+/* Drag and drop */
+import vDragDrop from 'v-drag-drop'
+
+/* Fonts */
 import fontawesome from '@fortawesome/fontawesome'
 import faSpinner from '@fortawesome/fontawesome-free-solid/faSpinner'
 import faFolder from '@fortawesome/fontawesome-free-solid/faFolder'
@@ -20,6 +24,7 @@ import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
 fontawesome.library.add(faSpinner, faFolder, faFolderOpen, faFolderReg, faFolderOpenReg, faPencilAlt, faCaretDown)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
+Vue.use(vDragDrop)
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 Vue.prototype.$projectDb = projectDb

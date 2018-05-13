@@ -143,7 +143,7 @@
         if (!taskName) {
           return
         }
-        let newTask = {id: this.uuidv4(), name: taskName, project: this.selectedProject, when: this.activeTab}
+        let newTask = {id: this.uuidv4(), name: taskName, project: this.selectedProject, projectName: this.selectedProjectName, when: this.activeTab}
         this.tasks.push(newTask)
         this.newTaskText = ''
         // Add it to the DB as well
