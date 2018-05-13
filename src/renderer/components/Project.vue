@@ -34,7 +34,7 @@ import Vue from 'vue'
         </ul>
         <context-menu id="context-menu" ref="ctxMenu">
     <li @click="addSubProject">Add subproject</li>
-    <li @click="$emit('remove', project.id)">Remove</li>
+    <li v-if="!isSpecialProject()" @click="$emit('remove', project.id)">Remove</li>
     </context-menu>
     </li>
 </template>
@@ -82,6 +82,9 @@ import Vue from 'vue'
         if (this.isNonEmptyFolder) {
           this.open = !this.open
         }
+      },
+      isInbox: function () {
+        return this.project.id === 1
       },
       isSpecialProject: function () {
         // INBOX or All Projects
