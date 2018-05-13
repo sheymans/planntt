@@ -18,6 +18,7 @@ import Vue from 'vue'
                    @blur="doneEditTaskName"
                    @keyup.enter="doneEditTaskName"
                    @keyup.esc="cancelEditTaskName"
+                   @focus="$event.target.select()"
                    v-focus="editingTaskName"/>
             <font-awesome-icon v-show="!editingTaskName" pull="left" @click="startEditTaskName" icon="pencil-alt"/>
         </div>

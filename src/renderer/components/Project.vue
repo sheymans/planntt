@@ -19,6 +19,7 @@ import Vue from 'vue'
                    @blur="doneEdit"
                    @keyup.enter="doneEdit"
                    @keyup.esc="cancelEdit"
+                   @focus="$event.target.select()"
                    v-focus="editing"/>
         </div>
         <ul v-show="open" v-if="isNonEmptyFolder">
@@ -101,7 +102,7 @@ import Vue from 'vue'
       },
       addChild: function () {
         this.project.children.push({
-          name: '<double click to rename>',
+          name: 'new project',
           id: this.uuidv4()
         })
         this.updateProjects()
