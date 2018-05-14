@@ -35,6 +35,7 @@ function createWindow () {
   })
 
   // https://github.com/electron/electron/issues/1344
+  // Open any new window requests in the browser's window
   mainWindow.webContents.on('new-window', function (event, url) {
     event.preventDefault()
     open(url)
