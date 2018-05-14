@@ -10,7 +10,8 @@ import Vue from 'vue'
                   @contextmenu.prevent="$refs.ctxMenu.open"
                   @click="selectProject"
                   @dblclick="startEdit"
-                  v-droppable @drag-drop="handleDropTask" @drag-over="handleDragOverTask" @drag-leave="handleDragLeaveTask"
+                  v-draggable="project"
+                  v-droppable @drag-drop="handleDrop" @drag-over="handleDragOver" @drag-leave="handleDragLeave"
                   :class="{selected: isSelectedProject, dragReady: dragHappening}">
                 {{ project.name }}</span>
             <input v-show="editing"
@@ -30,6 +31,7 @@ import Vue from 'vue'
                     :key="index"
                     :project="project"
                     @remove="removeChild"
+                    @removeFromRoot="removeFromRoot"
                     @updateProjects="updateProjects">
             </Project>
         </ul>
@@ -88,6 +90,14 @@ import Vue from 'vue'
       isInbox: function () {
         return this.project.id === 1
       },
+      handleDrop: function (object) {
+        // The object is a task
+        if (object.project) {
+          this.handleDropTask(object)
+        } else {
+          this.handleDropProject(object)
+        }
+      },
       handleDropTask: function (task) {
         console.log('dropped task: ' + task.name + ' in project ' + this.project.name)
         task.project = this.project.id
@@ -97,12 +107,28 @@ import Vue from 'vue'
           this.$store.commit('setSelectedTask', {})
         }
       },
-      handleDragOverTask: function (task, draggingPossible) {
+      handleDropProject: function (project) {
+        console.log('dropping project: ' + project.name + ' in project ' + this.project.name)
+        // You cannot drop All Project or INBOX something else
+        if (project.id === 1 || project.id === 2) {
+          return
+        }
+        // Remove the project you want to drop from the tree
+        this.removeFromRoot(project.id)
+        // And add it now as a child of this project you're dropping it on
+        if (!this.isNonEmptyFolder) {
+          this.$set(this.project, 'children', [])
+        }
+        this.project.children.push(project)
+        this.updateProjects()
+        this.open = true
+      },
+      handleDragOver: function (task, draggingPossible) {
         if (draggingPossible) {
           this.dragHappening = true
         }
       },
-      handleDragLeaveTask: function (task, draggingPossible) {
+      handleDragLeave: function (task, draggingPossible) {
         if (draggingPossible) {
           this.dragHappening = false
         }
@@ -140,6 +166,11 @@ import Vue from 'vue'
         this.$set(this.project, 'children', filtered)
         this.$store.commit('deleteProject', uuid)
         this.updateProjects()
+      },
+      // You want to drag something on this project and involves deleting a project with id uuid that could be somewhere entirely different
+      // We want to go up to the root project list and from there we'll initiate a recursive removeChild, so any project here will just propogate the event up
+      removeFromRoot: function (uuid) {
+        this.$emit('removeFromRoot', uuid)
       },
       startEdit: function () {
         // You can't edit special projects

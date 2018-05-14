@@ -8,6 +8,7 @@
                     v-for="project in projects"
                     :key="project.id"
                     :project="project"
+                    @removeFromRoot="removeFromRoot"
                     @updateProjects="updateProjectDb"/>
         </ul>
     </nav>
@@ -59,6 +60,23 @@
         this.$projectDb.update({id: 2}, this.projects[1])
         console.log('updating project dependencies in store')
         this.$store.commit('createProjectDependencies', this.projects)
+      },
+      removeFromRoot: function (uuid) {
+        let removeFromChildren = function (project, id) {
+          if (!project.children) {
+            return
+          }
+          let childrenIds = project.children.map(p => p.id)
+          if (childrenIds.includes(id)) {
+            let filtered = project.children.filter(p => p.id !== uuid)
+            project.children = filtered
+            console.log('uuid ' + uuid + ' removed from root.')
+          } else {
+            project.children.forEach(p => removeFromChildren(p, id))
+          }
+        }
+        this.projects.forEach(p => removeFromChildren(p, uuid))
+        this.updateProjectDb()
       }
     }
   }
