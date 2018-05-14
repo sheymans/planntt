@@ -1,8 +1,5 @@
 <template>
     <nav class="panel">
-        <p class="panel-heading">
-            projects
-        </p>
         <ul v-if="projects.length">
             <Project
                     v-for="project in projects"

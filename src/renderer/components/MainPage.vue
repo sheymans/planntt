@@ -1,25 +1,12 @@
 <template>
     <div id="mainPage">
-        <nav class="navbar" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
-                <a class="navbar-item">
-                    <!--<img src="https://bulma.io/images/bulma-logo.png" alt="planntt: automatic scheduling" width="112" height="28">-->
-                    <tt>planntt</tt>
-                </a>
+        <div class="header"><tt>planntt</tt></div>
+        <div class="content">
+            <div class="projectList">
+                <ProjectList/>
             </div>
-        </nav>
-        <section>
-            <div class="container">
-                <div class="columns">
-                    <div class="column is-one-fifth">
-                        <ProjectList/>
-                    </div>
-                    <div class="column">
-                        <TaskList/>
-                    </div>
-                </div>
-            </div>
-        </section>
+            <TaskList/>
+        </div>
     </div>
 </template>
 
@@ -45,5 +32,14 @@
 </script>
 
 <style scoped>
+
+    .content {
+    }
+
+    .projectList {
+        float: left;
+        width: 20%;
+        overflow: auto;
+    }
 
 </style>

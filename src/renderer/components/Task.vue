@@ -1,12 +1,12 @@
 import Vue from 'vue'
 
 <template>
-    <a class="panel-block" :class="{selected: isSelectedTask}" @click="selectTask">
+    <li :class="{selected: isSelectedTask}" @click="selectTask">
         <label class="checkbox">
             <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
         </label>
         <span v-draggable="task">{{ task.name }}</span>
-    </a>
+    </li>
 </template>
 
 <script>
@@ -52,6 +52,11 @@ import Vue from 'vue'
 </script>
 
 <style scoped>
+
+    li {
+        list-style: none;
+    }
+
     .selected {
         background-color: black;
         color: white;

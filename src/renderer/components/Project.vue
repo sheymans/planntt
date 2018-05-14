@@ -233,6 +233,10 @@ import Vue from 'vue'
         list-style-type: dot;
     }
 
+    li {
+        list-style: none;
+    }
+
     .selected {
         background-color: black;
         color: white;

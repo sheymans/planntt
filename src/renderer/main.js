@@ -6,7 +6,6 @@ import router from './router'
 import store from './store'
 import projectDb from './datastore/projects'
 import taskDb from './datastore/tasks'
-import 'bulma/css/bulma.css'
 
 /* Drag and drop */
 import vDragDrop from 'v-drag-drop'

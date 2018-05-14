@@ -1,40 +1,45 @@
 <template>
-    <div class="columns">
-        <div class="column">
-            <nav class="panel">
-                <p class="panel-heading">
-                    {{numberOfProjectTasks}} {{numberOfProjectTasks | pluralize }} in <b>{{selectedProjectName}}</b>
+    <div class="taskList">
+        <div class="tasks">
+            <div class="taskHeader">
+                <p>
+                    <i>{{numberOfProjectTasks}} {{numberOfProjectTasks | pluralize }} in <b>{{selectedProjectName}}</b></i>
                 </p>
-                <div class="panel-block">
-                    <input class="input is-rounded"
-                           autofocus autocomplete="off"
-                           placeholder="Add a task to this project"
-                           v-model="newTaskText"
-                           @keyup.enter="addTask">
-                </div>
-                <p class="panel-tabs">
-                    <a :class="{'is-active': isTabActive('all')}" @click="setActiveTab('all')">all</a>
-                    <a :class="{'is-active': isTabActive('today')}" @click="setActiveTab('today')">today</a>
-                    <a :class="{'is-active': isTabActive('thisweek')}" @click="setActiveTab('thisweek')">this week</a>
-                    <a :class="{'is-active': isTabActive('waitingfor')}" @click="setActiveTab('waitingfor')">waiting for</a>
-                    <a :class="{'is-active': isTabActive('someday')}" @click="setActiveTab('someday')">someday</a>
-                </p>
-                <div v-if="projectTasks.length">
+            </div>
+            <div class="taskInput">
+                <input class="input is-rounded"
+                       autofocus autocomplete="off"
+                       placeholder="Add a task to this project"
+                       v-model="newTaskText"
+                       @keyup.enter="addTask">
+            </div>
+            <div class="taskTabs">
+                <a :class="{'is-active': isTabActive('all')}" @click="setActiveTab('all')">all</a>
+                <a :class="{'is-active': isTabActive('today')}" @click="setActiveTab('today')">today</a>
+                <a :class="{'is-active': isTabActive('thisweek')}" @click="setActiveTab('thisweek')">this week</a>
+                <a :class="{'is-active': isTabActive('waitingfor')}" @click="setActiveTab('waitingfor')">waiting for</a>
+                <a :class="{'is-active': isTabActive('someday')}" @click="setActiveTab('someday')">someday</a>
+            </div>
+
+            <div class="theSelectableTaskList">
+                <ul v-if="projectTasks.length">
                     <Task v-for="task in projectTasks"
                           :key="task.id"
                           :task="task"/>
-                </div>
-                <a class="panel-block" v-if="!projectTasks.length">
+                </ul>
+                <a v-if="!projectTasks.length">
                     no tasks in this project
                 </a>
-                <div v-show="numberOfCompletedProjectTasks > 0" class="panel-block">
-                    <button class="button is-link is-outlined is-fullwidth" @click="removeCompleted">
-                        remove completed
-                    </button>
-                </div>
-            </nav>
+            </div>
+
+            <div v-show="numberOfCompletedProjectTasks > 0" class="removeTasks">
+                <button class="button is-link is-outlined is-fullwidth" @click="removeCompleted">
+                    remove completed
+                </button>
+            </div>
         </div>
-        <div class="column">
+
+        <div class="taskDetail">
             <TaskDetail @updateTask="updateTask" :task="selectedTask"/>
         </div>
     </div>
@@ -191,6 +196,40 @@
 </script>
 
 <style scoped>
+
+    .taskList {
+        float: left;
+        width: 80%;
+    }
+
+    /** 2 children of .tasklist **/
+    .tasks {
+        float: left;
+        width: 40%;
+        overflow: auto;
+    }
+
+    .taskDetail {
+        float: left;
+        width: 60%;
+    }
+
+    .taskHeader {
+        overflow: auto;
+    }
+
+    .taskInput {
+
+    }
+
+    .taskTabs {
+
+    }
+
+    .removeTasks {
+
+    }
+
     ul {
         padding-left: 1em;
         line-height: 1.5em;

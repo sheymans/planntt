@@ -101,7 +101,9 @@ import Vue from 'vue'
         return this.$store.getters.getSelectedProjectName
       },
       markedNote: function () {
-        return marked(this.task.note, {renderer: renderer})
+        if (this.task.note) {
+          return marked(this.task.note, {renderer: renderer})
+        }
       }
     },
     filters: {
