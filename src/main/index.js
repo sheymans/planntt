@@ -10,6 +10,9 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
+// Open links using user's preferred application
+let open = require('open')
+
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
@@ -29,6 +32,12 @@ function createWindow () {
 
   mainWindow.on('closed', () => {
     mainWindow = null
+  })
+
+  // https://github.com/electron/electron/issues/1344
+  mainWindow.webContents.on('new-window', function (event, url) {
+    event.preventDefault()
+    open(url)
   })
 }
 
