@@ -151,6 +151,7 @@
       },
       removeCompleted: function () {
         let projectsToConsiderForRemoval = this.$store.getters.getStoredDescendantProjectIdsOfSelected
+        let selectedTask = this.$store.getters.getSelectedTask
         let newTasks = []
         this.tasks.forEach(task => {
           let keepTask = !projectsToConsiderForRemoval.includes(task.project) || !task.completed
@@ -158,6 +159,10 @@
             newTasks.push(task)
           } else {
             this.$taskDb.remove(task)
+            // Also remove selected task if it is no longer in newTasks (in other words the selected task was removed)
+            if (selectedTask.id === task.id) {
+              this.unsetSelectedTask()
+            }
           }
         })
         this.tasks = newTasks
