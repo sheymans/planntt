@@ -1,11 +1,11 @@
 import Vue from 'vue'
 
 <template>
-    <a class="panel-block" :class="{selected: isSelectedTask}">
+    <a class="panel-block" :class="{selected: isSelectedTask}" @click="selectTask">
         <label class="checkbox">
             <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
         </label>
-        <span v-draggable="task" @click="selectTask">{{ task.name }}</span>
+        <span v-draggable="task">{{ task.name }}</span>
     </a>
 </template>
 
