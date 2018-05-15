@@ -3,7 +3,7 @@ import Vue from 'vue'
 <template>
     <li>
         <div>
-            <span @click="toggle">
+            <span @click="toggle" :class="{selected: isSelectedProject, dragReady: dragHappening}">
                 <font-awesome-icon :icon="getFolderIcon"/>
             </span>
             <span v-show="!editing"
@@ -16,6 +16,7 @@ import Vue from 'vue'
                 {{ project.name }}</span>
             <input v-show="editing"
                    type="text"
+                   :class="{selected: isSelectedProject}"
                    class="input is-rounded"
                    v-model="project.name"
                    @blur="doneEdit"
@@ -238,18 +239,13 @@ import Vue from 'vue'
     }
 
     .selected {
-        background-color: black;
-        color: white;
-        border-radius: 10px;
-        padding: 2px;
+        text-decoration: underline;
+        color: forestgreen;
     }
 
     .dragReady {
-        background-color: black;
         opacity: 0.5;
-        color: white;
-        border-radius: 10px;
-        padding: 2px;
+        color: forestgreen;
     }
 
 </style>
