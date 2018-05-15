@@ -114,6 +114,10 @@ import Vue from 'vue'
         if (project.id === 1 || project.id === 2) {
           return
         }
+        // You cannot drop a project into itself
+        if (this.project.id === project.id) {
+          return
+        }
         // Remove the project you want to drop from the tree
         this.removeFromRoot(project.id)
         // And add it now as a child of this project you're dropping it on
