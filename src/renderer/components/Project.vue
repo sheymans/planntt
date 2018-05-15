@@ -10,6 +10,7 @@ import Vue from 'vue'
                   @contextmenu.prevent="$refs.ctxMenu.open"
                   @click="selectProject"
                   @dblclick="startEdit"
+                  class="hasContextMenu"
                   v-draggable="project"
                   v-droppable @drag-drop="handleDrop" @drag-over="handleDragOver" @drag-leave="handleDragLeave"
                   :class="{selected: isSelectedProject, dragReady: dragHappening}">
@@ -250,6 +251,10 @@ import Vue from 'vue'
     .dragReady {
         opacity: 0.5;
         color: forestgreen;
+    }
+
+    .hasContextMenu {
+        cursor: context-menu;
     }
 
 </style>

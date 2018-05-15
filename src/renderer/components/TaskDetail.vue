@@ -2,10 +2,6 @@ import Vue from 'vue'
 
 <template>
     <div>
-        <h2>task detail</h2>
-        <div v-if="!task.name">
-            no task selected
-        </div>
         <div v-if="task.name">
              <span v-show="!editingTaskName">
                 {{ task.name }} &nbsp;</span>

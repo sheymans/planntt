@@ -2,23 +2,19 @@
     <div class="taskList">
         <div class="tasks">
             <div class="taskHeader">
-                <p>
-                    <i>{{numberOfProjectTasks}} {{numberOfProjectTasks | pluralize }} in <b>{{selectedProjectName}}</b></i>
-                </p>
+                    <b>{{selectedProjectName | capitalize}} ({{numberOfProjectTasks}})</b>
             </div>
-            <div class="taskInput">
-                <input class="input is-rounded"
-                       autofocus autocomplete="off"
-                       placeholder="Add a task to this project"
-                       v-model="newTaskText"
-                       @keyup.enter="addTask">
-            </div>
+            <input class="taskInput"
+                   autofocus autocomplete="off"
+                   placeholder="Add a task to this project"
+                   v-model="newTaskText"
+                   @keyup.enter="addTask">
             <div class="taskTabs">
-                <a :class="{'is-active': isTabActive('all')}" @click="setActiveTab('all')">all</a>
-                <a :class="{'is-active': isTabActive('today')}" @click="setActiveTab('today')">today</a>
-                <a :class="{'is-active': isTabActive('thisweek')}" @click="setActiveTab('thisweek')">this week</a>
-                <a :class="{'is-active': isTabActive('waitingfor')}" @click="setActiveTab('waitingfor')">waiting for</a>
-                <a :class="{'is-active': isTabActive('someday')}" @click="setActiveTab('someday')">someday</a>
+                <a :class="{'is-active': isTabActive('all')}" class="taskTab" @click="setActiveTab('all')">all</a>
+                <a :class="{'is-active': isTabActive('today')}" class="taskTab" @click="setActiveTab('today')">today</a>
+                <a :class="{'is-active': isTabActive('thisweek')}" class="taskTab" @click="setActiveTab('thisweek')">this week</a>
+                <a :class="{'is-active': isTabActive('waitingfor')}" class="taskTab" @click="setActiveTab('waitingfor')">waiting for</a>
+                <a :class="{'is-active': isTabActive('someday')}" class="taskTab" @click="setActiveTab('someday')">someday</a>
             </div>
 
             <div class="theSelectableTaskList">
@@ -27,15 +23,10 @@
                           :key="task.id"
                           :task="task"/>
                 </ul>
-                <a v-if="!projectTasks.length">
-                    no tasks in this project
-                </a>
             </div>
 
-            <div v-show="numberOfCompletedProjectTasks > 0" class="removeTasks">
-                <button class="button is-link is-outlined is-fullwidth" @click="removeCompleted">
-                    remove completed
-                </button>
+            <div v-show="numberOfCompletedProjectTasks > 0" class="removeTasks" @click="removeCompleted">
+                remove completed
             </div>
         </div>
 
@@ -130,6 +121,11 @@
     filters: {
       pluralize: function (n) {
         return n === 1 ? 'task' : 'tasks'
+      },
+      capitalize: function (value) {
+        if (!value) return ''
+        value = value.toString()
+        return value.charAt(0).toUpperCase() + value.slice(1)
       }
     },
     methods: {
@@ -216,18 +212,38 @@
 
     .taskHeader {
         overflow: auto;
+        padding-bottom: 20px;
     }
 
     .taskInput {
-
+        width: 70%;
+        /** center the taskInput: **/
+        margin: auto;
+        margin-bottom: 20px;
     }
 
     .taskTabs {
+        padding-bottom: 20px;
+        padding-top: 5px;
+    }
 
+    .taskTab {
+        text-decoration: underline;
+        cursor:pointer;
+        padding-right: 5px;
+    }
+
+    .is-active {
+        text-decoration: underline;
+        cursor:pointer;
+        color: forestgreen;
     }
 
     .removeTasks {
-
+        cursor:pointer;
+        float:right;
+        color: forestgreen;
+        text-decoration: underline;
     }
 
     ul {
