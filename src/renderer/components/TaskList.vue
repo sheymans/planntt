@@ -26,7 +26,7 @@
             </div>
 
             <div v-show="numberOfCompletedProjectTasks > 0" class="removeTasks" @click="removeCompleted">
-                remove completed
+                remove marked
             </div>
         </div>
 

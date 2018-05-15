@@ -33,19 +33,33 @@ import Vue from 'vue'
             </a>
         </div>
 
-        <div v-if="task.name" class="taskNoteHeader">
-            <div class="taskNoteHeaderText"><i>Note:</i></div>
-            <font-awesome-icon v-show="!editingNote" @click="startEditNote" icon="pencil-alt"
-                               class="taskNoteIcon"/>
+        <div v-if="task.name" v-show="!editingNote && !task.note" class="is-active addNote" @click="startEditNote">
+            add note
         </div>
-        <div class="taskNote">
-            <div v-show="!editingNote" v-html="markedNote"></div>
-            <div v-show="editingNote">
-                <a @click="doneEditNote">save</a> |
-                <a @click="cancelEditNote">cancel</a>
-                <textarea class="textarea" placeholder="add your note here" rows="10" v-model="task.note"></textarea>
+
+        <div class="taskNote" v-if="task.name">
+            <div class="row">
+                <div v-show="!editingNote" class="noteDisplay" v-html="markedNote"></div>
+                <div v-show="editingNote">
+                    <textarea class="noteInput" placeholder="add your note here" v-model="task.note" @blur="doneEditNote"></textarea>
+                </div>
+            </div>
+
+            <div v-show="editingNote" class="controlsLine">
+                <div class="editNoteControls">
+                    <a @click="doneEditNote" class="is-active clickable">save</a>
+                    <a @click="cancelEditNote" class="clickable">cancel</a>
+                </div>
+            </div>
+            <div v-show="!editingNote" class="controlsLine">
+                <div class="editNoteControls">
+                    <div v-show="task.note" class="is-active" @click="startEditNote">
+                        edit note
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
     </div>
 </template>
 
@@ -209,19 +223,9 @@ import Vue from 'vue'
         padding-bottom: 20px;
     }
 
-    .taskNoteHeader {
+    .addNote {
         width: 100%;
         float: left;
-    }
-
-    .taskNoteHeaderText {
-        width: 80%;
-        float: left
-    }
-
-    .taskNoteIcon {
-        width: 20%;
-        float: right;
     }
 
     .taskNote {
@@ -229,6 +233,32 @@ import Vue from 'vue'
         float: left;
     }
 
+    .noteDisplay {
+        width: 80%;
+    }
+
+    .noteInput {
+        width: 80%;
+        height: 80%;
+    }
+
+    .controlsLine {
+        width: 80%;
+    }
+
+    .editNoteControls {
+        float: right;
+    }
+
+    .clickable {
+        text-decoration: underline;
+        cursor:pointer;
+        padding-right: 5px;
+    }
+
+    .row {
+        width: 100%;
+    }
 
 
 
