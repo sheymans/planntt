@@ -37,7 +37,7 @@ import Vue from 'vue'
             <div class="row">
                 <div v-show="!editingNote" class="noteDisplay" v-html="markedNote"></div>
                 <div v-show="editingNote">
-                    <textarea class="noteInput" rows=20 placeholder="add your note here" v-model="task.note" @blur="doneEditNote"></textarea>
+                    <textarea class="noteInput" rows=20 placeholder="add your note here" v-model="task.note"></textarea>
                 </div>
             </div>
 
@@ -139,6 +139,7 @@ import Vue from 'vue'
         this.saveTask(this.task)
       },
       cancelEditTaskName: function () {
+        console.log('text before editing: ' + this.taskNameBeforeEdit)
         this.task.name = this.taskNameBeforeEdit
         this.taskNameBeforeEdit = null
         this.editingTaskName = false

@@ -125,6 +125,8 @@ import Vue from 'vue'
         if (!this.isNonEmptyFolder) {
           this.$set(this.project, 'children', [])
         }
+        console.log('project that is added to children: ' + project)
+        console.log('of this project: ' + this.project.name)
         this.project.children.push(project)
         this.updateProjects()
         this.open = true
