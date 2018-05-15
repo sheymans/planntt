@@ -45,6 +45,7 @@ import Vue from 'vue'
                 <div class="editNoteControls">
                     <a @click="doneEditNote" class="is-active clickable">save</a>
                     <a @click="cancelEditNote" class="clickable">cancel</a>
+                    <a @click="deleteEditNote" class="clickable">delete</a>
                 </div>
             </div>
             <div v-show="!editingNote" class="controlsLine">
@@ -148,19 +149,23 @@ import Vue from 'vue'
         console.log('starting to edit note')
         this.noteBeforeEdit = this.task.note
         this.editingNote = true
-        marked('bla')
       },
       doneEditNote: function () {
         console.log('done to edit note')
         this.editingNote = false
         this.noteBeforeEdit = null
         this.saveTask(this.task)
-        marked('bla')
       },
       cancelEditNote: function () {
         console.log('cancel edit note')
         this.task.note = this.noteBeforeEdit
         this.noteBeforeEdit = null
+        this.editingNote = false
+      },
+      deleteEditNote: function () {
+        console.log('delete edit note')
+        this.task.note = null
+        this.saveTask(this.task)
         this.editingNote = false
       },
       saveTask: function (task) {
