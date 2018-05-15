@@ -16,38 +16,22 @@ import Vue from 'vue'
                    v-focus="editingTaskName"/>
             <font-awesome-icon v-show="!editingTaskName" pull="left" @click="startEditTaskName" icon="pencil-alt"/>
         </div>
-        <div v-if="task.name">
-            <div class="dropdown" :class="{'is-active': isWhenDropdownActive}">
-                <div class="dropdown-trigger">
-                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" @click="setWhenDropdownActive">
-                        <span v-if="task.when !== 'all'">{{task.when | prettyWhen}}</span>
-                        <span v-if="task.when === 'all'">When</span>
-                        <span class="icon is-small">
-                            <font-awesome-icon icon="caret-down"/>
-                        </span>
-                    </button>
-                </div>
-                <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                    <div class="dropdown-content">
-                        <a href="#" @click="setWhen('today')" class="dropdown-item">
-                            Today
-                        </a>
-                        <a  @click="setWhen('thisweek')" class="dropdown-item">
-                            This Week
-                        </a>
-                        <a  @click="setWhen('waitingfor')"  href="#" class="dropdown-item">
-                            Waiting For
-                        </a>
-                        <a  @click="setWhen('someday')" href="#" class="dropdown-item">
-                            Someday
-                        </a>
-                    </div>
-                </div>
-            </div>
+
+        <div v-if="task.name" class="whenChoices">
+            <a @click="setWhen('today')" :class="{'is-active': task.when === 'today'}" class="whenChoice">
+                today
+            </a>
+            <a @click="setWhen('thisweek')" :class="{'is-active': task.when === 'thisweek'}" class="whenChoice">
+                this week
+            </a>
+            <a @click="setWhen('waitingfor')" :class="{'is-active': task.when === 'waitingfor'}" class="whenChoice">
+                waiting for
+            </a>
+            <a @click="setWhen('someday')" :class="{'is-active': task.when === 'someday'}" class="whenChoice">
+                someday
+            </a>
         </div>
-        <div v-if="task.name">
-            project: {{task.projectName}}
-        </div>
+
         <div v-if="task.name">
             <b>Note</b>
             <font-awesome-icon v-show="!editingNote" pull="left" @click="startEditNote" icon="pencil-alt"/>
@@ -85,7 +69,6 @@ import Vue from 'vue'
     data: function () {
       return {
         editingTaskName: false,
-        isWhenDropdownActive: false,
         editingNote: false
       }
     },
@@ -119,17 +102,9 @@ import Vue from 'vue'
       }
     },
     methods: {
-      setWhenDropdownActive: function () {
-        if (this.isWhenDropdownActive) {
-          this.isWhenDropdownActive = false
-        } else {
-          this.isWhenDropdownActive = true
-        }
-      },
       setWhen: function (when) {
         console.log('setting task to when: ' + when)
         this.task.when = when
-        this.isWhenDropdownActive = false
         this.saveTask(this.task)
       },
       startEditTaskName: function () {
@@ -191,5 +166,17 @@ import Vue from 'vue'
 </script>
 
 <style scoped>
+
+    .whenChoice {
+        text-decoration: underline;
+        cursor:pointer;
+        padding-right: 5px;
+    }
+
+    .is-active {
+        text-decoration: underline;
+        cursor:pointer;
+        color: forestgreen;
+    }
 
 </style>

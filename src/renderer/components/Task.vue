@@ -1,11 +1,9 @@
 import Vue from 'vue'
 
 <template>
-    <li :class="{selected: isSelectedTask}" @click="selectTask">
-        <label class="checkbox">
-            <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
-        </label>
-        <span v-draggable="task">{{ task.name }}</span>
+    <li>
+        <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
+        <span :class="{selected: isSelectedTask}" @click="selectTask" v-draggable="task" class="taskSummary">{{ task.name }}</span>
     </li>
 </template>
 
@@ -57,8 +55,12 @@ import Vue from 'vue'
         list-style: none;
     }
 
+    .taskSummary:hover {
+        background-color: chartreuse;
+    }
+
     .selected {
-        background-color: black;
-        color: white;
+        text-decoration: underline;
+        color: forestgreen;
     }
 </style>
