@@ -33,6 +33,14 @@
 
 <style scoped>
 
+    #mainPage {
+        font-family: 'Roboto Mono';
+        font-style: normal;
+        font-weight: 300;
+        font-size: 9pt;
+        -webkit-font-smoothing: antialiased;
+    }
+
     .content {
     }
 

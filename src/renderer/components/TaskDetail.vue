@@ -20,17 +20,13 @@ import Vue from 'vue'
 
         <div v-if="task.name" class="whenChoices">
             <a @click="setWhen('today')" :class="{'is-active': task.when === 'today'}" class="whenChoice">
-                today
-            </a>
+                today</a>
             <a @click="setWhen('thisweek')" :class="{'is-active': task.when === 'thisweek'}" class="whenChoice">
-                this week
-            </a>
+                this week</a>
             <a @click="setWhen('waitingfor')" :class="{'is-active': task.when === 'waitingfor'}" class="whenChoice">
-                waiting for
-            </a>
+                waiting for</a>
             <a @click="setWhen('someday')" :class="{'is-active': task.when === 'someday'}" class="whenChoice">
-                someday
-            </a>
+                someday</a>
         </div>
 
         <div v-if="task.name" v-show="!editingNote && !task.note" class="is-active addNote" @click="startEditNote">
@@ -41,7 +37,7 @@ import Vue from 'vue'
             <div class="row">
                 <div v-show="!editingNote" class="noteDisplay" v-html="markedNote"></div>
                 <div v-show="editingNote">
-                    <textarea class="noteInput" placeholder="add your note here" v-model="task.note" @blur="doneEditNote"></textarea>
+                    <textarea class="noteInput" rows=20 placeholder="add your note here" v-model="task.note" @blur="doneEditNote"></textarea>
                 </div>
             </div>
 
@@ -231,6 +227,11 @@ import Vue from 'vue'
     .taskNote {
         width: 100%;
         float: left;
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 100;
+        font-size: 12pt;
+        -webkit-font-smoothing: antialiased;
     }
 
     .noteDisplay {
@@ -258,6 +259,14 @@ import Vue from 'vue'
 
     .row {
         width: 100%;
+    }
+
+    input {
+        font: inherit;
+    }
+
+    textarea {
+        font: inherit;
     }
 
 

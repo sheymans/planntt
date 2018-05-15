@@ -252,4 +252,8 @@
         list-style-type: dot;
     }
 
+    input {
+        font: inherit;
+    }
+
 </style>

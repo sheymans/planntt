@@ -18,7 +18,7 @@ import Vue from 'vue'
             <input v-show="editing"
                    type="text"
                    :class="{selected: isSelectedProject}"
-                   class="input is-rounded"
+                   class="projectInput"
                    v-model="project.name"
                    @blur="doneEdit"
                    @keyup.enter="doneEdit"
@@ -256,5 +256,14 @@ import Vue from 'vue'
     .hasContextMenu {
         cursor: context-menu;
     }
+
+    input {
+        font: inherit;
+    }
+
+    .projectInput {
+        width: 100px;
+    }
+
 
 </style>
