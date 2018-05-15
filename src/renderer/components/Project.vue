@@ -275,4 +275,8 @@ import Vue from 'vue'
         background-color: chartreuse;
     }
 
+    #context-menu {
+        cursor: default;
+    }
+
 </style>
