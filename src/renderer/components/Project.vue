@@ -38,7 +38,7 @@ import Vue from 'vue'
             </Project>
         </ul>
         <context-menu id="context-menu" ref="ctxMenu">
-    <li @click="addSubProject">Add subproject</li>
+    <li @click="addSubProject">Add subfolder</li>
     <li v-if="!isSpecialProject()" @click="$emit('remove', project.id)">Remove</li>
     </context-menu>
     </li>
