@@ -8,6 +8,7 @@ import projectDb from './datastore/projects'
 import taskDb from './datastore/tasks'
 import 'typeface-roboto/index.css'
 import 'typeface-roboto-mono/index.css'
+import 'typeface-raleway/index.css'
 
 /* Drag and drop */
 import vDragDrop from 'v-drag-drop'

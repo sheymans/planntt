@@ -34,10 +34,10 @@
 <style scoped>
 
     #mainPage {
-        font-family: 'Roboto Mono';
+        font-family: 'Raleway';
         font-style: normal;
-        font-weight: 300;
-        font-size: 9pt;
+        font-weight: 500;
+        font-size: 10pt;
         -webkit-font-smoothing: antialiased;
     }
 

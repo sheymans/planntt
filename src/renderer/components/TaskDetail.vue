@@ -232,20 +232,23 @@ import Vue from 'vue'
     .taskNote {
         width: 100%;
         float: left;
-        font-family: 'Roboto';
-        font-style: normal;
-        font-weight: 100;
-        font-size: 12pt;
-        -webkit-font-smoothing: antialiased;
     }
 
     .noteDisplay {
         width: 80%;
+        font-family: 'Roboto Mono';
+        font-style: normal;
+        font-weight: 100;
+        -webkit-font-smoothing: antialiased;
     }
 
     .noteInput {
         width: 80%;
         height: 80%;
+        font-family: 'Roboto Mono';
+        font-style: normal;
+        font-weight: 100;
+        -webkit-font-smoothing: antialiased;
     }
 
     .controlsLine {
