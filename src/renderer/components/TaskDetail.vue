@@ -2,19 +2,20 @@ import Vue from 'vue'
 
 <template>
     <div>
-        <div v-if="task.name">
-             <span v-show="!editingTaskName">
-                {{ task.name }} &nbsp;</span>
+        <div v-if="task.name" class="editTask">
+            <div v-show="!editingTaskName" class="taskNameToEdit">
+                <b>{{ task.name }}</b></div>
             <input v-show="editingTaskName"
                    type="text"
-                   class="input is-rounded"
+                   class="inputTaskNameToEdit"
                    v-model="task.name"
                    @blur="doneEditTaskName"
                    @keyup.enter="doneEditTaskName"
                    @keyup.esc="cancelEditTaskName"
                    @focus="$event.target.select()"
                    v-focus="editingTaskName"/>
-            <font-awesome-icon v-show="!editingTaskName" pull="left" @click="startEditTaskName" icon="pencil-alt"/>
+            <font-awesome-icon v-show="!editingTaskName" @click="startEditTaskName" icon="pencil-alt"
+                               class="iconTaskNameToEdit"/>
         </div>
 
         <div v-if="task.name" class="whenChoices">
@@ -32,15 +33,18 @@ import Vue from 'vue'
             </a>
         </div>
 
-        <div v-if="task.name">
-            <b>Note</b>
-            <font-awesome-icon v-show="!editingNote" pull="left" @click="startEditNote" icon="pencil-alt"/>
-            <div v-show="!editingNote" v-html="markedNote"></div>
+        <div v-if="task.name" class="taskNoteHeader">
+            <div class="taskNoteHeaderText"><i>Note:</i></div>
+            <font-awesome-icon v-show="!editingNote" @click="startEditNote" icon="pencil-alt"
+                               class="taskNoteIcon"/>
         </div>
-        <div v-show="editingNote">
-            <a @click="doneEditNote">save</a> |
-            <a @click="cancelEditNote">cancel</a>
-            <textarea class="textarea" placeholder="add your note here" rows="10" v-model="task.note"></textarea>
+        <div class="taskNote">
+            <div v-show="!editingNote" v-html="markedNote"></div>
+            <div v-show="editingNote">
+                <a @click="doneEditNote">save</a> |
+                <a @click="cancelEditNote">cancel</a>
+                <textarea class="textarea" placeholder="add your note here" rows="10" v-model="task.note"></textarea>
+            </div>
         </div>
     </div>
 </template>
@@ -178,5 +182,54 @@ import Vue from 'vue'
         cursor:pointer;
         color: forestgreen;
     }
+
+    .editTask {
+        width: 100%;
+        float: left;
+        padding-bottom: 20px;
+    }
+
+    .taskNameToEdit {
+        width: 80%;
+        float:left
+    }
+
+    .inputTaskNameToEdit {
+        width: 80%;
+        float: left;
+    }
+
+    iconTaskNameToEdit {
+        width: 20%;
+        float: right;
+    }
+
+    .whenChoices {
+        float: left;
+        padding-bottom: 20px;
+    }
+
+    .taskNoteHeader {
+        width: 100%;
+        float: left;
+    }
+
+    .taskNoteHeaderText {
+        width: 80%;
+        float: left
+    }
+
+    .taskNoteIcon {
+        width: 20%;
+        float: right;
+    }
+
+    .taskNote {
+        width: 100%;
+        float: left;
+    }
+
+
+
 
 </style>
