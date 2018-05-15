@@ -265,5 +265,12 @@ import Vue from 'vue'
         width: 100px;
     }
 
+    input:focus {
+        outline-color: chartreuse;
+    }
+
+    input::selection {
+        background-color: chartreuse;
+    }
 
 </style>

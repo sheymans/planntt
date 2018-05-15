@@ -256,4 +256,12 @@
         font: inherit;
     }
 
+    input:focus {
+        outline-color: chartreuse;
+    }
+
+    input::selection {
+        background-color: chartreuse;
+    }
+
 </style>

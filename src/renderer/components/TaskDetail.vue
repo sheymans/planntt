@@ -209,6 +209,11 @@ import Vue from 'vue'
         float: left;
     }
 
+    .inputTaskNameToEdit:focus {
+        outline-color: chartreuse;
+    }
+
+
     iconTaskNameToEdit {
         width: 20%;
         float: right;
@@ -265,8 +270,16 @@ import Vue from 'vue'
         font: inherit;
     }
 
+    input::selection {
+        background-color: chartreuse;
+    }
+
     textarea {
         font: inherit;
+    }
+
+    textarea:focus {
+        outline-color: chartreuse;
     }
 
 
