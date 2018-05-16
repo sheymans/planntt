@@ -13,6 +13,9 @@ if (process.env.NODE_ENV !== 'development') {
 // Open links using user's preferred application
 let open = require('open')
 
+// Icons
+let path = require('path')
+
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
@@ -25,7 +28,8 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
-    width: 1000
+    width: 1000,
+    icon: path.join(__dirname, 'assets/icons/png/64x64.png')
   })
 
   mainWindow.loadURL(winURL)
