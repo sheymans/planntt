@@ -1,6 +1,8 @@
 <template>
     <div id="mainPage">
-        <div class="header"><tt>planntt</tt></div>
+        <div class="header">
+            <img id="logo" src="~@/assets/planntt.png" alt="planntt">
+        </div>
         <div class="content">
             <div class="projectList">
                 <ProjectList/>
@@ -42,12 +44,19 @@
     }
 
     .content {
+        margin-left: 50px;
     }
 
     .projectList {
         float: left;
         width: 20%;
         overflow: auto;
+    }
+
+    #logo {
+        width: 80px;
+        height: auto;
+        margin-bottom: 20px;
     }
 
 </style>
