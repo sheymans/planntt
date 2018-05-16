@@ -57,6 +57,8 @@
         width: 80px;
         height: auto;
         margin-bottom: 20px;
+        margin-left: 10px;
+        margin-top: 10px;
     }
 
 </style>
