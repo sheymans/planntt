@@ -1,8 +1,9 @@
 {
   "name": "planntt",
-  "version": "0.0.0",
-  "author": "Stijn Heymans <stijn.heymans@gmail.com>",
-  "description": "An Automatic Scheduler.",
+  "version": "0.0.1",
+  "author": "Sheldonize, LLC <stijn.heymans@gmail.com>",
+  "description": "A Simple ToDo Application",
+  "homepage": "http://planntt.com",
   "license": "UNLICENSED",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -21,6 +22,7 @@
   "build": {
     "productName": "planntt",
     "appId": "com.planntt",
+    "copyright": "Copyright © 2018 ${author}",
     "directories": {
       "output": "build"
     },
@@ -42,13 +44,15 @@
         }
       ]
     },
+    "win": {
+      "target": "NSIS",
+      "icon": "build/icons/planntt_icon.ico"
+    },
     "mac": {
       "icon": "build/icons/planntt_icon.icns"
     },
-    "win": {
-      "icon": "build/icons/planntt_icon.ico"
-    },
     "linux": {
+      "target": ["AppImage", "tar.gz"],
       "icon": "build/icons"
     }
   },
