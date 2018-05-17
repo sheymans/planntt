@@ -44,6 +44,9 @@ function createWindow () {
     event.preventDefault()
     open(url)
   })
+
+  // Get in custom menu
+  require('./menu/mainmenu')
 }
 
 app.on('ready', createWindow)
