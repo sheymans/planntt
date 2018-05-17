@@ -279,4 +279,12 @@ import Vue from 'vue'
         cursor: default;
     }
 
+    #context-menu li {
+        padding-left: 5px;
+    }
+
+    #context-menu li:hover {
+        background-color: chartreuse;
+    }
+
 </style>
