@@ -61,12 +61,6 @@
         "dmg"
       ],
       "icon": "build/icons/planntt_icon.icns"
-    },
-    "linux": {
-      "target": [
-        "AppImage"
-      ],
-      "icon": "build/icons"
     }
   },
   "dependencies": {
