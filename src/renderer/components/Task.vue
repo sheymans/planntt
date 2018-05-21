@@ -3,7 +3,7 @@ import Vue from 'vue'
 <template>
     <li class="taskItem">
         <input class="taskCheckbox" type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
-        <span class="projectLabel">{{ getProjectName }}</span>
+        <span class="projectLabel">{{ getProjectName}}</span>
         <span :class="{selected: isSelectedTask}" @click="selectTask" v-draggable="task" class="taskSummary">{{ task.name }}</span>
     </li>
 </template>
@@ -34,7 +34,13 @@ import Vue from 'vue'
     },
     filters: {
       shorten: function (n) {
-        return n.toString().substring(0, 5)
+        let nString = n.toString()
+        let l = nString.length
+        if (l > 12) {
+          let shortened = nString.substring(0, 12)
+          return `${shortened}..`
+        }
+        return nString
       }
     },
     methods: {
@@ -71,7 +77,6 @@ import Vue from 'vue'
 
     .taskCheckbox {
         float:left;
-        width: 2%;
     }
 
     .taskSummary:hover {
