@@ -1,9 +1,12 @@
+import Vue from 'vue'
+
 const state = {
   // INBOX is by default selected
   selected: 1,
   selectedProjectName: 'INBOX',
   subProjects: {},
-  deletedProjects: []
+  deletedProjects: [],
+  projectNames: {}
 }
 
 const getters = {
@@ -12,6 +15,12 @@ const getters = {
   },
   getSelectedProjectName (state) {
     return state.selectedProjectName
+  },
+  getProjectName (state) {
+    let getProjectNameTemp = (id) => {
+      return state.projectNames[id]
+    }
+    return getProjectNameTemp
   },
   getStoredDescendantProjectIdsOfSelected (state) {
     if (!state.selected) {
@@ -71,6 +80,20 @@ const mutations = {
         mutations.createProjectDependencies(state, project.children)
       }
     })
+  },
+  createProjectNames (state, projects) {
+    projects.forEach(project => {
+      console.log('setting project name of id ' + project.id + ' to ' + project.name)
+      Vue.set(state.projectNames, project.id, project.name)
+      // And do the same for all its children:
+      if (project.children) {
+        mutations.createProjectNames(state, project.children)
+      }
+    })
+  },
+  setProjectName (state, project) {
+    console.log('setting project name in store ' + project.name)
+    Vue.set(state.projectNames, project.id, project.name)
   }
 }
 

@@ -103,7 +103,6 @@ import Vue from 'vue'
       handleDropTask: function (task) {
         console.log('dropped task: ' + task.name + ' in project ' + this.project.name)
         task.project = this.project.id
-        task.projectName = this.project.name
         // If you're moving the selected task, unset the selection as you moved it.
         if (task.id === this.$store.getters.getSelectedTask.id) {
           this.$store.commit('setSelectedTask', {})
@@ -201,6 +200,7 @@ import Vue from 'vue'
         this.editing = false
         this.projectNameBeforeEdit = null
         this.$store.commit('setSelectedProjectName', this.project.name)
+        this.$store.commit('setProjectName', this.project)
         this.updateProjects()
       },
       cancelEdit: function () {

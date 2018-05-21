@@ -1,8 +1,9 @@
 import Vue from 'vue'
 
 <template>
-    <li>
-        <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
+    <li class="taskItem">
+        <input class="taskCheckbox" type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
+        <span class="projectLabel">{{ getProjectName }}</span>
         <span :class="{selected: isSelectedTask}" @click="selectTask" v-draggable="task" class="taskSummary">{{ task.name }}</span>
     </li>
 </template>
@@ -26,6 +27,14 @@ import Vue from 'vue'
       isSelectedTask: function () {
         let currentlySelected = this.$store.getters.getSelectedTask
         return (currentlySelected.id === this.task.id)
+      },
+      getProjectName: function () {
+        return this.$store.getters.getProjectName(this.task.project)
+      }
+    },
+    filters: {
+      shorten: function (n) {
+        return n.toString().substring(0, 5)
       }
     },
     methods: {
@@ -55,12 +64,39 @@ import Vue from 'vue'
         list-style: none;
     }
 
+    .taskItem {
+        float:left;
+        width: 100%;
+    }
+
+    .taskCheckbox {
+        float:left;
+        width: 2%;
+    }
+
     .taskSummary:hover {
         background-color: chartreuse;
+    }
+    .taskSummary {
+        float:left;
     }
 
     .selected {
         text-decoration: underline;
         color: forestgreen;
     }
+
+    .projectLabel {
+        float:left;
+        width: 15%;
+        color: darkslategrey;
+        padding-left: 2px;
+        padding-right: 2px;
+        border-radius: 5%;
+        font-family: 'Roboto Mono';
+        font-style: normal;
+        font-size: 8px;
+        -webkit-font-smoothing: antialiased;
+    }
+
 </style>

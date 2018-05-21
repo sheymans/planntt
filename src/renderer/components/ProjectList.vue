@@ -45,6 +45,8 @@
           console.log('read existing project list from db')
           self.$store.commit('createProjectDependencies', self.projects)
           console.log('created project dependencies')
+          self.$store.commit('createProjectNames', self.projects)
+          console.log('created project names')
         }
       })
     },
