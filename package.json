@@ -1,6 +1,6 @@
 {
   "name": "planntt",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "author": "Sheldonize, LLC <stijn.heymans@gmail.com>",
   "description": "A Simple ToDo Application",
   "homepage": "http://planntt.com",
@@ -58,7 +58,8 @@
     },
     "mac": {
       "target": [
-        "dmg"
+        "dmg",
+        "zip"
       ],
       "icon": "build/icons/planntt_icon.icns"
     }

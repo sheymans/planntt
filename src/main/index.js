@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, dialog } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
 autoUpdater.logger = require('electron-log')
@@ -74,10 +74,21 @@ app.on('activate', () => {
  * support auto updating. Code Signing with a valid certificate is required.
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
  */
-autoUpdater.on('update-downloaded', () => {
-  autoUpdater.quitAndInstall()
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'plannt Update',
+    message: 'planntt Update',
+    detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+  }
+
+  dialog.showMessageBox(dialogOpts, (response) => {
+    if (response === 0) autoUpdater.quitAndInstall()
+  })
 })
 
 app.on('ready', () => {
+  console.log('environment: ' + process.env.NODE_ENV)
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
 })
