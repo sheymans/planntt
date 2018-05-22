@@ -194,12 +194,11 @@
     .taskList {
         grid-area: taskList;
         display: grid;
-        grid-template-rows: 500px 1fr;
+        grid-template-rows: 1fr 0.68fr;
         grid-template-columns: 1fr;
         grid-template-areas: "tasks"
                              "taskDetail";
         grid-row-gap: 50px;
-        max-height: 100%;
     }
 
     /** 2 children of .tasklist **/
@@ -214,6 +213,7 @@
                             "removeTasks"
     "theSelectableTaskList";
         grid-row-gap: 10px;
+        height: 50vh;
     }
 
     .taskHeader {

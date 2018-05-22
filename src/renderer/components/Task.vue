@@ -72,7 +72,7 @@ import Vue from 'vue'
         grid-area: taskItem;
         display: grid;
         grid-template-rows: 1fr;
-        grid-template-columns: 20px 100px 1fr;
+        grid-template-columns: 20px 100px 0.9fr;
         grid-template-areas: "taskCheckbox  projectLabel    taskSummary";
         align-items: baseline;
     }

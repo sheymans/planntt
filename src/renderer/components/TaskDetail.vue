@@ -36,12 +36,10 @@ import Vue from 'vue'
         </div>
 
         <div class="taskNote" v-if="task.name">
-            <div class="row">
                 <div v-show="!editingNote" class="noteDisplay" v-html="markedNote"></div>
                 <div v-show="editingNote">
-                    <textarea class="noteInput" rows=20 placeholder="add your note here" v-model="task.note"></textarea>
+                    <textarea class="noteInput" placeholder="add your note here" v-model="task.note"></textarea>
                 </div>
-            </div>
 
             <div v-show="editingNote" class="controlsLine">
                 <div class="editNoteControls">
@@ -199,7 +197,9 @@ import Vue from 'vue'
         "taskNote";
         grid-row-gap: 10px;
         background-color: lightgrey;
+        margin-right: 50px;
         padding: 20px;
+        height: 28vh;
     }
 
     .whenChoice {
@@ -245,7 +245,6 @@ import Vue from 'vue'
 
     .taskNote {
         grid-area: taskNote;
-        overflow: auto;
     }
 
     .noteDisplay {
@@ -258,7 +257,7 @@ import Vue from 'vue'
 
     .noteInput {
         width: 80%;
-        height: 200px;
+        height: 14vh;
         font-family: 'Roboto Mono';
         font-style: normal;
         font-weight: 100;
@@ -277,10 +276,6 @@ import Vue from 'vue'
         text-decoration: underline;
         cursor:pointer;
         padding-right: 5px;
-    }
-
-    .row {
-        width: 100%;
     }
 
     input {
