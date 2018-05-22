@@ -1,10 +1,13 @@
 import Vue from 'vue'
 
 <template>
-    <div>
+    <div v-if="task.name" class="taskDetail">
         <div v-if="task.name" class="editTask">
             <div v-show="!editingTaskName" class="taskNameToEdit">
-                <b>{{ task.name }}</b></div>
+                <b>{{ task.name }}</b>
+                <font-awesome-icon v-show="!editingTaskName" @click="startEditTaskName" icon="pencil-alt"
+                                   class="iconTaskNameToEdit"/>
+            </div>
             <input v-show="editingTaskName"
                    type="text"
                    class="inputTaskNameToEdit"
@@ -14,8 +17,7 @@ import Vue from 'vue'
                    @keyup.esc="cancelEditTaskName"
                    @focus="$event.target.select()"
                    v-focus="editingTaskName"/>
-            <font-awesome-icon v-show="!editingTaskName" @click="startEditTaskName" icon="pencil-alt"
-                               class="iconTaskNameToEdit"/>
+
         </div>
 
         <div v-if="task.name" class="whenChoices">
@@ -56,7 +58,6 @@ import Vue from 'vue'
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </template>
 
@@ -187,6 +188,20 @@ import Vue from 'vue'
 
 <style scoped>
 
+    .taskDetail {
+        grid-area: taskDetail;
+        display: grid;
+        grid-template-rows: 40px 20px 20px 1fr;
+        grid-template-columns: 1fr;
+        grid-template-areas:    "editTask"
+        "whenChoices"
+        "addNote"
+        "taskNote";
+        grid-row-gap: 10px;
+        background-color: lightgrey;
+        padding: 20px;
+    }
+
     .whenChoice {
         text-decoration: underline;
         cursor:pointer;
@@ -200,44 +215,37 @@ import Vue from 'vue'
     }
 
     .editTask {
-        width: 100%;
-        float: left;
-        padding-bottom: 20px;
+        grid-area: editTask;
+        display: grid;
+        grid-auto-flow: column;
+        overflow: auto;
     }
 
     .taskNameToEdit {
-        width: 80%;
-        float:left
     }
 
     .inputTaskNameToEdit {
-        width: 80%;
-        float: left;
     }
 
     .inputTaskNameToEdit:focus {
         outline-color: chartreuse;
     }
 
-
-    iconTaskNameToEdit {
-        width: 20%;
-        float: right;
+    .iconTaskNameToEdit {
+        margin-left: 20px;
     }
 
     .whenChoices {
-        float: left;
-        padding-bottom: 20px;
+        grid-area: whenChoices;
     }
 
     .addNote {
-        width: 100%;
-        float: left;
+        grid-area: addNote;
     }
 
     .taskNote {
-        width: 100%;
-        float: left;
+        grid-area: taskNote;
+        overflow: auto;
     }
 
     .noteDisplay {
@@ -250,7 +258,7 @@ import Vue from 'vue'
 
     .noteInput {
         width: 80%;
-        height: 80%;
+        height: 200px;
         font-family: 'Roboto Mono';
         font-style: normal;
         font-weight: 100;

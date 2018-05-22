@@ -1,11 +1,13 @@
 import Vue from 'vue'
 
 <template>
-    <li class="taskItem">
-        <input class="taskCheckbox" type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
-        <span class="projectLabel">{{ getProjectName}}</span>
-        <span :class="{selected: isSelectedTask}" @click="selectTask" v-draggable="task" class="taskSummary">{{ task.name }}</span>
-    </li>
+    <div class="taskItem">
+        <div class="taskCheckbox">
+            <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
+        </div>
+        <div class="projectLabel">{{ getProjectName}}</div>
+        <div :class="{selected: isSelectedTask}" @click="selectTask" v-draggable="task" class="taskSummary">{{ task.name }}</div>
+    </div>
 </template>
 
 <script>
@@ -66,24 +68,24 @@ import Vue from 'vue'
 
 <style scoped>
 
-    li {
-        list-style: none;
-    }
-
     .taskItem {
-        float:left;
-        width: 100%;
+        grid-area: taskItem;
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-template-columns: 20px 100px 1fr;
+        grid-template-areas: "taskCheckbox  projectLabel    taskSummary";
+        align-items: baseline;
     }
 
     .taskCheckbox {
-        float:left;
+        grid-area: taskCheckbox;
     }
 
     .taskSummary:hover {
         background-color: chartreuse;
     }
     .taskSummary {
-        float:left;
+        grid-area: taskSummary;
     }
 
     .selected {
@@ -92,12 +94,8 @@ import Vue from 'vue'
     }
 
     .projectLabel {
-        float:left;
-        width: 15%;
+        grid-area: projectLabel;
         color: darkslategrey;
-        padding-left: 2px;
-        padding-right: 2px;
-        border-radius: 5%;
         font-family: 'Roboto Mono';
         font-style: normal;
         font-size: 8px;

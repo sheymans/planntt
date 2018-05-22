@@ -44,13 +44,14 @@
     }
 
     .content {
-        margin-left: 50px;
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-template-columns: 200px 1fr;
+        grid-template-areas: "projectList   taskList";
     }
 
     .projectList {
-        float: left;
-        width: 20%;
-        overflow: auto;
+        grid-area: projectList
     }
 
     #logo {

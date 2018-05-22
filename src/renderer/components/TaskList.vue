@@ -18,11 +18,11 @@
             </div>
 
             <div class="theSelectableTaskList">
-                <ul v-if="projectTasks.length">
+                <div v-if="projectTasks.length">
                     <Task v-for="task in projectTasks"
                           :key="task.id"
                           :task="task"/>
-                </ul>
+                </div>
             </div>
 
             <div v-show="numberOfCompletedProjectTasks > 0" class="removeTasks" @click="removeCompleted">
@@ -30,9 +30,7 @@
             </div>
         </div>
 
-        <div class="taskDetail">
-            <TaskDetail @updateTask="updateTask" :task="selectedTask"/>
-        </div>
+        <TaskDetail @updateTask="updateTask" :task="selectedTask"/>
     </div>
 </template>
 
@@ -194,37 +192,47 @@
 <style scoped>
 
     .taskList {
-        float: left;
-        width: 80%;
+        grid-area: taskList;
+        display: grid;
+        grid-template-rows: 500px 1fr;
+        grid-template-columns: 1fr;
+        grid-template-areas: "tasks"
+                             "taskDetail";
+        grid-row-gap: 50px;
+        max-height: 100%;
     }
 
     /** 2 children of .tasklist **/
     .tasks {
-        float: left;
-        width: 40%;
-        overflow: auto;
-    }
-
-    .taskDetail {
-        float: left;
-        width: 60%;
+        grid-area: tasks;
+        display: grid;
+        grid-template-rows: 20px 20px 20px 20px 1fr;
+        grid-template-columns: 1fr;
+        grid-template-areas: "taskHeader"
+                            "taskInput"
+                            "taskTabs"
+                            "removeTasks"
+    "theSelectableTaskList";
+        grid-row-gap: 10px;
     }
 
     .taskHeader {
-        overflow: auto;
-        padding-bottom: 20px;
+        grid-area: taskHeader;
     }
 
     .taskInput {
-        width: 70%;
-        /** center the taskInput: **/
-        margin: auto;
-        margin-bottom: 20px;
+      grid-area: taskInput;
+        width: 500px;
     }
 
     .taskTabs {
-        padding-bottom: 20px;
-        padding-top: 5px;
+        grid-area: taskTabs;
+    }
+
+    .theSelectableTaskList {
+        grid-area: theSelectableTaskList;
+        overflow: auto;
+        display: grid;
     }
 
     .taskTab {
@@ -241,9 +249,9 @@
 
     .removeTasks {
         cursor:pointer;
-        float:right;
         color: forestgreen;
         text-decoration: underline;
+        grid-area: removeTasks;
     }
 
     ul {
