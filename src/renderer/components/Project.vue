@@ -107,6 +107,7 @@ import Vue from 'vue'
         if (task.id === this.$store.getters.getSelectedTask.id) {
           this.$store.commit('setSelectedTask', {})
         }
+        this.$taskDb.update({id: task.id}, task, {})
       },
       handleDropProject: function (project) {
         console.log('dropping project: ' + project.name + ' in project ' + this.project.name)
