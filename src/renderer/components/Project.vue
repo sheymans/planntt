@@ -9,7 +9,7 @@ import Vue from 'vue'
             <span v-show="!editing"
                   @contextmenu.prevent="$refs.ctxMenu.open"
                   @click="selectProject"
-                  @dblclick="startEdit"
+                  @dblclick="toggle"
                   class="hasContextMenu"
                   v-draggable="project"
                   v-droppable @drag-drop="handleDrop" @drag-over="handleDragOver" @drag-leave="handleDragLeave"
@@ -38,8 +38,9 @@ import Vue from 'vue'
             </Project>
         </ul>
         <context-menu id="context-menu" ref="ctxMenu">
+    <li v-if="!isSpecialProject()" @click="startEdit">Rename</li>
     <li @click="addSubProject">Add subfolder</li>
-    <li v-if="!isSpecialProject()" @click="$emit('remove', project.id)">Remove</li>
+    <li v-if="!isSpecialProject()" @click="$emit('remove', project.id)">Delete</li>
     </context-menu>
     </li>
 </template>
