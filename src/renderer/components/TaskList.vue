@@ -9,19 +9,45 @@
                    placeholder="Add a task to this project"
                    v-model="newTaskText"
                    @keyup.enter="addTask">
-            <div class="taskTabs">
-                <a :class="{'is-active': isTabActive('all')}" class="taskTab" @click="setActiveTab('all')">all</a>
-                <a :class="{'is-active': isTabActive('today')}" class="taskTab" @click="setActiveTab('today')">today</a>
-                <a :class="{'is-active': isTabActive('thisweek')}" class="taskTab" @click="setActiveTab('thisweek')">this week</a>
-                <a :class="{'is-active': isTabActive('waitingfor')}" class="taskTab" @click="setActiveTab('waitingfor')">waiting for</a>
-                <a :class="{'is-active': isTabActive('someday')}" class="taskTab" @click="setActiveTab('someday')">someday</a>
-            </div>
 
             <div class="theSelectableTaskList">
-                <div v-if="projectTasks.length">
-                    <Task v-for="task in projectTasks"
-                          :key="task.id"
-                          :task="task"/>
+                <div class="todayList">
+                    <font-awesome-icon class="caretIcon" @click="setWhenStatus('today')" :icon="getWhenStatusExpandedIcon('today')"/>
+                    <a :class="{'is-active': isTabActive('today')}" class="taskTab" @click="setActiveTab('today')">today</a>
+                    <div class="tasksInTab" v-if="projectTasks['today'].length && todayStatus">
+                        <Task v-for="task in projectTasks['today']"
+                              :key="task.id"
+                              :task="task"/>
+                    </div>
+                </div>
+                <div class="thisweekList">
+                    <font-awesome-icon class="caretIcon"  @click="setWhenStatus('thisweek')" :icon="getWhenStatusExpandedIcon('thisweek')"/>
+                    <a :class="{'is-active': isTabActive('thisweek')}" class="taskTab" @click="setActiveTab('thisweek')">this week</a>
+                    <div class="tasksInTab"  v-if="projectTasks['thisweek'].length && thisWeekStatus">
+                        <Task v-for="task in projectTasks['thisweek']"
+                              :key="task.id"
+                              :task="task"/>
+                    </div>
+                </div>
+
+                <div class="waitingforList">
+                    <font-awesome-icon class="caretIcon"  @click="setWhenStatus('waitingfor')" :icon="getWhenStatusExpandedIcon('waitingfor')"/>
+                    <a :class="{'is-active': isTabActive('waitingfor')}" class="taskTab" @click="setActiveTab('waitingfor')">waiting for</a>
+                    <div class="tasksInTab" v-if="projectTasks['waitingfor'].length && waitingforStatus">
+                        <Task v-for="task in projectTasks['waitingfor']"
+                              :key="task.id"
+                              :task="task"/>
+                    </div>
+                </div>
+
+                <div class="somedayList">
+                    <font-awesome-icon class="caretIcon"  @click="setWhenStatus('someday')" :icon="getWhenStatusExpandedIcon('someday')"/>
+                    <a :class="{'is-active': isTabActive('someday')}" class="taskTab" @click="setActiveTab('someday')">someday</a>
+                    <div class="tasksInTab" v-if="projectTasks['someday'].length && somedayStatus">
+                        <Task v-for="task in projectTasks['someday']"
+                              :key="task.id"
+                              :task="task"/>
+                    </div>
                 </div>
             </div>
 
@@ -37,18 +63,24 @@
 <script>
   import Task from './Task.vue'
   import TaskDetail from './TaskDetail'
+  import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 
   export default {
     name: 'TaskList',
     components: {
       TaskDetail,
-      Task
+      Task,
+      FontAwesomeIcon
     },
     data () {
       return {
         newTaskText: '',
         tasks: [],
-        activeTab: 'all'
+        activeTab: 'someday',
+        todayStatus: false,
+        thisWeekStatus: false,
+        waitingforStatus: false,
+        somedayStatus: false
       }
     },
     computed: {
@@ -65,17 +97,14 @@
         })
         let projectsToConsider = this.$store.getters.getStoredDescendantProjectIdsOfSelected
         let allTasksToShow = this.tasks.filter(task => projectsToConsider.includes(task.project))
-        if (this.activeTab === 'all') {
-          return allTasksToShow
-        } else if (this.activeTab === 'today') {
-          return allTasksToShow.filter(t => t.when === 'today')
-        } else if (this.activeTab === 'thisweek') {
-          return allTasksToShow.filter(t => t.when === 'thisweek')
-        } else if (this.activeTab === 'waitingfor') {
-          return allTasksToShow.filter(t => t.when === 'waitingfor')
-        } else if (this.activeTab === 'someday') {
-          return allTasksToShow.filter(t => t.when === 'someday')
-        }
+
+        let mapOfTasksPerWhen = {'today': [], 'thisweek': [], 'waitingfor': [], 'someday': []}
+
+        mapOfTasksPerWhen['today'] = allTasksToShow.filter(t => t.when === 'today')
+        mapOfTasksPerWhen['thisweek'] = allTasksToShow.filter(t => t.when === 'thisweek')
+        mapOfTasksPerWhen['waitingfor'] = allTasksToShow.filter(t => t.when === 'waitingfor')
+        mapOfTasksPerWhen['someday'] = allTasksToShow.filter(t => t.when === 'someday')
+        return mapOfTasksPerWhen
       },
       selectedProject: function () {
         return this.$store.getters.getSelectedProject
@@ -88,15 +117,22 @@
       },
       numberOfCompletedProjectTasks: function () {
         if (this.projectTasks) {
-          let completedTasks = this.projectTasks.filter(t => t.completed)
-          return completedTasks.length
+          let completedTasksToday = this.projectTasks['today'].filter(t => t.completed)
+          let completedTasksThisWeek = this.projectTasks['thisweek'].filter(t => t.completed)
+          let completedTasksWaitingFor = this.projectTasks['waitingfor'].filter(t => t.completed)
+          let completedTasksSomeday = this.projectTasks['someday'].filter(t => t.completed)
+          return completedTasksToday.length + completedTasksThisWeek.length + completedTasksSomeday.length + completedTasksWaitingFor.length
         } else {
           return 0
         }
       },
       numberOfProjectTasks: function () {
         if (this.projectTasks) {
-          return this.projectTasks.length
+          let completedTasksToday = this.projectTasks['today']
+          let completedTasksThisWeek = this.projectTasks['thisweek']
+          let completedTasksWaitingFor = this.projectTasks['waitingfor']
+          let completedTasksSomeday = this.projectTasks['someday']
+          return completedTasksToday.length + completedTasksThisWeek.length + completedTasksSomeday.length + completedTasksWaitingFor.length
         } else {
           return 0
         }
@@ -130,6 +166,7 @@
       setActiveTab: function (tab) {
         this.activeTab = tab
         this.unsetSelectedTask()
+        this.setWhenStatus(tab)
       },
       unsetSelectedTask: function () {
         this.$store.commit('setSelectedTask', {})
@@ -177,6 +214,46 @@
         // Also update the task database
         this.$taskDb.update({id: task.id}, task, {})
       },
+      getWhenStatusExpandedIcon: function (when) {
+        if (when === 'today' && this.todayStatus) {
+          return 'caret-down'
+        }
+        if (when === 'today' && !this.todayStatus) {
+          return 'caret-right'
+        }
+        if (when === 'thisweek' && this.thisWeekStatus) {
+          return 'caret-down'
+        }
+        if (when === 'thisweek' && !this.thisWeekStatus) {
+          return 'caret-right'
+        }
+        if (when === 'waitingfor' && this.waitingforStatus) {
+          return 'caret-down'
+        }
+        if (when === 'waitingfor' && !this.waitingforStatus) {
+          return 'caret-right'
+        }
+        if (when === 'someday' && this.somedayStatus) {
+          return 'caret-down'
+        }
+        if (when === 'someday' && !this.somedayStatus) {
+          return 'caret-right'
+        }
+      },
+      setWhenStatus: function (when) {
+        if (when === 'today') {
+          this.todayStatus = !this.todayStatus
+        }
+        if (when === 'thisweek') {
+          this.thisWeekStatus = !this.thisWeekStatus
+        }
+        if (when === 'waitingfor') {
+          this.waitingforStatus = !this.waitingforStatus
+        }
+        if (when === 'someday') {
+          this.somedayStatus = !this.somedayStatus
+        }
+      },
       // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
       uuidv4: function () {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -205,11 +282,10 @@
     .tasks {
         grid-area: tasks;
         display: grid;
-        grid-template-rows: 20px 20px 20px 20px 1fr;
+        grid-template-rows: 20px 20px 20px 1fr;
         grid-template-columns: 1fr;
         grid-template-areas: "taskHeader"
                             "taskInput"
-                            "taskTabs"
                             "removeTasks"
     "theSelectableTaskList";
         grid-row-gap: 10px;
@@ -225,14 +301,56 @@
         width: 500px;
     }
 
-    .taskTabs {
-        grid-area: taskTabs;
-    }
 
     .theSelectableTaskList {
         grid-area: theSelectableTaskList;
         overflow: auto;
+    }
+
+    .todayList {
+        grid-area: todayList;
         display: grid;
+        grid-template-rows: 20px 1fr;
+        grid-template-columns: 10px 1fr;
+        grid-template-areas: "caretIcon taskTab"
+        ". tasksInTab";
+    }
+
+    .caretIcon {
+        grid-area: caretIcon;
+    }
+
+    .tasksInTab {
+        grid-area: tasksInTab;
+    }
+
+    .thisweekList {
+        margin-top: 10px;
+        grid-area: thisweekList;
+        display: grid;
+        grid-template-rows: 20px 1fr;
+        grid-template-columns: 10px 1fr;
+        grid-template-areas: "caretIcon taskTab"
+        ". tasksInTab";
+    }
+
+    .waitingforList {
+        margin-top: 10px;
+        grid-area: waitingforList;
+        display: grid;
+        grid-template-rows: 20px 1fr;
+        grid-template-columns: 10px 1fr;
+        grid-template-areas: "caretIcon taskTab"
+        ". tasksInTab";    }
+
+    .somedayList {
+        margin-top: 10px;
+        grid-area: somedayList;
+        display: grid;
+        grid-template-rows: 20px 1fr;
+        grid-template-columns: 10px 1fr;
+        grid-template-areas: "caretIcon taskTab"
+        ". tasksInTab";
     }
 
     .taskTab {
