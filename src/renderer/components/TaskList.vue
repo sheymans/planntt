@@ -13,7 +13,7 @@
             <div class="theSelectableTaskList">
                 <div class="todayList">
                     <font-awesome-icon class="caretIcon" @click="setWhenStatus('today')" :icon="getWhenStatusExpandedIcon('today')"/>
-                    <a :class="{'is-active': isTabActive('today')}" class="taskTab" @click="setActiveTab('today')">today</a>
+                    <a :class="{'is-active': isTabActive('today')}" class="taskTab" @click="setActiveTab('today')">today ({{projectTasks['today'].length}})</a>
                     <div class="tasksInTab" v-if="projectTasks['today'].length && todayStatus">
                         <Task v-for="task in projectTasks['today']"
                               :key="task.id"
@@ -22,7 +22,7 @@
                 </div>
                 <div class="thisweekList">
                     <font-awesome-icon class="caretIcon"  @click="setWhenStatus('thisweek')" :icon="getWhenStatusExpandedIcon('thisweek')"/>
-                    <a :class="{'is-active': isTabActive('thisweek')}" class="taskTab" @click="setActiveTab('thisweek')">this week</a>
+                    <a :class="{'is-active': isTabActive('thisweek')}" class="taskTab" @click="setActiveTab('thisweek')">this week ({{projectTasks['thisweek'].length}})</a>
                     <div class="tasksInTab"  v-if="projectTasks['thisweek'].length && thisWeekStatus">
                         <Task v-for="task in projectTasks['thisweek']"
                               :key="task.id"
@@ -32,7 +32,7 @@
 
                 <div class="waitingforList">
                     <font-awesome-icon class="caretIcon"  @click="setWhenStatus('waitingfor')" :icon="getWhenStatusExpandedIcon('waitingfor')"/>
-                    <a :class="{'is-active': isTabActive('waitingfor')}" class="taskTab" @click="setActiveTab('waitingfor')">waiting for</a>
+                    <a :class="{'is-active': isTabActive('waitingfor')}" class="taskTab" @click="setActiveTab('waitingfor')">waiting for ({{projectTasks['waitingfor'].length}})</a>
                     <div class="tasksInTab" v-if="projectTasks['waitingfor'].length && waitingforStatus">
                         <Task v-for="task in projectTasks['waitingfor']"
                               :key="task.id"
@@ -42,7 +42,7 @@
 
                 <div class="somedayList">
                     <font-awesome-icon class="caretIcon"  @click="setWhenStatus('someday')" :icon="getWhenStatusExpandedIcon('someday')"/>
-                    <a :class="{'is-active': isTabActive('someday')}" class="taskTab" @click="setActiveTab('someday')">someday</a>
+                    <a :class="{'is-active': isTabActive('someday')}" class="taskTab" @click="setActiveTab('someday')">someday ({{projectTasks['someday'].length}})</a>
                     <div class="tasksInTab" v-if="projectTasks['someday'].length && somedayStatus">
                         <Task v-for="task in projectTasks['someday']"
                               :key="task.id"
