@@ -31,8 +31,23 @@ import Vue from 'vue'
                 someday</a>
         </div>
 
-        <div v-if="task.name" v-show="!editingNote && !task.note" class="is-active addNote" @click="startEditNote">
+        <button v-if="task.name" v-show="!editingNote && !task.note" class="is-active addNote" @click="startEditNote">
             add note
+        </button>
+
+        <div v-show="editingNote" class="controlsLine">
+            <div class="editNoteControls">
+                <button @click="doneEditNote" class="is-active">save</button>
+                <button @click="cancelEditNote">cancel</button>
+                <button @click="deleteEditNote">delete</button>
+            </div>
+        </div>
+        <div v-show="!editingNote" class="controlsLine">
+            <div class="editNoteControls">
+                <button v-show="task.note" class="is-active" @click="startEditNote">
+                    edit note
+                </button>
+            </div>
         </div>
 
         <div class="taskNote" v-if="task.name">
@@ -40,21 +55,6 @@ import Vue from 'vue'
                 <div v-show="editingNote">
                     <textarea class="noteInput" placeholder="add your note here" v-model="task.note"></textarea>
                 </div>
-
-            <div v-show="editingNote" class="controlsLine">
-                <div class="editNoteControls">
-                    <a @click="doneEditNote" class="is-active clickable">save</a>
-                    <a @click="cancelEditNote" class="clickable">cancel</a>
-                    <a @click="deleteEditNote" class="clickable">delete</a>
-                </div>
-            </div>
-            <div v-show="!editingNote" class="controlsLine">
-                <div class="editNoteControls">
-                    <div v-show="task.note" class="is-active" @click="startEditNote">
-                        edit note
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -269,7 +269,6 @@ import Vue from 'vue'
     }
 
     .editNoteControls {
-        float: right;
     }
 
     .clickable {
@@ -292,6 +291,32 @@ import Vue from 'vue'
 
     textarea:focus {
         outline-color: chartreuse;
+    }
+
+    button {
+        background-color: black;
+        outline: 0;
+        border: none;
+        color: white;
+        font-family: 'Roboto Mono';
+        font-style: normal;
+        font-weight: 500;
+        width: 100px;
+        height: 25px;
+        line-height: 25px;
+        text-transform: uppercase;
+        border-radius: 2px;
+        text-align: center;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: .3s ease-out;
+        font-size: 12px;
+    }
+
+    button.is-active {
+        text-decoration: none;
+        color: white;
+        background-color: forestgreen;
     }
 
 

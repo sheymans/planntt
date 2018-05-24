@@ -51,9 +51,9 @@
                 </div>
             </div>
 
-            <div v-show="numberOfCompletedProjectTasks > 0" class="removeTasks" @click="removeCompleted">
+            <button v-show="numberOfCompletedProjectTasks > 0" class="removeTasks" @click="removeCompleted">
                 remove marked
-            </div>
+            </button>
         </div>
 
         <TaskDetail @updateTask="updateTask" :task="selectedTask"/>
@@ -366,10 +366,8 @@
     }
 
     .removeTasks {
-        cursor:pointer;
-        color: forestgreen;
-        text-decoration: underline;
         grid-area: removeTasks;
+        justify-self: start;
     }
 
     ul {
@@ -388,6 +386,26 @@
 
     input::selection {
         background-color: chartreuse;
+    }
+
+    button {
+        background-color: forestgreen;
+        outline: 0;
+        border: none;
+        color: white;
+        font-family: 'Roboto Mono';
+        font-style: normal;
+        font-weight: 500;
+        width: 150px;
+        height: 25px;
+        line-height: 25px;
+        text-transform: uppercase;
+        border-radius: 2px;
+        text-align: center;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: .3s ease-out;
+        font-size: 12px;
     }
 
 </style>
