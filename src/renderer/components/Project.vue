@@ -201,7 +201,7 @@ import Vue from 'vue'
         }
         this.editing = false
         this.projectNameBeforeEdit = null
-        this.$store.commit('setSelectedProjectName', this.project.name)
+        this.selectProject()
         this.$store.commit('setProjectName', this.project)
         this.updateProjects()
       },

@@ -71,10 +71,10 @@ const mutations = {
     projects.forEach(project => {
       let projectDependencies = state.subProjects[project.id]
       if (!projectDependencies) {
-        state.subProjects[project.id] = []
+        Vue.set(state.subProjects, project.id, [])
       }
       let descendantProjectIds = getDescendantProjectIds(project)
-      state.subProjects[project.id] = descendantProjectIds
+      Vue.set(state.subProjects, project.id, descendantProjectIds)
       // And do the same for all its children:
       if (project.children) {
         mutations.createProjectDependencies(state, project.children)
