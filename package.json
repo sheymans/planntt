@@ -1,6 +1,6 @@
 {
   "name": "planntt",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "author": "Sheldonize, LLC <stijn.heymans@gmail.com>",
   "description": "A Simple ToDo Application",
   "homepage": "http://planntt.com",
@@ -8,7 +8,7 @@
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
-    "buildwin": "node .electron-vue/build.js && electron-builder -w",
+    "buildwin": "export CSC_LINK=file:///Users/sheymans/s/keys/windows_digicert.p12; read -s -p \"Certificate Password: \" certPassword; export CSC_KEY_PASSWORD=\"$certPassword\"; node .electron-vue/build.js && electron-builder -w",
     "buildlin": "node .electron-vue/build.js && electron-builder -l",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
