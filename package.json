@@ -74,6 +74,7 @@
     "electron-updater": "^2.21.10",
     "marked": "^0.3.19",
     "nedb": "^1.8.0",
+    "npm": "^6.1.0",
     "open": "0.0.5",
     "typeface-raleway": "0.0.54",
     "typeface-roboto": "0.0.54",
