@@ -8,7 +8,7 @@
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
-    "buildwin": "export CSC_LINK=file:///Users/sheymans/s/keys/windows_digicert.p12; read -s -p \"Certificate Password: \" certPassword; export CSC_KEY_PASSWORD=\"$certPassword\"; node .electron-vue/build.js && electron-builder -w",
+    "buildwin": "./src/scripts/win_cert.sh; node .electron-vue/build.js && electron-builder -w",
     "buildlin": "node .electron-vue/build.js && electron-builder -l",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
