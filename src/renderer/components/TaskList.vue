@@ -271,7 +271,6 @@
     .taskList {
         grid-area: taskList;
         display: grid;
-        grid-template-rows: 1fr 0.68fr;
         grid-template-columns: 1fr;
         grid-template-areas: "tasks"
                              "taskDetail";

@@ -199,7 +199,6 @@ import Vue from 'vue'
         background-color: lightgrey;
         margin-right: 50px;
         padding: 20px;
-        height: 28vh;
     }
 
     .whenChoice {
