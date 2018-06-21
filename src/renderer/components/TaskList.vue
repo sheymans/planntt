@@ -200,7 +200,7 @@
           } else {
             this.$taskDb.remove(task)
             // Also remove selected task if it is no longer in newTasks (in other words the selected task was removed)
-            if (selectedTask.id === task.id) {
+            if (selectedTask && selectedTask.id === task.id) {
               this.unsetSelectedTask()
             }
           }
