@@ -17,6 +17,7 @@
                     <div class="tasksInTab" v-if="projectTasks['today'].length && todayStatus">
                         <Task v-for="task in projectTasks['today']"
                               :key="task.id"
+                              @setSelectedTask="setSelectedTask"
                               :task="task"/>
                     </div>
                 </div>
@@ -26,6 +27,7 @@
                     <div class="tasksInTab"  v-if="projectTasks['thisweek'].length && thisWeekStatus">
                         <Task v-for="task in projectTasks['thisweek']"
                               :key="task.id"
+                              @setSelectedTask="setSelectedTask"
                               :task="task"/>
                     </div>
                 </div>
@@ -36,6 +38,7 @@
                     <div class="tasksInTab" v-if="projectTasks['waitingfor'].length && waitingforStatus">
                         <Task v-for="task in projectTasks['waitingfor']"
                               :key="task.id"
+                              @setSelectedTask="setSelectedTask"
                               :task="task"/>
                     </div>
                 </div>
@@ -46,6 +49,7 @@
                     <div class="tasksInTab" v-if="projectTasks['someday'].length && somedayStatus">
                         <Task v-for="task in projectTasks['someday']"
                               :key="task.id"
+                              @setSelectedTask="setSelectedTask"
                               :task="task"/>
                     </div>
                 </div>
@@ -80,11 +84,14 @@
         todayStatus: false,
         thisWeekStatus: false,
         waitingforStatus: false,
-        somedayStatus: false
+        somedayStatus: false,
+        selectedTask: {}
       }
     },
     computed: {
       projectTasks: function () {
+        // Reset selectedTask:
+        this.selectedTask = {}
         // Clean up tasks (set as INBOX project if the project is gone)
         let deletedProjects = this.$store.getters.getDeletedProjects
         this.tasks.forEach(task => {
@@ -111,9 +118,6 @@
       },
       selectedProjectName: function () {
         return this.$store.getters.getSelectedProjectName
-      },
-      selectedTask: function () {
-        return Object.assign({}, this.$store.getters.getSelectedTask)
       },
       numberOfCompletedProjectTasks: function () {
         if (this.projectTasks) {
@@ -169,7 +173,7 @@
         this.setWhenStatus(tab)
       },
       unsetSelectedTask: function () {
-        this.$store.commit('setSelectedTask', {})
+        this.selectedTask = {}
       },
       isTabActive: function (tab) {
         return this.activeTab === tab
@@ -213,6 +217,9 @@
         console.log('updated task in task list, new task is now ' + JSON.stringify(task))
         // Also update the task database
         this.$taskDb.update({id: task.id}, task, {})
+      },
+      setSelectedTask: function (task) {
+        this.selectedTask = task
       },
       getWhenStatusExpandedIcon: function (when) {
         if (when === 'today' && this.todayStatus) {

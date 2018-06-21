@@ -6,7 +6,7 @@ import Vue from 'vue'
             <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
         </div>
         <div class="projectLabel">{{ getProjectName}}</div>
-        <div :class="{selected: isSelectedTask}" @click="selectTask" v-draggable="task" class="taskSummary">{{ task.name }}</div>
+        <div :class="{selected: isSelectedTask}" @click="selectTask" v-draggable="task" @drag-start="onDragStart" @drag-end="onDragEnd" class="taskSummary">{{ task.name }}</div>
     </div>
 </template>
 
@@ -22,14 +22,11 @@ import Vue from 'vue'
     },
     data: function () {
       return {
-        editing: false
+        editing: false,
+        isSelectedTask: false
       }
     },
     computed: {
-      isSelectedTask: function () {
-        let currentlySelected = this.$store.getters.getSelectedTask
-        return (currentlySelected.id === this.task.id)
-      },
       getProjectName: function () {
         return this.$store.getters.getProjectName(this.task.project)
       }
@@ -46,13 +43,19 @@ import Vue from 'vue'
       }
     },
     methods: {
+      onDragStart: function (task) {
+        console.log('drag start ' + JSON.stringify(task))
+      },
+      onDragEnd: function (task) {
+        console.log('drag end ' + JSON.stringify(task))
+      },
       toggleTaskCheckbox: function () {
         // save the task when checkbox toggled
         console.log('update task DB for task with id ' + this.task.id + ' to set completed state to ' + this.task.completed)
         this.$taskDb.update({id: this.task.id}, {$set: {completed: this.task.completed}}, {})
       },
       selectTask: function () {
-        this.$store.commit('setSelectedTask', this.task)
+        this.$emit('setSelectedTask', this.task)
       },
       // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
       uuidv4: function () {
