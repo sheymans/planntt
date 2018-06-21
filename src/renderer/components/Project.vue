@@ -104,10 +104,6 @@ import Vue from 'vue'
       handleDropTask: function (task) {
         console.log('dropped task: ' + task.name + ' in project ' + this.project.name)
         this.$set(task, 'project', this.project.id)
-        // If you're moving the selected task, unset the selection as you moved it.
-        // if (task.id === this.$store.getters.getSelectedTask.id) {
-        //  this.$store.commit('setSelectedTask', {})
-        // }
         this.$taskDb.update({id: task.id}, { $set: { project: task.project } }, {})
       },
       handleDropProject: function (project) {
@@ -151,8 +147,6 @@ import Vue from 'vue'
         // We should combine this in 1 call maybe just emit the whole project
         this.$store.commit('setSelectedProject', this.project.id)
         this.$store.commit('setSelectedProjectName', this.project.name)
-        // Also reset the selected task when you switch project
-        // this.$store.commit('setSelectedTask', {})
       },
       addSubProject: function () {
         if (this.isNonEmptyFolder) {

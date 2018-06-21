@@ -6,7 +6,7 @@ import Vue from 'vue'
             <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
         </div>
         <div class="projectLabel">{{ getProjectName}}</div>
-        <div :class="{selected: isSelectedTask}" @click="selectTask" v-draggable="task" @drag-start="onDragStart" @drag-end="onDragEnd" class="taskSummary">{{ task.name }}</div>
+        <div :class="{selected: isSelectedTask}" @click="selectTask" v-draggable="task" class="taskSummary">{{ task.name }}</div>
     </div>
 </template>
 
@@ -43,12 +43,6 @@ import Vue from 'vue'
       }
     },
     methods: {
-      onDragStart: function (task) {
-        console.log('drag start ' + JSON.stringify(task))
-      },
-      onDragEnd: function (task) {
-        console.log('drag end ' + JSON.stringify(task))
-      },
       toggleTaskCheckbox: function () {
         // save the task when checkbox toggled
         console.log('update task DB for task with id ' + this.task.id + ' to set completed state to ' + this.task.completed)

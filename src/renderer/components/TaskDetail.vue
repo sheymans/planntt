@@ -168,9 +168,7 @@ import Vue from 'vue'
         this.editingNote = false
       },
       saveTask: function () {
-        // this.$store.commit('setSelectedTask', this.task)
-        // Also save this updated task in the task list
-        this.$emit('updateTask', this.task)
+        this.$taskDb.update({id: this.task.id}, this.task, {})
       }
     },
     // https://vuejs.org/v2/guide/custom-directive.html

@@ -60,7 +60,7 @@
             </button>
         </div>
 
-        <TaskDetail @updateTask="updateTask" :task="selectedTask"/>
+        <TaskDetail :task="selectedTask"/>
     </div>
 </template>
 
@@ -206,17 +206,6 @@
           }
         })
         this.tasks = newTasks
-      },
-      updateTask: function (task) {
-        // First find the task to update in the task list
-        let index = this.tasks.findIndex(t => {
-          return t.id === task.id
-        })
-        // Use set rather than updating the array index to actually see the value
-        this.$set(this.tasks, index, task)
-        console.log('updated task in task list, new task is now ' + JSON.stringify(task))
-        // Also update the task database
-        this.$taskDb.update({id: task.id}, task, {})
       },
       setSelectedTask: function (task) {
         this.selectedTask = task
