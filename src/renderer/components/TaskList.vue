@@ -90,7 +90,7 @@
         this.tasks.forEach(task => {
           if (deletedProjects.includes(task.project)) {
             console.log('set project of task with id' + task.id + ' to INBOX')
-            task.project = 1
+            this.$set(task, 'project', 1)
             // Update DB
             this.$taskDb.update({id: task.id}, { $set: { project: task.project } }, {})
           }

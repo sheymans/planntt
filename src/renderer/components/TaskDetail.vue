@@ -119,7 +119,7 @@ import Vue from 'vue'
       setWhen: function (when) {
         console.log('setting task to when: ' + when)
         this.task.when = when
-        this.saveTask(this.task)
+        this.saveTask()
       },
       startEditTaskName: function () {
         console.log('starting to edit task name: ' + this.task.name)
@@ -136,7 +136,7 @@ import Vue from 'vue'
         }
         this.editingTaskName = false
         this.taskNameBeforeEdit = null
-        this.saveTask(this.task)
+        this.saveTask()
       },
       cancelEditTaskName: function () {
         console.log('text before editing: ' + this.taskNameBeforeEdit)
@@ -153,7 +153,7 @@ import Vue from 'vue'
         console.log('done to edit note')
         this.editingNote = false
         this.noteBeforeEdit = null
-        this.saveTask(this.task)
+        this.saveTask()
       },
       cancelEditNote: function () {
         console.log('cancel edit note')
@@ -164,10 +164,10 @@ import Vue from 'vue'
       deleteEditNote: function () {
         console.log('delete edit note')
         this.task.note = null
-        this.saveTask(this.task)
+        this.saveTask()
         this.editingNote = false
       },
-      saveTask: function (task) {
+      saveTask: function () {
         this.$store.commit('setSelectedTask', this.task)
         // Also save this updated task in the task list
         this.$emit('updateTask', this.task)
