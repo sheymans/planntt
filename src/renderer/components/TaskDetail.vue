@@ -1,8 +1,8 @@
 import Vue from 'vue'
 
 <template>
-    <div v-if="task.name" class="taskDetail">
-        <div v-if="task.name" class="editTask">
+    <div v-if="Object.keys(task).length !== 0" class="taskDetail">
+        <div v-if="Object.keys(task).length !== 0" class="editTask">
             <div v-show="!editingTaskName" class="taskNameToEdit">
                 <b>{{ task.name }}</b>
                 <font-awesome-icon v-show="!editingTaskName" @click="startEditTaskName" icon="pencil-alt"
@@ -20,7 +20,7 @@ import Vue from 'vue'
 
         </div>
 
-        <div v-if="task.name" class="whenChoices">
+        <div v-if="Object.keys(task).length !== 0" class="whenChoices">
             <a @click="setWhen('today')" :class="{'is-active': task.when === 'today'}" class="whenChoice">
                 today</a>
             <a @click="setWhen('thisweek')" :class="{'is-active': task.when === 'thisweek'}" class="whenChoice">
@@ -31,7 +31,7 @@ import Vue from 'vue'
                 someday</a>
         </div>
 
-        <button v-if="task.name" v-show="!editingNote && !task.note" class="is-active addNote" @click="startEditNote">
+        <button v-if="Object.keys(task).length !== 0" v-show="!editingNote && !task.note" class="is-active addNote" @click="startEditNote">
             add note
         </button>
 
@@ -50,7 +50,7 @@ import Vue from 'vue'
             </div>
         </div>
 
-        <div class="taskNote" v-if="task.name">
+        <div class="taskNote" v-if="Object.keys(task).length !== 0">
                 <div v-show="!editingNote" class="noteDisplay" v-html="markedNote"></div>
                 <div v-show="editingNote">
                     <textarea class="noteInput" placeholder="add your note here" v-model="task.note"></textarea>
