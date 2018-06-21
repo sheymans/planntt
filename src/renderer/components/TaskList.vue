@@ -90,8 +90,6 @@
     },
     computed: {
       projectTasks: function () {
-        // Reset selectedTask:
-        this.selectedTask = {}
         // Clean up tasks (set as INBOX project if the project is gone)
         let deletedProjects = this.$store.getters.getDeletedProjects
         this.tasks.forEach(task => {
@@ -111,6 +109,12 @@
         mapOfTasksPerWhen['thisweek'] = allTasksToShow.filter(t => t.when === 'thisweek')
         mapOfTasksPerWhen['waitingfor'] = allTasksToShow.filter(t => t.when === 'waitingfor')
         mapOfTasksPerWhen['someday'] = allTasksToShow.filter(t => t.when === 'someday')
+
+        // If selected task is not in any of the mapOfTasksPerWhen, then unset it.
+        if (this.selectedTask && !(mapOfTasksPerWhen['today'].includes(this.selectedTask) || mapOfTasksPerWhen['thisweek'].includes(this.selectedTask) || mapOfTasksPerWhen['waitingfor'].includes(this.selectedTask) || mapOfTasksPerWhen['someday'].includes(this.selectedTask))) {
+          this.selectedTask = {}
+        }
+
         return mapOfTasksPerWhen
       },
       selectedProject: function () {
