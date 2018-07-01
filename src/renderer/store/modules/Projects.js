@@ -6,12 +6,16 @@ const state = {
   selectedProjectName: 'INBOX',
   subProjects: {},
   deletedProjects: [],
-  projectNames: {}
+  projectNames: {},
+  projectTargetTaskDrag: null
 }
 
 const getters = {
   getSelectedProject (state) {
     return state.selected
+  },
+  getProjectTargetTaskDrag (state) {
+    return state.projectTargetTaskDrag
   },
   getSelectedProjectName (state) {
     return state.selectedProjectName
@@ -41,6 +45,9 @@ const getters = {
 const mutations = {
   setSelectedProject (state, uuid) {
     state.selected = uuid
+  },
+  setProjectTargetTaskDrag (state, projectId) {
+    state.projectTargetTaskDrag = projectId
   },
   setSelectedProjectName (state, name) {
     state.selectedProjectName = name

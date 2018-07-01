@@ -6,7 +6,7 @@ import Vue from 'vue'
             <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
         </div>
         <div class="projectLabel">{{ getProjectName}}</div>
-        <div :class="{selected: isSelectedTask}" @click="selectTask" v-draggable="task" class="taskSummary">{{ task.name }}</div>
+        <div :class="{selected: isSelectedTask}" @click="selectTask" draggable="true" @dragstart="dragTask" @dragend="dragEndTask" class="taskSummary">{{ task.name }}</div>
     </div>
 </template>
 
@@ -50,6 +50,16 @@ import Vue from 'vue'
       },
       selectTask: function () {
         this.$emit('setSelectedTask', this.task)
+      },
+      dragTask: function (event) {
+        this.$store.commit('setProjectTargetTaskDrag', null)
+        event.dataTransfer.setData('text', JSON.stringify(this.task))
+      },
+      dragEndTask: function (event) {
+        let projectTarget = this.$store.getters.getProjectTargetTaskDrag
+        if (projectTarget) {
+          this.task.project = projectTarget
+        }
       },
       // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
       uuidv4: function () {

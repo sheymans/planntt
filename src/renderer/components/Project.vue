@@ -11,8 +11,11 @@ import Vue from 'vue'
                   @click="selectProject"
                   @dblclick="toggle"
                   class="hasContextMenu"
-                  v-draggable="project"
-                  v-droppable @drag-drop="handleDrop" @drag-over="handleDragOver" @drag-leave="handleDragLeave"
+                  draggable="true"
+                  @dragstart="dragProject"
+                  @drop="handleDrop"
+                  @dragover="handleDragOver"
+                  @dragleave="handleDragLeave"
                   :class="{selected: isSelectedProject, dragReady: dragHappening}">
                 {{ project.name }}</span>
             <input v-show="editing"
@@ -93,7 +96,11 @@ import Vue from 'vue'
       isInbox: function () {
         return this.project.id === 1
       },
-      handleDrop: function (object) {
+      handleDrop: function (event) {
+        event.preventDefault()
+        let objectString = event.dataTransfer.getData('text')
+        let object = JSON.parse(objectString)
+
         // The object is a task
         if (object.project) {
           this.handleDropTask(object)
@@ -101,10 +108,15 @@ import Vue from 'vue'
           this.handleDropProject(object)
         }
       },
+      dragProject: function (event) {
+        event.dataTransfer.setData('text', JSON.stringify(this.project))
+      },
       handleDropTask: function (task) {
         console.log('dropped task: ' + task.name + ' in project ' + this.project.name)
         this.$set(task, 'project', this.project.id)
         this.$taskDb.update({id: task.id}, { $set: { project: task.project } }, {})
+        this.$store.commit('setProjectTargetTaskDrag', this.project.id)
+        this.dragHappening = false
       },
       handleDropProject: function (project) {
         console.log('dropping project: ' + project.name + ' in project ' + this.project.name)
@@ -127,16 +139,15 @@ import Vue from 'vue'
         this.project.children.push(project)
         this.updateProjects()
         this.open = true
+        this.dragHappening = false
       },
-      handleDragOver: function (task, draggingPossible) {
-        if (draggingPossible) {
-          this.dragHappening = true
-        }
+      handleDragOver: function (event) {
+        event.preventDefault()
+        this.dragHappening = true
       },
-      handleDragLeave: function (task, draggingPossible) {
-        if (draggingPossible) {
-          this.dragHappening = false
-        }
+      handleDragLeave: function (event) {
+        event.preventDefault()
+        this.dragHappening = false
       },
       isSpecialProject: function () {
         // INBOX or All Projects

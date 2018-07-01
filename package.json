@@ -1,6 +1,6 @@
 {
   "name": "planntt",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "author": "Sheldonize, LLC <stijn.heymans@gmail.com>",
   "description": "A Simple ToDo Application",
   "homepage": "http://planntt.com",
@@ -84,7 +84,6 @@
     "typeface-raleway": "0.0.54",
     "typeface-roboto": "0.0.54",
     "typeface-roboto-mono": "0.0.54",
-    "v-drag-drop": "^0.2.0",
     "vue": "^2.3.3",
     "vue-context-menu": "^2.0.6",
     "vue-electron": "^1.0.6",
