@@ -174,7 +174,6 @@
       setActiveTab: function (tab) {
         this.activeTab = tab
         this.unsetSelectedTask()
-        this.setWhenStatus(tab)
       },
       unsetSelectedTask: function () {
         this.selectedTask = {}
@@ -192,6 +191,8 @@
         this.newTaskText = ''
         // Add it to the DB as well
         this.$taskDb.insert(newTask)
+        // Expand the task tab corresponding to this task (open up someday if you add a someday task)
+        this.setWhenStatus(this.activeTab)
       },
       removeCompleted: function () {
         let projectsToConsiderForRemoval = this.$store.getters.getStoredDescendantProjectIdsOfSelected
