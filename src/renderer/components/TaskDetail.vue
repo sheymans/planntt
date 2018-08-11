@@ -246,18 +246,20 @@ import Vue from 'vue'
 
     .noteDisplay {
         width: 80%;
-        font-family: 'Roboto Mono';
+        font-family: 'Raleway';
         font-style: normal;
-        font-weight: 100;
+        font-weight: 500;
+        font-size: 10pt;
         -webkit-font-smoothing: antialiased;
     }
 
     .noteInput {
         width: 80%;
         height: 14vh;
-        font-family: 'Roboto Mono';
+        font-family: 'Raleway';
         font-style: normal;
-        font-weight: 100;
+        font-weight: 500;
+        font-size: 10pt;
         -webkit-font-smoothing: antialiased;
     }
 
