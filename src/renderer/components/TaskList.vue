@@ -192,7 +192,7 @@
         // Add it to the DB as well
         this.$taskDb.insert(newTask)
         // Expand the task tab corresponding to this task (open up someday if you add a someday task)
-        this.setWhenStatus(this.activeTab)
+        this.setWhenStatusOpen(this.activeTab)
       },
       removeCompleted: function () {
         let projectsToConsiderForRemoval = this.$store.getters.getStoredDescendantProjectIdsOfSelected
@@ -253,6 +253,20 @@
         }
         if (when === 'someday') {
           this.somedayStatus = !this.somedayStatus
+        }
+      },
+      setWhenStatusOpen: function (when) {
+        if (when === 'today') {
+          this.todayStatus = true
+        }
+        if (when === 'thisweek') {
+          this.thisWeekStatus = true
+        }
+        if (when === 'waitingfor') {
+          this.waitingforStatus = true
+        }
+        if (when === 'someday') {
+          this.somedayStatus = true
         }
       },
       // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
