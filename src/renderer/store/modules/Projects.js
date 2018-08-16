@@ -46,8 +46,8 @@ const mutations = {
   setSelectedProject (state, uuid) {
     state.selected = uuid
   },
-  setProjectTargetTaskDrag (state, projectId) {
-    state.projectTargetTaskDrag = projectId
+  setProjectTargetTaskDrag (state, project) {
+    state.projectTargetTaskDrag = project
   },
   setSelectedProjectName (state, name) {
     state.selectedProjectName = name

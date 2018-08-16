@@ -114,8 +114,8 @@ import Vue from 'vue'
       handleDropTask: function (task) {
         console.log('dropped task: ' + task.name + ' in project ' + this.project.name)
         this.$set(task, 'project', this.project.id)
-        this.$taskDb.update({id: task.id}, { $set: { project: task.project } }, {})
-        this.$store.commit('setProjectTargetTaskDrag', this.project.id)
+        this.$taskDb.update({id: task.id}, { $set: { project: task.project, projectName: this.project.name } }, {})
+        this.$store.commit('setProjectTargetTaskDrag', this.project)
         this.dragHappening = false
       },
       handleDropProject: function (project) {

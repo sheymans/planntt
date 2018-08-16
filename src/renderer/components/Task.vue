@@ -58,7 +58,8 @@ import Vue from 'vue'
       dragEndTask: function (event) {
         let projectTarget = this.$store.getters.getProjectTargetTaskDrag
         if (projectTarget) {
-          this.task.project = projectTarget
+          this.task.project = projectTarget.id
+          this.task.projectName = projectTarget.name
         }
       },
       // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
