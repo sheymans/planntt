@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 import projectDb from './datastore/projects'
 import taskDb from './datastore/tasks'
+import archivedTaskDb from './datastore/archivedTasks'
 import 'typeface-roboto/index.css'
 import 'typeface-roboto-mono/index.css'
 import 'typeface-raleway/index.css'
@@ -24,10 +25,12 @@ import faCaretRight from '@fortawesome/fontawesome-free-solid/faCaretRight'
 fontawesome.library.add(faSpinner, faFolder, faFolderOpen, faFolderReg, faFolderOpenReg, faPencilAlt, faCaretDown, faCaretRight)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
+Vue.use(require('vue-moment'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 Vue.prototype.$projectDb = projectDb
 Vue.prototype.$taskDb = taskDb
+Vue.prototype.$archivedTaskDb = archivedTaskDb
 
 /* eslint-disable no-new */
 new Vue({

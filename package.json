@@ -1,6 +1,6 @@
 {
   "name": "planntt",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "author": "Sheldonize, LLC <stijn.heymans@gmail.com>",
   "description": "A Simple ToDo Application",
   "homepage": "http://planntt.com",
@@ -87,6 +87,7 @@
     "vue": "^2.3.3",
     "vue-context-menu": "^2.0.6",
     "vue-electron": "^1.0.6",
+    "vue-moment": "^4.0.0",
     "vue-router": "^2.5.3",
     "vuex": "^2.3.1"
   },

@@ -55,9 +55,14 @@
                 </div>
             </div>
 
-            <button v-show="numberOfCompletedProjectTasks > 0" class="removeTasks" @click="removeCompleted">
-                remove marked
-            </button>
+            <div class="removeTasksLine">
+                <button v-show="numberOfCompletedProjectTasks > 0" class="archiveTasks" @click="archiveCompleted">
+                    mark done
+                </button>
+                <button v-show="numberOfCompletedProjectTasks > 0" class="removeTasks" @click="removeCompleted">
+                    remove selected
+                </button>
+            </div>
         </div>
 
         <TaskDetail :task="selectedTask"/>
@@ -212,6 +217,28 @@
         })
         this.tasks = newTasks
       },
+      archiveCompleted: function () {
+        let projectsToConsiderForRemoval = this.$store.getters.getStoredDescendantProjectIdsOfSelected
+        let selectedTask = this.$store.getters.getSelectedTask
+        let newTasks = []
+        this.tasks.forEach(task => {
+          let keepTask = !projectsToConsiderForRemoval.includes(task.project) || !task.completed
+          if (keepTask) {
+            newTasks.push(task)
+          } else {
+            this.$taskDb.remove(task)
+            // Also remove selected task if it is no longer in newTasks (in other words the selected task was removed)
+            if (selectedTask && selectedTask.id === task.id) {
+              this.unsetSelectedTask()
+            }
+            // Archive Task
+            let archivedTask = Object.assign({}, task)
+            archivedTask.done = new Date()
+            this.$archivedTaskDb.insert(archivedTask)
+          }
+        })
+        this.tasks = newTasks
+      },
       setSelectedTask: function (task) {
         this.selectedTask = task
       },
@@ -299,8 +326,8 @@
         grid-template-rows: 20px 20px 20px 1fr;
         grid-template-columns: 1fr;
         grid-template-areas: "taskHeader"
-                            "taskInput"
-                            "removeTasks"
+                             "taskInput"
+                             "removeTasksLine"
     "theSelectableTaskList";
         grid-row-gap: 10px;
         height: 50vh;
@@ -379,9 +406,23 @@
         color: forestgreen;
     }
 
+    .removeTasksLine {
+        grid-area: removeTasksLine;
+        grid-area: removeTasksLine;
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-template-columns: 250px 250px 1fr;
+        grid-template-areas: "archiveTasks removeTasks ."
+    }
+
     .removeTasks {
         grid-area: removeTasks;
-        justify-self: start;
+        justify-self: end;
+    }
+
+    .archiveTasks {
+        grid-area: archiveTasks;
+        justify-self:start;
     }
 
     ul {
@@ -404,6 +445,26 @@
 
     button {
         background-color: forestgreen;
+        outline: 0;
+        border: none;
+        color: white;
+        font-family: 'Roboto Mono';
+        font-style: normal;
+        font-weight: 500;
+        width: 150px;
+        height: 25px;
+        line-height: 25px;
+        text-transform: uppercase;
+        border-radius: 2px;
+        text-align: center;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: .3s ease-out;
+        font-size: 12px;
+    }
+
+    button.removeTasks {
+        background-color: darkslategrey;
         outline: 0;
         border: none;
         color: white;

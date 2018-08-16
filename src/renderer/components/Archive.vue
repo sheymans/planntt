@@ -6,31 +6,20 @@
             <router-link class="archive" to="/archive">Archive</router-link>
         </div>
         <div class="content">
-            <div class="projectList">
-                <ProjectList/>
-            </div>
-            <TaskList/>
+            <ArchiveList/>
         </div>
     </div>
 </template>
 
 <script>
-  import ProjectList from './ProjectList.vue'
-  import TaskList from './TaskList.vue'
   import Planntt from '../App'
+  import ArchiveList from './ArchiveList.vue'
 
   export default {
-    name: 'MainPage',
+    name: 'Archive',
     components: {
       Planntt,
-      ProjectList,
-      TaskList
-    },
-    data () {
-      return {
-        person: 'molly heymans',
-        person2: 'charlie heymans'
-      }
+      ArchiveList
     }
   }
 </script>
@@ -60,24 +49,17 @@
     .home {
         grid-area: home;
         text-decoration: underline;
-        color: forestgreen;
+        color: black;
     }
 
     .archive {
         grid-area: archive;
         text-decoration: underline;
-        color: black;
+        color: forestgreen;
     }
 
     .content {
         display: grid;
-        grid-template-rows: 1fr;
-        grid-template-columns: 200px 1fr;
-        grid-template-areas: "projectList   taskList";
-    }
-
-    .projectList {
-        grid-area: projectList
     }
 
     #logo {
