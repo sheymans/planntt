@@ -85,15 +85,25 @@
       return {
         newTaskText: '',
         tasks: [],
-        activeTab: 'someday',
-        todayStatus: false,
-        thisWeekStatus: false,
-        waitingforStatus: false,
-        somedayStatus: false,
         selectedTask: {}
       }
     },
     computed: {
+      activeTab: function () {
+        return this.$store.getters.getSelectedTaskTab
+      },
+      todayStatus: function () {
+        return this.$store.getters.isExpanded('today')
+      },
+      thisWeekStatus: function () {
+        return this.$store.getters.isExpanded('thisweek')
+      },
+      waitingforStatus: function () {
+        return this.$store.getters.isExpanded('waitingfor')
+      },
+      somedayStatus: function () {
+        return this.$store.getters.isExpanded('someday')
+      },
       projectTasks: function () {
         // Clean up tasks (set as INBOX project if the project is gone)
         let deletedProjects = this.$store.getters.getDeletedProjects
@@ -177,7 +187,7 @@
     },
     methods: {
       setActiveTab: function (tab) {
-        this.activeTab = tab
+        this.$store.commit('setSelectedTaskTab', tab)
         this.unsetSelectedTask()
       },
       unsetSelectedTask: function () {
@@ -201,7 +211,6 @@
       },
       removeCompleted: function () {
         let projectsToConsiderForRemoval = this.$store.getters.getStoredDescendantProjectIdsOfSelected
-        let selectedTask = this.$store.getters.getSelectedTask
         let newTasks = []
         this.tasks.forEach(task => {
           let keepTask = !projectsToConsiderForRemoval.includes(task.project) || !task.completed
@@ -209,17 +218,12 @@
             newTasks.push(task)
           } else {
             this.$taskDb.remove(task)
-            // Also remove selected task if it is no longer in newTasks (in other words the selected task was removed)
-            if (selectedTask && selectedTask.id === task.id) {
-              this.unsetSelectedTask()
-            }
           }
         })
         this.tasks = newTasks
       },
       archiveCompleted: function () {
         let projectsToConsiderForRemoval = this.$store.getters.getStoredDescendantProjectIdsOfSelected
-        let selectedTask = this.$store.getters.getSelectedTask
         let newTasks = []
         this.tasks.forEach(task => {
           let keepTask = !projectsToConsiderForRemoval.includes(task.project) || !task.completed
@@ -227,10 +231,6 @@
             newTasks.push(task)
           } else {
             this.$taskDb.remove(task)
-            // Also remove selected task if it is no longer in newTasks (in other words the selected task was removed)
-            if (selectedTask && selectedTask.id === task.id) {
-              this.unsetSelectedTask()
-            }
             // Archive Task
             let archivedTask = Object.assign({}, task)
             archivedTask.done = new Date()
@@ -270,31 +270,20 @@
       },
       setWhenStatus: function (when) {
         if (when === 'today') {
-          this.todayStatus = !this.todayStatus
+          this.$store.commit('setExpanded', {what: when, state: !this.todayStatus})
         }
         if (when === 'thisweek') {
-          this.thisWeekStatus = !this.thisWeekStatus
+          this.$store.commit('setExpanded', {what: when, state: !this.thisWeekStatus})
         }
         if (when === 'waitingfor') {
-          this.waitingforStatus = !this.waitingforStatus
+          this.$store.commit('setExpanded', {what: when, state: !this.waitingforStatus})
         }
         if (when === 'someday') {
-          this.somedayStatus = !this.somedayStatus
+          this.$store.commit('setExpanded', {what: when, state: !this.somedayStatus})
         }
       },
       setWhenStatusOpen: function (when) {
-        if (when === 'today') {
-          this.todayStatus = true
-        }
-        if (when === 'thisweek') {
-          this.thisWeekStatus = true
-        }
-        if (when === 'waitingfor') {
-          this.waitingforStatus = true
-        }
-        if (when === 'someday') {
-          this.somedayStatus = true
-        }
+        this.$store.commit('setExpanded', {what: when, state: true})
       },
       // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
       uuidv4: function () {

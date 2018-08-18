@@ -63,7 +63,6 @@ import Vue from 'vue'
     },
     data: function () {
       return {
-        open: false,
         editing: false,
         dragHappening: false
       }
@@ -85,12 +84,15 @@ import Vue from 'vue'
       isSelectedProject: function () {
         let currentlySelected = this.$store.getters.getSelectedProject
         return (currentlySelected === this.project.id)
+      },
+      open: function () {
+        return this.$store.getters.isExpanded(this.project.id)
       }
     },
     methods: {
       toggle: function () {
         if (this.isNonEmptyFolder) {
-          this.open = !this.open
+          this.$store.commit('setExpanded', {what: this.project.id, state: !this.open})
         }
       },
       isInbox: function () {
@@ -138,7 +140,7 @@ import Vue from 'vue'
         console.log('of this project: ' + this.project.name)
         this.project.children.push(project)
         this.updateProjects()
-        this.open = true
+        this.$store.commit('setExpanded', {what: this.project.id, state: true})
         this.dragHappening = false
       },
       handleDragOver: function (event) {
@@ -166,7 +168,7 @@ import Vue from 'vue'
           this.$set(this.project, 'children', [])
           this.addChild()
         }
-        this.open = true
+        this.$store.commit('setExpanded', {what: this.project.id, state: true})
       },
       addChild: function () {
         this.project.children.push({

@@ -7,10 +7,15 @@ const state = {
   subProjects: {},
   deletedProjects: [],
   projectNames: {},
-  projectTargetTaskDrag: null
+  projectTargetTaskDrag: null,
+  expanded: {},
+  selectedTaskTab: 'someday'
 }
 
 const getters = {
+  getSelectedTaskTab (state) {
+    return state.selectedTaskTab
+  },
   getSelectedProject (state) {
     return state.selected
   },
@@ -25,6 +30,12 @@ const getters = {
       return state.projectNames[id]
     }
     return getProjectNameTemp
+  },
+  isExpanded (state) {
+    let isExpandedTemp = (projectIdOrTaskTab) => {
+      return state.expanded[projectIdOrTaskTab]
+    }
+    return isExpandedTemp
   },
   getStoredDescendantProjectIdsOfSelected (state) {
     if (!state.selected) {
@@ -43,8 +54,14 @@ const getters = {
 }
 
 const mutations = {
+  setSelectedTaskTab (state, when) {
+    state.selectedTaskTab = when
+  },
   setSelectedProject (state, uuid) {
     state.selected = uuid
+  },
+  setExpanded (state, projectIdOrTaskTab) {
+    Vue.set(state.expanded, projectIdOrTaskTab.what, projectIdOrTaskTab.state)
   },
   setProjectTargetTaskDrag (state, project) {
     state.projectTargetTaskDrag = project
