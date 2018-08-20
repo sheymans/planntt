@@ -22,13 +22,23 @@ import Vue from 'vue'
     },
     data: function () {
       return {
-        editing: false,
-        isSelectedTask: false
+        editing: false
       }
     },
     computed: {
+      isSelectedTask: function () {
+        let selectedTaskId = this.$store.getters.getSelectedTaskId
+        return selectedTaskId === this.task.id
+      },
       getProjectName: function () {
         return this.$store.getters.getProjectName(this.task.project)
+      }
+    },
+    created () {
+      // Set the selected task based on the stored selected task.
+      let selectedTaskId = this.$store.getters.getSelectedTaskId
+      if (selectedTaskId === this.task.id) {
+        this.$emit('setSelectedTask', this.task)
       }
     },
     filters: {
@@ -50,6 +60,7 @@ import Vue from 'vue'
       },
       selectTask: function () {
         this.$emit('setSelectedTask', this.task)
+        this.$store.commit('setSelectedTaskId', this.task.id)
       },
       dragTask: function (event) {
         this.$store.commit('setProjectTargetTaskDrag', null)

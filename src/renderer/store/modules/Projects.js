@@ -9,12 +9,16 @@ const state = {
   projectNames: {},
   projectTargetTaskDrag: null,
   expanded: {},
-  selectedTaskTab: 'someday'
+  selectedTaskTab: 'someday',
+  selectedTaskId: null
 }
 
 const getters = {
   getSelectedTaskTab (state) {
     return state.selectedTaskTab
+  },
+  getSelectedTaskId (state) {
+    return state.selectedTaskId
   },
   getSelectedProject (state) {
     return state.selected
@@ -54,6 +58,9 @@ const getters = {
 }
 
 const mutations = {
+  setSelectedTaskId (state, id) {
+    state.selectedTaskId = id
+  },
   setSelectedTaskTab (state, when) {
     state.selectedTaskTab = when
   },
