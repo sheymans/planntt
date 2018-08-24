@@ -4,7 +4,7 @@ import Vue from 'vue'
     <div class="taskItem">
         <div class="doneLabel">{{task.done | moment("YYYY-MM-DD hh:mma")}} </div>
         <div class="projectLabel">{{ task.projectName }}</div>
-        <div class="taskSummary">{{ task.name }}</div>
+        <div class="taskSummary" @click="selectTask">{{ task.name }}</div>
     </div>
 </template>
 
@@ -19,6 +19,9 @@ import Vue from 'vue'
       }
     },
     methods: {
+      selectTask: function () {
+        this.$emit('setSelectedTask', this.task)
+      }
     }
   }
 </script>
@@ -32,6 +35,10 @@ import Vue from 'vue'
         grid-template-columns: 250px 100px 1fr;
         grid-template-areas: "doneLabel projectLabel taskSummary";
         align-items: baseline;
+    }
+
+    .taskSummary:hover {
+        background-color: chartreuse;
     }
 
     .taskSummary {

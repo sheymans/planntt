@@ -1,22 +1,29 @@
 <template>
     <div class="archiveList">
-        <ArchivedTask v-for="task in tasks"
-              :key="task.id"
-              :task="task"/>
+        <div class="archiveTasks">
+            <ArchivedTask v-for="task in tasks"
+                          :key="task.id"
+                          @setSelectedTask="setSelectedTask"
+                          :task="task"/>
+        </div>
+        <ArchivedTaskDetail :task="selectedTask"/>
     </div>
 </template>
 
 <script>
   import ArchivedTask from './ArchivedTask.vue'
+  import ArchivedTaskDetail from './ArchivedTaskDetail.vue'
 
   export default {
     name: 'ArchiveList',
     components: {
-      ArchivedTask
+      ArchivedTask,
+      ArchivedTaskDetail
     },
     data () {
       return {
-        tasks: []
+        tasks: [],
+        selectedTask: {}
       }
     },
     created () {
@@ -38,6 +45,9 @@
       })
     },
     methods: {
+      setSelectedTask: function (task) {
+        this.selectedTask = task
+      }
     }
   }
 </script>
@@ -46,6 +56,16 @@
 
     .archiveList {
         grid-area: archiveList;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-areas: "archiveTasks"
+        "taskDetail";
+        grid-row-gap: 50px;
+    }
+
+    .archiveTasks {
+        height: 70vh;
+        overflow: auto;
     }
 
 </style>
