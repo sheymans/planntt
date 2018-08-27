@@ -3,7 +3,7 @@ import Vue from 'vue'
 <template>
     <div class="taskItem">
         <div class="doneLabel">{{task.done | moment("YYYY-MM-DD hh:mma")}} </div>
-        <div class="projectLabel">{{ task.projectName }}</div>
+        <div class="projectLabel">{{ task.projectName }}[{{ task.when }}]</div>
         <div class="taskSummary" @click="selectTask">{{ task.name }}</div>
     </div>
 </template>
@@ -32,7 +32,7 @@ import Vue from 'vue'
         grid-area: taskItem;
         display: grid;
         grid-template-rows: 1fr;
-        grid-template-columns: 250px 100px 1fr;
+        grid-template-columns: 250px 150px 1fr;
         grid-template-areas: "doneLabel projectLabel taskSummary";
         align-items: baseline;
     }
