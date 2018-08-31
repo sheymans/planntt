@@ -120,6 +120,17 @@
 
         let mapOfTasksPerWhen = {'today': [], 'thisweek': [], 'waitingfor': [], 'someday': []}
 
+        // Sort with oldest created on top
+        allTasksToShow.sort((a, b) => {
+          if (a.created && b.created) {
+            return a.created - b.created
+          }
+          if (a.created) {
+            return 1
+          }
+          return -1
+        })
+
         mapOfTasksPerWhen['today'] = allTasksToShow.filter(t => t.when === 'today')
         mapOfTasksPerWhen['thisweek'] = allTasksToShow.filter(t => t.when === 'thisweek')
         mapOfTasksPerWhen['waitingfor'] = allTasksToShow.filter(t => t.when === 'waitingfor')
@@ -201,7 +212,7 @@
         if (!taskName) {
           return
         }
-        let newTask = {id: this.uuidv4(), name: taskName, project: this.selectedProject, projectName: this.selectedProjectName, when: this.activeTab}
+        let newTask = {id: this.uuidv4(), name: taskName, project: this.selectedProject, projectName: this.selectedProjectName, when: this.activeTab, created: new Date()}
         this.tasks.push(newTask)
         this.newTaskText = ''
         // Add it to the DB as well
