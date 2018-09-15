@@ -21,14 +21,15 @@ import Vue from 'vue'
         </div>
 
         <div v-if="Object.keys(task).length !== 0" class="whenChoices">
-            <a @click="setWhen('today')" :class="{'is-active': task.when === 'today'}" class="whenChoice">
+            <a @click="setWhen('today')" :class="{'is-active': task.when === 'today'}" class="whenChoice whenChoiceToday">
                 today</a>
-            <a @click="setWhen('thisweek')" :class="{'is-active': task.when === 'thisweek'}" class="whenChoice">
+            <a @click="setWhen('thisweek')" :class="{'is-active': task.when === 'thisweek'}" class="whenChoice whenChoiceThisWeek">
                 this week</a>
-            <a @click="setWhen('waitingfor')" :class="{'is-active': task.when === 'waitingfor'}" class="whenChoice">
+            <a @click="setWhen('waitingfor')" :class="{'is-active': task.when === 'waitingfor'}" class="whenChoice whenChoiceWaitingFor">
                 waiting for</a>
-            <a @click="setWhen('someday')" :class="{'is-active': task.when === 'someday'}" class="whenChoice">
+            <a @click="setWhen('someday')" :class="{'is-active': task.when === 'someday'}" class="whenChoice whenChoiceSomeday">
                 someday</a>
+            <date-picker class="whenChoiceSpecific" lang="en" @change="changeDate" placeholder="due date" v-model="task.due" :first-day-of-week="1"></date-picker>
         </div>
 
         <button v-if="Object.keys(task).length !== 0" v-show="!editingNote && !task.note" class="is-active addNote" @click="startEditNote">
@@ -61,6 +62,7 @@ import Vue from 'vue'
 
 <script>
   import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+  import DatePicker from 'vue2-datepicker'
 
   // Markdown transformer
   let marked = require('marked')
@@ -73,7 +75,7 @@ import Vue from 'vue'
 
   export default {
     name: 'TaskDetail',
-    components: {FontAwesomeIcon},
+    components: {FontAwesomeIcon, DatePicker},
     props: {
       task: {
         type: Object,
@@ -116,6 +118,9 @@ import Vue from 'vue'
       }
     },
     methods: {
+      changeDate: function (currentValue) {
+        this.saveTask()
+      },
       setWhen: function (when) {
         console.log('setting task to when: ' + when)
         this.task.when = when
@@ -187,7 +192,7 @@ import Vue from 'vue'
     .taskDetail {
         grid-area: taskDetail;
         display: grid;
-        grid-template-rows: 40px 20px 20px 1fr;
+        grid-template-rows: 20px 30px 20px 1fr;
         grid-template-columns: 1fr;
         grid-template-areas:    "editTask"
         "whenChoices"
@@ -234,6 +239,31 @@ import Vue from 'vue'
 
     .whenChoices {
         grid-area: whenChoices;
+        display: grid;
+        grid-template-columns: 50px 70px 80px 70px 1fr;
+        grid-template-areas:    "whenChoiceToday whenChoiceThisWeek whenChoiceWaitingFor whenChoiceSomeday whenChoiceSpecific";
+        align-items: center;
+    }
+
+    .whenChoiceToday {
+        grid-area: whenChoiceToday;
+    }
+
+    .whenChoiceThisWeek {
+        grid-area: whenChoiceThisWeek;
+    }
+
+    .whenChoiceWaitingFor {
+        grid-area: whenChoiceWaitingFor;
+    }
+
+    .whenChoiceSomeday {
+        grid-area: whenChoiceSomeday;
+    }
+
+    .whenChoiceSpecific {
+        grid-area: whenChoiceSpecific;
+        justify-self: end;
     }
 
     .addNote {
@@ -317,7 +347,5 @@ import Vue from 'vue'
         color: white;
         background-color: forestgreen;
     }
-
-
 
 </style>

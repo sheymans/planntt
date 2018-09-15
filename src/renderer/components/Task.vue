@@ -6,7 +6,9 @@ import Vue from 'vue'
             <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
         </div>
         <div class="projectLabel">{{ getProjectName}}</div>
-        <div :class="{selected: isSelectedTask}" @click="selectTask" draggable="true" @dragstart="dragTask" @dragend="dragEndTask" class="taskSummary">{{ task.name }}</div>
+        <div :class="{selected: isSelectedTask}" @click="selectTask" draggable="true" @dragstart="dragTask" @dragend="dragEndTask" class="taskSummary">
+            <span v-if="task.due"  :class="{'is-late': isLate}">[ {{task.due | moment("YYYY-MM-DD")}} ]</span>
+            {{ task.name }}</div>
     </div>
 </template>
 
@@ -32,6 +34,16 @@ import Vue from 'vue'
       },
       getProjectName: function () {
         return this.$store.getters.getProjectName(this.task.project)
+      },
+      isLate: function () {
+        if (this.task.due) {
+          let today = this.$moment()
+          let due = this.$moment(this.task.due)
+          let daysAgo = today.diff(due, 'days')
+          return daysAgo > 0
+        } else {
+          return false
+        }
       }
     },
     created () {
@@ -119,6 +131,10 @@ import Vue from 'vue'
         font-style: normal;
         font-size: 8px;
         -webkit-font-smoothing: antialiased;
+    }
+
+    .is-late {
+        color: red
     }
 
 </style>
