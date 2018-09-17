@@ -1,14 +1,15 @@
 import Vue from 'vue'
 
 const state = {
-  // INBOX is by default selected
-  selected: 1,
-  selectedProjectName: 'INBOX',
+  // All Projects is by default selected
+  selected: 2,
+  selectedProjectName: 'All Projects',
   subProjects: {},
   deletedProjects: [],
   projectNames: {},
   projectTargetTaskDrag: null,
-  expanded: {},
+  // Expand All Projects initially
+  expanded: {"today": true, "thisweek": true},
   selectedTaskTab: 'someday',
   selectedTaskId: null
 }
