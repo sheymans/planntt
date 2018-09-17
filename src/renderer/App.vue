@@ -13,7 +13,7 @@
 <style>
   /* CSS */
 
-  .mx-datepicker {
+  #app .mx-datepicker {
     font: initial;
     font-family: 'Raleway';
     font-style: normal;
@@ -22,7 +22,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .mx-input {
+  #app .mx-input {
     font: initial;
     font-family: 'Raleway';
     font-style: normal;
@@ -31,7 +31,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .mx-calendar {
+  #app .mx-calendar {
     font: initial;
     font-family: 'Raleway';
     font-style: normal;
@@ -40,11 +40,11 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .mx-calendar-content .cell.actived {
+  #app .mx-calendar-content .cell.actived {
     background-color: forestgreen;
   }
 
-  .mx-calendar-content .cell:hover {
+  #app .mx-calendar-content .cell:hover {
     background-color: chartreuse;
   }
 
