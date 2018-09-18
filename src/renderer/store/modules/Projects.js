@@ -9,7 +9,7 @@ const state = {
   projectNames: {},
   projectTargetTaskDrag: null,
   // Expand All Projects initially
-  expanded: {"today": true, "thisweek": true},
+  expanded: {'today': true, 'thisweek': true},
   selectedTaskTab: 'someday',
   selectedTaskId: null
 }

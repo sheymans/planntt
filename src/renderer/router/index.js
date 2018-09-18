@@ -21,6 +21,11 @@ export default new Router({
       component: require('@/components/Archive').default
     },
     {
+      path: '/deadlines',
+      name: 'deadlines',
+      component: require('@/components/Deadlines').default
+    },
+    {
       path: '*',
       redirect: '/'
     }

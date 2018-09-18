@@ -3,6 +3,7 @@
         <div class="header">
             <img class="logo" id="logo" src="~@/assets/planntt.png" alt="planntt">
             <router-link class="home" to="/">Projects</router-link>
+            <router-link class="deadlines" to="/deadlines">Deadlines</router-link>
             <router-link class="archive" to="/archive">Archive</router-link>
         </div>
         <div class="content">
@@ -49,8 +50,8 @@
         display: grid;
         grid-area: header;
         grid-template-rows: 1fr;
-        grid-template-columns: 1fr 60px 60px;
-        grid-template-areas: "logo home archive";
+        grid-template-columns: 1fr 60px 70px 60px;
+        grid-template-areas: "logo home deadlines archive";
     }
 
     .logo {
@@ -65,6 +66,12 @@
 
     .archive {
         grid-area: archive;
+        text-decoration: underline;
+        color: black;
+    }
+
+    .deadlines {
+        grid-area: deadlines;
         text-decoration: underline;
         color: black;
     }
