@@ -7,6 +7,7 @@ import store from './store'
 import projectDb from './datastore/projects'
 import taskDb from './datastore/tasks'
 import archivedTaskDb from './datastore/archivedTasks'
+import preferences from './datastore/preferences'
 import 'typeface-roboto/index.css'
 import 'typeface-roboto-mono/index.css'
 import 'typeface-raleway/index.css'
@@ -31,6 +32,7 @@ Vue.config.productionTip = false
 Vue.prototype.$projectDb = projectDb
 Vue.prototype.$taskDb = taskDb
 Vue.prototype.$archivedTaskDb = archivedTaskDb
+Vue.prototype.$preferences = preferences
 
 /* eslint-disable no-new */
 new Vue({

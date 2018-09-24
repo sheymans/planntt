@@ -12,6 +12,9 @@
             </div>
             <TaskList/>
         </div>
+        <div class="footer">
+            <div class="dataLocation">{{dataLocation}}</div>
+        </div>
     </div>
 </template>
 
@@ -19,6 +22,7 @@
   import ProjectList from './ProjectList.vue'
   import TaskList from './TaskList.vue'
   import Planntt from '../App'
+  import { remote } from 'electron'
 
   export default {
     name: 'MainPage',
@@ -29,9 +33,28 @@
     },
     data () {
       return {
-        person: 'molly heymans',
-        person2: 'charlie heymans'
+        dataLocation: {}
       }
+    },
+    created () {
+      let self = this
+      this.$preferences.find({}, function (err, docs) {
+        if (err) {
+          console.log(err.stack)
+          return
+        }
+        if (!docs || docs.length === 0) {
+          let dataLocation = remote.app.getPath('userData')
+          console.log('no preferences existing, creating new preferences file with data location: ' + dataLocation)
+          let preference = {'dataLocation': dataLocation}
+          self.$preferences.insert(preference)
+          self.dataLocation = dataLocation
+        } else {
+          let dataLocationObject = docs[0]
+          self.dataLocation = dataLocationObject['dataLocation']
+          console.log('data location read from preferences: ' + self.dataLocation)
+        }
+      })
     }
   }
 </script>
@@ -44,6 +67,8 @@
         font-weight: 500;
         font-size: 10pt;
         -webkit-font-smoothing: antialiased;
+        height: 98vh;
+        min-height: 98vh;
     }
 
     .header {
@@ -81,10 +106,27 @@
         grid-template-rows: 1fr;
         grid-template-columns: 200px 1fr;
         grid-template-areas: "projectList   taskList";
+        height: 89vh;
+        min-height: 89vh;
     }
 
     .projectList {
         grid-area: projectList
+    }
+
+    .footer {
+        display: grid;
+        grid-area: footer;
+        grid-template-rows: 1fr;
+        grid-template-areas: "dataLocation";
+    }
+
+    .dataLocation {
+        grid-area: dataLocation;
+        justify-self: end;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 8pt;
     }
 
     #logo {
