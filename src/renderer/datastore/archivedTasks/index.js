@@ -1,24 +1,20 @@
 import Datastore from 'nedb'
 import path from 'path'
 import { remote } from 'electron'
-import preferences from '../preferences'
 
 let dataLocation = remote.app.getPath('userData')
+const fs = require('fs')
+let contents = null
 
-preferences.find({}, function (err, docs) {
-  if (err) {
-    console.log(err.stack)
-    return
+try {
+  contents = JSON.parse(fs.readFileSync(remote.app.getPath('userData') + '/preferences.db').toString())
+  if (contents) {
+    dataLocation = contents['dataLocation']
+    console.log('using data location: ' + dataLocation)
   }
-  if (!docs || docs.length === 0) {
-    // doing nothing, no specific preferences were changed so using default Location
-    console.log('no preferences specified using data location for archived tasks: ' + dataLocation)
-  } else {
-    let dataLocationObject = docs[0]
-    dataLocation = dataLocationObject['dataLocation']
-    console.log('using data location for archived tasks: ' + dataLocation)
-  }
-})
+} catch (err) {
+  console.log('no preferences.db exists')
+}
 
 export default new Datastore({
   autoload: true,
