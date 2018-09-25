@@ -81,6 +81,7 @@
     "nedb": "^1.8.0",
     "npm": "^6.4.1",
     "open": "0.0.5",
+    "save": "^2.3.2",
     "typeface-raleway": "0.0.54",
     "typeface-roboto": "0.0.54",
     "typeface-roboto-mono": "0.0.54",
