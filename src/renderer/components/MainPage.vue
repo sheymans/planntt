@@ -15,12 +15,16 @@
         <div class="footer">
             <modal name="dataLocationModal">
                 <div class="dataLocationChangeDialog">
-                    <h2>Change your Data Location</h2>
-                    <p>Currently, your data is stored at {{preference.dataLocation}}.
-                        You can copy <tt>projects.db</tt>, <tt>tasks.db</tt>, and <tt>archivedTasks.db</tt> to any folder of your choice and tell <tt>planntt</tt> to use that folder to read and write data from.</p>
-                    <p><a class="directoryAction" @click="selectDirectory">Change</a> or <a class="directoryAction" @click="resetDirectory">reset to the original</a></p>
-                    <p v-if="newDataLocation">We will start reading and write data from <b>{{newDataLocation}}</b></p>
-                    <p v-if="newDataLocation"><a class="directoryAction" @click="confirmLocationChange">OK, let's do it</a> or <a class="directoryAction" @click="abortLocationChange">NO, get me out of here</a>.</p>
+                    <div class="dataLocationTitle">Change your Data Location</div>
+                    <div class="dataLocationCurrent">Currently, your data is stored at <i>{{preference.dataLocation}}</i></div>
+                    <div class="dataLocationExplanation">You can copy <tt>projects.db</tt>, <tt>tasks.db</tt>, and <tt>archivedTasks.db</tt> to any folder of your choice and tell <tt>planntt</tt> to use that folder to read and write data from.</div>
+                    <div class="dataLocationNew" v-if="newDataLocation">We will start reading and write data from <b>{{newDataLocation}}</b></div>
+                    <div class="dataLocationActions">
+                        <div v-show="!newDataLocation" class="directoryAction" @click="selectDirectory">change</div>
+                        <div v-show="!newDataLocation" class="directoryAction" @click="resetDirectory">reset</div>
+                        <div v-show="newDataLocation" class="directoryAction" @click="confirmLocationChange">confirm</div>
+                        <div class="directoryAction cancelAction" @click="abortLocationChange">cancel</div>
+                    </div>
                 </div>
             </modal>
             <div class="dataLocation" href="#" @click="openDataLocationChange">{{preference.dataLocation}}</div>
@@ -177,9 +181,56 @@
         cursor:pointer;
     }
 
+    .dataLocationChangeDialog {
+        display: grid;
+        grid-area: dataLocationChangeDialog;
+        grid-template-rows: 30px 30px 40px 40px 1fr;
+        grid-template-areas: "dataLocationTitle"
+        "dataLocationCurrent"
+        "dataLocationExplanation"
+        "dataLocationNew"
+        "dataLocationActions";
+        margin: 20px;
+        height: 250px;
+    }
+
+    .dataLocationTitle {
+        grid-area: dataLocationTitle;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 12pt;
+
+    }
+
+    .dataLocationCurrent {
+        grid-area: dataLocationCurrent;
+    }
+
+    .dataLocationExplanation {
+        grid-area: dataLocationExplanation;
+    }
+
+    .dataLocationNew {
+        grid-area: dataLocationNew;
+    }
+
+    .dataLocationActions {
+        grid-area: dataLocationActions;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        justify-self: end;
+        grid-column-gap: 20px;
+        align-self: end;
+    }
+
     .directoryAction {
         text-decoration: underline;
-        cursor: pointer
+        cursor: pointer;
+        color: forestgreen;
+    }
+
+    .cancelAction {
+        color: black;
     }
 
     #logo {
