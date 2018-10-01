@@ -171,10 +171,9 @@ import Vue from 'vue'
         this.$store.commit('setExpanded', {what: this.project.id, state: true})
       },
       addChild: function () {
-        this.project.children.push({
-          name: 'new project',
-          id: this.uuidv4()
-        })
+        let newChildProject = {name: 'new project', id: this.uuidv4()}
+        this.project.children.push(newChildProject)
+        this.$store.commit('setProjectName', newChildProject)
         this.updateProjects()
       },
       removeChild: function (uuid) {

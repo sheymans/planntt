@@ -179,6 +179,7 @@
         font-size: 8pt;
         text-decoration: underline;
         cursor:pointer;
+        margin-right: 5px;
     }
 
     .dataLocationChangeDialog {

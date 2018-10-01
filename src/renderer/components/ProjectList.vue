@@ -43,11 +43,11 @@
           self.projects = docs
           self.projects.sort((project1, project2) => project1.id - project2.id)
           console.log('read existing project list from db')
-          self.$store.commit('createProjectDependencies', self.projects)
-          console.log('created project dependencies')
-          self.$store.commit('createProjectNames', self.projects)
-          console.log('created project names')
         }
+        self.$store.commit('createProjectDependencies', self.projects)
+        console.log('created project dependencies')
+        self.$store.commit('createProjectNames', self.projects)
+        console.log('created project names')
       })
     },
     methods: {
