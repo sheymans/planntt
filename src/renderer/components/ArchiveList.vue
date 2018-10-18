@@ -1,7 +1,11 @@
 <template>
     <div class="archiveList">
+        <input class="searchInput"
+               autofocus autocomplete="off"
+               placeholder="filter the archive"
+               v-model="searchText">
         <div class="archiveTasks">
-            <ArchivedTask v-for="task in tasks"
+            <ArchivedTask v-for="task in searchedTasks"
                           :key="task.id"
                           @setSelectedTask="setSelectedTask"
                           :task="task"/>
@@ -23,7 +27,8 @@
     data () {
       return {
         tasks: [],
-        selectedTask: {}
+        selectedTask: {},
+        searchText: ''
       }
     },
     created () {
@@ -48,6 +53,26 @@
       setSelectedTask: function (task) {
         this.selectedTask = task
       }
+    },
+    computed: {
+      searchedTasks: function () {
+        let self = this
+        const tasksToShow = this.tasks.filter(task => {
+          const mandatoryFieldsContains = task.name.includes(self.searchText) || task.projectName.includes(self.searchText) || task.when.includes(self.searchText)
+          if (mandatoryFieldsContains) {
+            return mandatoryFieldsContains
+          }
+          if (task.note) {
+            const optionalFieldsContains = task.note.includes(self.searchText)
+            if (optionalFieldsContains) {
+              return optionalFieldsContains
+            }
+          }
+          let doneDay = this.$moment(task.done).format('YYYY-MM-DD hh:mma')
+          return doneDay.includes(self.searchText)
+        })
+        return tasksToShow
+      }
     }
   }
 </script>
@@ -58,7 +83,9 @@
         grid-area: archiveList;
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-areas: "archiveTasks"
+        grid-template-areas:
+                "searchInput"
+                "archiveTasks"
         "taskDetail";
         grid-row-gap: 50px;
     }
@@ -66,6 +93,24 @@
     .archiveTasks {
         height: 70vh;
         overflow: auto;
+    }
+
+    .searchInput {
+        grid-area: searchInput;
+        width: 500px;
+    }
+
+
+    input {
+        font: inherit;
+    }
+
+    input:focus {
+        outline-color: chartreuse;
+    }
+
+    input::selection {
+        background-color: chartreuse;
     }
 
 </style>
