@@ -22,6 +22,7 @@ import faFolderOpenReg from '@fortawesome/fontawesome-free-regular/faFolderOpen'
 import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
 import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
 import faCaretRight from '@fortawesome/fontawesome-free-solid/faCaretRight'
+import 'muze/dist/muze.css'
 
 fontawesome.library.add(faSpinner, faFolder, faFolderOpen, faFolderReg, faFolderOpenReg, faPencilAlt, faCaretDown, faCaretRight)
 

@@ -5,6 +5,7 @@
             <router-link class="home" to="/">Projects</router-link>
             <router-link class="deadlines" to="/deadlines">Deadlines</router-link>
             <router-link class="archive" to="/archive">Archive</router-link>
+            <router-link class="stats" to="/stats">Stats</router-link>
         </div>
         <div class="content">
             <div class="projectList">
@@ -125,8 +126,8 @@
         display: grid;
         grid-area: header;
         grid-template-rows: 1fr;
-        grid-template-columns: 1fr 60px 70px 60px;
-        grid-template-areas: "logo home deadlines archive";
+        grid-template-columns: 1fr 60px 70px 60px 60px;
+        grid-template-areas: "logo home deadlines archive stats";
     }
 
     .logo {
@@ -147,6 +148,12 @@
 
     .deadlines {
         grid-area: deadlines;
+        text-decoration: underline;
+        color: black;
+    }
+
+    .stats {
+        grid-area: stats;
         text-decoration: underline;
         color: black;
     }
