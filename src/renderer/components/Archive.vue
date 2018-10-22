@@ -40,7 +40,7 @@
         display: grid;
         grid-area: header;
         grid-template-rows: 1fr;
-        grid-template-columns: 1fr 60px 70px 60px 60px;
+        grid-template-columns: 1fr 60px 70px 54px 60px;
         grid-template-areas: "logo home deadlines archive stats";
     }
 

@@ -8,11 +8,16 @@
             <router-link class="stats" to="/stats">Stats</router-link>
         </div>
         <div class="content">
+            <div class="statsOverview">
+                <ul>
+                    <li :class="{'is-active': statsType === 'allCompletedTasksPerDay'}" class="statsChoice" @click="tasksCompletedPerDay">completed tasks/day</li>
+                    <li :class="{'is-active': statsType === 'allCompletedTasksPerMonth'}" class="statsChoice" @click="tasksCompletedPerMonth">completed tasks/month</li>
+                </ul>
+            </div>
             <div class="statsList">
             <div class="statsHeader">
-                <b>Tasks Completed Per Day</b>
             </div>
-            <div class="tasksCompletedPerDay" id="done-tasks-per-day"></div>
+            <div class="canvasStats" id="canvasStats"></div>
             </div>
         </div>
     </div>
@@ -29,7 +34,8 @@
     },
     data () {
       return {
-        tasks: []
+        tasks: [],
+        statsType: 'allCompletedTasksPerDay'
       }
     },
     created () {
@@ -47,49 +53,99 @@
             return b.done - a.done
           })
           console.log('read archived task list from db for stats')
-          // Now group by done day:
-          // Count by day:
-          let countTasksByDay = []
-          self.tasks.forEach(task => {
-            const doneDay = self.$moment(task.done).format('YYYY-MM-DD')
-            countTasksByDay.push({done: doneDay, count: 1})
-          })
-
-          const DataModel = muze.DataModel
-          const schema = [
-            {
-              name: 'done', // Name of the variable
-              type: 'dimension', // Date time is a dimension
-              subtype: 'temporal', // Subtype is temporal by which DataModel understands its a datetime variable
-              format: '%Y-%m-%d'
-            },
-            {
-              name: 'count',
-              type: 'measure'
-            }
-          ]
-          const dm = new DataModel(countTasksByDay, schema)
-          const groupBy = DataModel.Operators.groupBy
-          const groupedFn = groupBy(['done'], {count: 'count'})
-          const outputDM = groupedFn(dm)
-          const env = muze()
-          const canvas = env.canvas()
-
-          canvas
-            .data(outputDM)
-            .width(600)
-            .height(400)
-            .rows(['count']) /* Gets plotted on y-axis */
-            .columns(['done']) /* Gets plotted on x-axis */
-            .mount('#done-tasks-per-day') /* Attaching the canvas to DOM element */
+          // Always initialize tasks completed per day
+          self.tasksCompletedPerDay()
         }
       })
     },
-    methods: {},
-    computed: {
-      totalDoneTasks: function () {
-        return this.tasks.length
+    methods: {
+      tasksCompletedPer: function (momentFormat, muzeFormat) {
+        // Now group by format, for example, by day 'YYYY-MM-DD':
+        // Count by day:
+        let countTasksBy = []
+        this.tasks.forEach(task => {
+          const doneDay = this.$moment(task.done).format(momentFormat)
+          countTasksBy.push({date: doneDay, count: 1})
+        })
+
+        const DataModel = muze.DataModel
+        const schema = [
+          {
+            name: 'date', // Name of the variable
+            type: 'dimension' // Date time is a dimension
+          },
+          {
+            name: 'count',
+            type: 'measure'
+          }
+        ]
+        const dm = new DataModel(countTasksBy, schema)
+        const groupBy = DataModel.Operators.groupBy
+        const groupedFn = groupBy(['date'], {count: 'count'})
+        const outputDM = groupedFn(dm).sort([['date', 'ASC']])
+        const env = muze()
+        const canvas = env.canvas()
+        const html = muze.Operators.html
+
+        canvas
+          .data(outputDM)
+          .width(700)
+          .height(500)
+          .rows(['count']) /* Gets plotted on y-axis */
+          .columns(['date']) /* Gets plotted on x-axis */
+          .config({
+            autoGroupBy: { disabled: true },
+            gridLines: {
+              y: { show: true }
+            },
+            border: {
+              showValueBorders: { left: false, bottom: false }
+            },
+            axes: {
+              y: {
+                showAxisName: false
+              },
+              x: {
+                tickFormat: val => {
+                  return this.$moment(val).format(momentFormat)
+                },
+                showInnerTicks: true,
+                showAxisName: false
+              }
+            },
+            interaction: {
+              tooltip: {
+                formatter: (dataModel, context) => {
+                  const tooltipData = dataModel.getData().data
+                  const fieldConfig = dataModel.getFieldsConfig()
+
+                  let tooltipContent = ''
+                  tooltipData.forEach((dataArray, i) => {
+                    const datePoint = this.$moment(dataArray[fieldConfig.date.index]).format(momentFormat)
+                    const countPoint = dataArray[fieldConfig.count.index]
+
+                    tooltipContent += `${countPoint} on ${datePoint}`
+                  })
+                  return html`${tooltipContent}`
+                }
+              }
+            },
+            legend: {
+              size: { show: false }
+            }
+          })
+          .mount('#canvasStats') /* Attaching the canvas to DOM element */
+      },
+      tasksCompletedPerDay: function () {
+        this.statsType = 'allCompletedTasksPerDay'
+        this.tasksCompletedPer('YYYY-MM-DD', '%Y-%m-%d')
+      },
+      tasksCompletedPerMonth: function () {
+        this.statsType = 'allCompletedTasksPerMonth'
+        this.tasksCompletedPer('YYYY-MM', '%Y-%m')
       }
+    },
+    computed: {
     }
   }
 </script>
@@ -108,7 +164,7 @@
         display: grid;
         grid-area: header;
         grid-template-rows: 1fr;
-        grid-template-columns: 1fr 60px 70px 60px 60px;
+        grid-template-columns: 1fr 60px 70px 54px 60px;
         grid-template-areas: "logo home deadlines archive stats";
     }
 
@@ -144,7 +200,9 @@
         display: grid;
         grid-template-rows: 1fr;
         grid-template-columns: 200px 1fr;
-        grid-template-areas: ".   statsList";
+        grid-template-areas: "statsOverview statsList";
+        height: 89vh;
+        min-height: 89vh;
     }
 
     .statsList {
@@ -152,15 +210,15 @@
         display: grid;
         grid-template-rows: 100px 1fr;
         grid-template-areas: "statsHeader"
-                             "tasksCompletedPerDay";
+                             "canvasStats";
     }
 
     .statsHeader {
         grid-area: statsHeader;
     }
 
-    .tasksCompletedPerDay {
-        grid-area: tasksCompletedPerDay;
+    .canvasStats {
+        grid-area: canvasStats;
     }
 
     #logo {
@@ -170,5 +228,27 @@
         margin-left: 10px;
         margin-top: 10px;
     }
+
+    ul {
+        padding-left: 1em;
+        line-height: 1.5em;
+        list-style-type: dot;
+    }
+
+    li {
+        list-style: none;
+    }
+
+    .is-active {
+        text-decoration: underline;
+        cursor:pointer;
+        color: forestgreen;
+    }
+
+    .statsChoice {
+        text-decoration: underline;
+        cursor:pointer;
+    }
+
 
 </style>
