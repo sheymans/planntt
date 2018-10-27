@@ -11,6 +11,7 @@
             <div class="statsOverview">
                 <ul>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerDay'}" class="statsChoice" @click="tasksCompletedPerDay">completed tasks/day</li>
+                    <li :class="{'is-active': statsType === 'allCompletedTasksPerWeek'}" class="statsChoice" @click="tasksCompletedPerWeek">completed tasks/week</li>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerMonth'}" class="statsChoice" @click="tasksCompletedPerMonth">completed tasks/month</li>
                 </ul>
             </div>
@@ -59,7 +60,7 @@
       })
     },
     methods: {
-      tasksCompletedPer: function (momentFormat, muzeFormat) {
+      tasksCompletedPer: function (momentFormat) {
         // Now group by format, for example, by day 'YYYY-MM-DD':
         // Count by day:
         let countTasksBy = []
@@ -107,7 +108,7 @@
               },
               x: {
                 tickFormat: val => {
-                  return this.$moment(val).format(momentFormat)
+                  return val
                 },
                 showInnerTicks: true,
                 showAxisName: false
@@ -121,10 +122,15 @@
 
                   let tooltipContent = ''
                   tooltipData.forEach((dataArray, i) => {
-                    const datePoint = this.$moment(dataArray[fieldConfig.date.index]).format(momentFormat)
+                    const datePoint = dataArray[fieldConfig.date.index]
                     const countPoint = dataArray[fieldConfig.count.index]
 
-                    tooltipContent += `${countPoint} on ${datePoint}`
+                    if (momentFormat === 'YYYY-MM-WW') {
+                      const week = datePoint.substring(datePoint.length - 2, datePoint.length)
+                      tooltipContent += `${countPoint} in week ${week}`
+                    } else {
+                      tooltipContent += `${countPoint} on ${datePoint}`
+                    }
                   })
                   return html`${tooltipContent}`
                 }
@@ -138,11 +144,15 @@
       },
       tasksCompletedPerDay: function () {
         this.statsType = 'allCompletedTasksPerDay'
-        this.tasksCompletedPer('YYYY-MM-DD', '%Y-%m-%d')
+        this.tasksCompletedPer('YYYY-MM-DD')
       },
       tasksCompletedPerMonth: function () {
         this.statsType = 'allCompletedTasksPerMonth'
-        this.tasksCompletedPer('YYYY-MM', '%Y-%m')
+        this.tasksCompletedPer('YYYY-MM')
+      },
+      tasksCompletedPerWeek: function () {
+        this.statsType = 'allCompletedTasksPerWeek'
+        this.tasksCompletedPer('YYYY-MM-WW')
       }
     },
     computed: {
