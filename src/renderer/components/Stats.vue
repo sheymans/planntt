@@ -13,6 +13,9 @@
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerDay'}" class="statsChoice" @click="tasksCompletedPerDay">completed tasks/day</li>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerWeek'}" class="statsChoice" @click="tasksCompletedPerWeek">completed tasks/week</li>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerMonth'}" class="statsChoice" @click="tasksCompletedPerMonth">completed tasks/month</li>
+                    <li :class="{'is-active': statsType === 'allCompletedTasksPerMinute'}" class="statsChoice" @click="tasksCompletedPerMinute">productive minutes</li>
+                    <li :class="{'is-active': statsType === 'allCompletedTasksPerHour'}" class="statsChoice" @click="tasksCompletedPerHour">productive hours</li>
+                    <li :class="{'is-active': statsType === 'allCompletedTasksPerDayOfWeek'}" class="statsChoice" @click="tasksCompletedPerDayOfWeek">productive days</li>
                 </ul>
             </div>
             <div class="statsList">
@@ -108,6 +111,12 @@
               },
               x: {
                 tickFormat: val => {
+                  if (momentFormat === 'E') {
+                    return this.$moment().weekday(val).format('ddd')
+                  }
+                  if (momentFormat === 'HH:mm') {
+                    return ''
+                  }
                   return val
                 },
                 showInnerTicks: true,
@@ -128,6 +137,13 @@
                     if (momentFormat === 'YYYY-MM-WW') {
                       const week = datePoint.substring(datePoint.length - 2, datePoint.length)
                       tooltipContent += `${countPoint} in week ${week}`
+                    } else if (momentFormat === 'HH:mm') {
+                      tooltipContent += `${countPoint} at ${datePoint}`
+                    } else if (momentFormat === 'HH') {
+                      tooltipContent += `${countPoint} at ${datePoint}h`
+                    } else if (momentFormat === 'E') {
+                      const day = this.$moment().weekday(datePoint).format('ddd')
+                      tooltipContent += `${countPoint} on ${day}`
                     } else {
                       tooltipContent += `${countPoint} on ${datePoint}`
                     }
@@ -153,6 +169,18 @@
       tasksCompletedPerWeek: function () {
         this.statsType = 'allCompletedTasksPerWeek'
         this.tasksCompletedPer('YYYY-MM-WW')
+      },
+      tasksCompletedPerMinute: function () {
+        this.statsType = 'allCompletedTasksPerMinute'
+        this.tasksCompletedPer('HH:mm')
+      },
+      tasksCompletedPerHour: function () {
+        this.statsType = 'allCompletedTasksPerHour'
+        this.tasksCompletedPer('HH')
+      },
+      tasksCompletedPerDayOfWeek: function () {
+        this.statsType = 'allCompletedTasksPerDayOfWeek'
+        this.tasksCompletedPer('E')
       }
     },
     computed: {
