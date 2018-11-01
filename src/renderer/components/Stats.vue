@@ -117,6 +117,11 @@
                   if (momentFormat === 'HH:mm') {
                     return ''
                   }
+                  if (momentFormat === 'YYYY-WW') {
+                    const weekNumber = val.substring(val.length - 2, val.length)
+                    const mondayOfWeek = this.$moment().day('Monday').week(weekNumber)
+                    return mondayOfWeek.format('YYYY-MM-DD')
+                  }
                   return val
                 },
                 showInnerTicks: true,
@@ -144,6 +149,11 @@
                     } else if (momentFormat === 'E') {
                       const day = this.$moment().weekday(datePoint).format('ddd')
                       tooltipContent += `${countPoint} on ${day}`
+                    } else if (momentFormat === 'YYYY-WW') {
+                      const weekNumber = datePoint.substring(datePoint.length - 2, datePoint.length)
+                      const mondayOfWeek = this.$moment().day('Monday').week(weekNumber)
+                      const day = mondayOfWeek.format('YYYY-MM-DD')
+                      tooltipContent += `${countPoint} in week of ${day}`
                     } else {
                       tooltipContent += `${countPoint} on ${datePoint}`
                     }
@@ -168,7 +178,7 @@
       },
       tasksCompletedPerWeek: function () {
         this.statsType = 'allCompletedTasksPerWeek'
-        this.tasksCompletedPer('YYYY-MM-WW')
+        this.tasksCompletedPer('YYYY-WW')
       },
       tasksCompletedPerMinute: function () {
         this.statsType = 'allCompletedTasksPerMinute'
