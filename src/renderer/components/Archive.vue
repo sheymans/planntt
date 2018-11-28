@@ -8,6 +8,11 @@
             <router-link class="stats" to="/stats">Stats</router-link>
         </div>
         <div class="content">
+            <div class="archiveActions">
+                <ul>
+                    <li :class="{'is-active': true}" class="exportToCSV" @click="exportToCsv">export</li>
+                </ul>
+            </div>
             <ArchiveList/>
         </div>
     </div>
@@ -22,6 +27,43 @@
     components: {
       Planntt,
       ArchiveList
+    },
+    methods: {
+      exportToCsv: function () {
+        console.log('exporting to CSV')
+        this.$archivedTaskDb.find({}, function (err, docs) {
+          if (err) {
+            console.log(err.stack)
+            return
+          }
+          if (docs && docs.length > 0) {
+            let tasks = docs
+            // Sort tasks by date (latest first):
+            tasks.sort((a, b) => {
+              return b.done - a.done
+            })
+            console.log('read archived task list from db for exporting to db')
+            let csv = 'created,done,name,projectName,note,when\n'
+            tasks.forEach(task => {
+              csv += task.created + ','
+              csv += task.done + ','
+              csv += '"' + task.name + '"' + ','
+              csv += '"' + task.projectName + '"' + ','
+              if (task.note) {
+                csv += '"' + task.note + '"' + ','
+              } else {
+                csv += '"",'
+              }
+              csv += task.when + '\n'
+            })
+            let hiddenElement = document.createElement('a')
+            hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv)
+            hiddenElement.target = '_blank'
+            hiddenElement.download = 'archivedTasks.csv'
+            hiddenElement.click()
+          }
+        })
+      }
     }
   }
 </script>
@@ -76,7 +118,7 @@
         display: grid;
         grid-template-rows: 1fr;
         grid-template-columns: 200px 1fr;
-        grid-template-areas: ".   archiveList";
+        grid-template-areas: "archiveActions   archiveList";
     }
 
     #logo {
@@ -85,6 +127,27 @@
         margin-bottom: 20px;
         margin-left: 10px;
         margin-top: 10px;
+    }
+
+    ul {
+        padding-left: 1em;
+        line-height: 1.5em;
+        list-style-type: dot;
+    }
+
+    li {
+        list-style: none;
+    }
+
+    .is-active {
+        text-decoration: underline;
+        cursor:pointer;
+        color: forestgreen;
+    }
+
+    .exportToCsv {
+        text-decoration: underline;
+        cursor:pointer;
     }
 
 </style>
