@@ -3,20 +3,25 @@ import Vue from 'vue'
 <template>
     <div v-if="Object.keys(task).length !== 0" class="taskDetail">
         <div v-if="Object.keys(task).length !== 0" class="editTask">
-            <div v-show="!editingTaskName" class="taskNameToEdit">
-                <b>{{ task.name }}</b>
-                <font-awesome-icon v-show="!editingTaskName" @click="startEditTaskName" icon="pencil-alt"
-                                   class="iconTaskNameToEdit"/>
+            <div class="editTaskFirstPart">
+                <div v-show="!editingTaskName" class="taskNameToEdit">
+                    <b>{{ task.name }}</b>
+                    <font-awesome-icon v-show="!editingTaskName" @click="startEditTaskName" icon="pencil-alt"
+                                       class="iconTaskNameToEdit"/>
+                </div>
+                <input v-show="editingTaskName"
+                       type="text"
+                       class="inputTaskNameToEdit"
+                       v-model="task.name"
+                       @blur="doneEditTaskName"
+                       @keyup.enter="doneEditTaskName"
+                       @keyup.esc="cancelEditTaskName"
+                       @focus="$event.target.select()"
+                       v-focus="editingTaskName"/>
             </div>
-            <input v-show="editingTaskName"
-                   type="text"
-                   class="inputTaskNameToEdit"
-                   v-model="task.name"
-                   @blur="doneEditTaskName"
-                   @keyup.enter="doneEditTaskName"
-                   @keyup.esc="cancelEditTaskName"
-                   @focus="$event.target.select()"
-                   v-focus="editingTaskName"/>
+            <div v-show="task.created" class="editTaskCreatedDate">
+                created: {{ task.created | moment("YYYY-MM-DD hh:mma")}}
+            </div>
 
         </div>
 
@@ -219,8 +224,19 @@ import Vue from 'vue'
     .editTask {
         grid-area: editTask;
         display: grid;
-        grid-auto-flow: column;
-        overflow: auto;
+        grid-template-rows: 1fr;
+        grid-template-columns: 5fr 1fr;
+        grid-template-areas:    "editTaskFirstPart editTaskCreatedDate";
+    }
+
+    .editTaskFirstPart {
+        grid-area: editTaskFirstPart;
+        display: grid;
+    }
+
+    .editTaskCreatedDate {
+        grid-area: editTaskCreatedDate;
+        display: grid;
     }
 
     .taskNameToEdit {
@@ -346,6 +362,12 @@ import Vue from 'vue'
         text-decoration: none;
         color: white;
         background-color: forestgreen;
+    }
+
+    .editTaskCreatedDate {
+        font-family: Raleway;
+        font-size: small;
+        font-style: italic;
     }
 
 </style>

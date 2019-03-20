@@ -13,6 +13,13 @@
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerDay'}" class="statsChoice" @click="tasksCompletedPerDay">completed tasks/day</li>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerWeek'}" class="statsChoice" @click="tasksCompletedPerWeek">completed tasks/week</li>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerMonth'}" class="statsChoice" @click="tasksCompletedPerMonth">completed tasks/month</li>
+                </ul>
+                <ul>
+                    <li :class="{'is-active': statsType === 'allCreatedTasksPerDay'}" class="statsChoice" @click="tasksCreatedPerDay">created tasks/day</li>
+                    <li :class="{'is-active': statsType === 'allCreatedTasksPerWeek'}" class="statsChoice" @click="tasksCreatedPerWeek">created tasks/week</li>
+                    <li :class="{'is-active': statsType === 'allCreatedTasksPerMonth'}" class="statsChoice" @click="tasksCreatedPerMonth">created tasks/month</li>
+                </ul>
+                <ul>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerMinute'}" class="statsChoice" @click="tasksCompletedPerMinute">productive minutes</li>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerHour'}" class="statsChoice" @click="tasksCompletedPerHour">productive hours</li>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerDayOfWeek'}" class="statsChoice" @click="tasksCompletedPerDayOfWeek">productive days</li>
@@ -38,6 +45,7 @@
     },
     data () {
       return {
+        doneTasks: [],
         tasks: [],
         statsType: 'allCompletedTasksPerDay'
       }
@@ -45,15 +53,16 @@
     created () {
       // Load the data (note we need the self, cause of the callback scope; we could try using an arrow function here)
       let self = this
+      // Read the archived tasks:
       this.$archivedTaskDb.find({}, function (err, docs) {
         if (err) {
           console.log(err.stack)
           return
         }
         if (docs && docs.length > 0) {
-          self.tasks = docs
-          // Sort tasks by date (latest first):
-          self.tasks.sort((a, b) => {
+          self.doneTasks = docs
+          // Sort doneTasks by date (latest first):
+          self.doneTasks.sort((a, b) => {
             return b.done - a.done
           })
           console.log('read archived task list from db for stats')
@@ -61,15 +70,32 @@
           self.tasksCompletedPerDay()
         }
       })
+      // Read the current tasks:
+      this.$taskDb.find({}, function (err, docs) {
+        if (err) {
+          console.log(err.stack)
+          return
+        }
+        if (docs && docs.length > 0) {
+          self.tasks = docs
+          // Sort tasks by created date (latest first):
+          self.tasks.sort((a, b) => {
+            return b.created - a.created
+          })
+          console.log('read task list from db for stats')
+        }
+      })
     },
     methods: {
-      tasksCompletedPer: function (momentFormat) {
+      tasksPer: function (momentFormat, dateSelector, taskList) {
         // Now group by format, for example, by day 'YYYY-MM-DD':
         // Count by day:
         let countTasksBy = []
-        this.tasks.forEach(task => {
-          const doneDay = this.$moment(task.done).format(momentFormat)
-          countTasksBy.push({date: doneDay, count: 1})
+        taskList.forEach(task => {
+          if (dateSelector(task)) {
+            const selectedDay = this.$moment(dateSelector(task)).format(momentFormat)
+            countTasksBy.push({date: selectedDay, count: 1})
+          }
         })
 
         const DataModel = muze.DataModel
@@ -170,27 +196,39 @@
       },
       tasksCompletedPerDay: function () {
         this.statsType = 'allCompletedTasksPerDay'
-        this.tasksCompletedPer('YYYY-MM-DD')
+        this.tasksPer('YYYY-MM-DD', task => task.done, this.doneTasks)
       },
       tasksCompletedPerMonth: function () {
         this.statsType = 'allCompletedTasksPerMonth'
-        this.tasksCompletedPer('YYYY-MM')
+        this.tasksPer('YYYY-MM', task => task.done, this.doneTasks)
       },
       tasksCompletedPerWeek: function () {
         this.statsType = 'allCompletedTasksPerWeek'
-        this.tasksCompletedPer('YYYY-WW')
+        this.tasksPer('YYYY-WW', task => task.done, this.doneTasks)
+      },
+      tasksCreatedPerDay: function () {
+        this.statsType = 'allCreatedTasksPerDay'
+        this.tasksPer('YYYY-MM-DD', task => task.created, this.tasks.concat(this.doneTasks))
+      },
+      tasksCreatedPerMonth: function () {
+        this.statsType = 'allCreatedTasksPerMonth'
+        this.tasksPer('YYYY-MM', task => task.created, this.tasks.concat(this.doneTasks))
+      },
+      tasksCreatedPerWeek: function () {
+        this.statsType = 'allCreatedTasksPerWeek'
+        this.tasksPer('YYYY-WW', task => task.created, this.tasks.concat(this.doneTasks))
       },
       tasksCompletedPerMinute: function () {
         this.statsType = 'allCompletedTasksPerMinute'
-        this.tasksCompletedPer('HH:mm')
+        this.tasksPer('HH:mm', task => task.done, this.doneTasks)
       },
       tasksCompletedPerHour: function () {
         this.statsType = 'allCompletedTasksPerHour'
-        this.tasksCompletedPer('HH')
+        this.tasksPer('HH', task => task.done, this.doneTasks)
       },
       tasksCompletedPerDayOfWeek: function () {
         this.statsType = 'allCompletedTasksPerDayOfWeek'
-        this.tasksCompletedPer('E')
+        this.tasksPer('E', task => task.done, this.doneTasks)
       }
     },
     computed: {
