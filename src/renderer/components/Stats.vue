@@ -319,6 +319,7 @@
         padding-left: 1em;
         line-height: 1.5em;
         list-style-type: dot;
+        margin-bottom: 1em;
     }
 
     li {

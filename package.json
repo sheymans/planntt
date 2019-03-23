@@ -1,7 +1,7 @@
 {
   "name": "planntt",
-  "version": "0.0.42",
-  "author": "Sheldonize, LLC <stijn.heymans@gmail.com>",
+  "version": "0.0.43",
+  "author": "Stijn Heymans <stijn.heymans@gmail.com>",
   "description": "A Simple ToDo Application",
   "homepage": "http://planntt.com",
   "license": "UNLICENSED",
@@ -24,7 +24,7 @@
   "build": {
     "productName": "planntt",
     "appId": "com.planntt",
-    "copyright": "Copyright © 2018 Sheldonize LLC",
+    "copyright": "Copyright © 2018-2019 Sheldonize LLC",
     "directories": {
       "output": "build"
     },
