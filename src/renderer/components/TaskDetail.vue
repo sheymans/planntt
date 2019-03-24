@@ -6,8 +6,10 @@ import Vue from 'vue'
             <div class="editTaskFirstPart">
                 <div v-show="!editingTaskName" class="taskNameToEdit">
                     <b>{{ task.name }}</b>
-                    <font-awesome-icon v-show="!editingTaskName" @click="startEditTaskName" icon="pencil-alt"
+                    <font-awesome-icon v-tooltip.top="{content:'edit task name', class:'tooltip', delay: 50}"
+                                       @click="startEditTaskName" icon="pencil-alt"
                                        class="iconTaskNameToEdit"/>
+                    <font-awesome-icon v-tooltip.top="{content:'duplicate task', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
                 </div>
                 <input v-show="editingTaskName"
                        type="text"
@@ -131,6 +133,9 @@ import Vue from 'vue'
         this.task.when = when
         this.saveTask()
       },
+      duplicateTask: function () {
+        this.$emit('duplicateTask', this.task)
+      },
       startEditTaskName: function () {
         console.log('starting to edit task name: ' + this.task.name)
         this.taskNameBeforeEdit = this.task.name
@@ -179,6 +184,14 @@ import Vue from 'vue'
       },
       saveTask: function () {
         this.$taskDb.update({id: this.task.id}, this.task, {})
+      },
+      // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+      uuidv4: function () {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+          let r = Math.random() * 16 | 0
+          let v = c === 'x' ? r : (r & 0x3 | 0x8)
+          return v.toString(16)
+        })
       }
     },
     // https://vuejs.org/v2/guide/custom-directive.html

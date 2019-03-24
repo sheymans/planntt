@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <TaskDetail :task="selectedTask"/>
+        <TaskDetail :task="selectedTask" @duplicateTask="duplicateTask"/>
     </div>
 </template>
 
@@ -252,6 +252,20 @@
       },
       setSelectedTask: function (task) {
         this.selectedTask = task
+      },
+      duplicateTask: function (task) {
+        let newTask = {}
+        newTask.id = this.uuidv4()
+        newTask.created = new Date()
+        newTask.name = task.name
+        newTask.due = task.due
+        newTask.when = task.when
+        newTask.note = task.note
+        newTask.project = task.project
+        newTask.projectName = task.projectName
+        this.tasks.push(newTask)
+        this.$taskDb.insert(newTask)
+        console.log('duplicated task')
       },
       getWhenStatusExpandedIcon: function (when) {
         if (when === 'today' && this.todayStatus) {

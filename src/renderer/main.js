@@ -22,13 +22,17 @@ import faFolderOpenReg from '@fortawesome/fontawesome-free-regular/faFolderOpen'
 import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
 import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
 import faCaretRight from '@fortawesome/fontawesome-free-solid/faCaretRight'
+import faClone from '@fortawesome/fontawesome-free-solid/faClone'
 import 'muze/dist/muze.css'
+import Tooltip from 'vue-directive-tooltip'
+import 'vue-directive-tooltip/css/index.css'
 
-fontawesome.library.add(faSpinner, faFolder, faFolderOpen, faFolderReg, faFolderOpenReg, faPencilAlt, faCaretDown, faCaretRight)
+fontawesome.library.add(faSpinner, faFolder, faFolderOpen, faFolderReg, faFolderOpenReg, faPencilAlt, faCaretDown, faCaretRight, faClone)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.use(require('vue-moment'))
 Vue.use(VModal)
+Vue.use(Tooltip)
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 Vue.prototype.$projectDb = projectDb
