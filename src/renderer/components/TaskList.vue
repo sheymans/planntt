@@ -228,7 +228,7 @@
           if (keepTask) {
             newTasks.push(task)
           } else {
-            this.$taskDb.remove(task)
+            this.$taskDb.remove({id: task.id})
           }
         })
         this.tasks = newTasks
