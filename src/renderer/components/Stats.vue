@@ -20,6 +20,11 @@
                     <li :class="{'is-active': statsType === 'allCreatedTasksPerMonth'}" class="statsChoice" @click="tasksCreatedPerMonth">created tasks/month</li>
                 </ul>
                 <ul>
+                    <li :class="{'is-active': statsType === 'allDurationTasksPerDay'}" class="statsChoice" @click="tasksDurationPerDay">duration tasks/day</li>
+                    <li :class="{'is-active': statsType === 'allDurationTasksPerWeek'}" class="statsChoice" @click="tasksDurationPerWeek">duration tasks/week</li>
+                    <li :class="{'is-active': statsType === 'allDurationTasksPerMonth'}" class="statsChoice" @click="tasksDurationPerMonth">duration tasks/month</li>
+                </ul>
+                <ul>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerMinute'}" class="statsChoice" @click="tasksCompletedPerMinute">productive minutes</li>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerHour'}" class="statsChoice" @click="tasksCompletedPerHour">productive hours</li>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerDayOfWeek'}" class="statsChoice" @click="tasksCompletedPerDayOfWeek">productive days</li>
@@ -87,14 +92,18 @@
       })
     },
     methods: {
-      tasksPer: function (momentFormat, dateSelector, taskList) {
+      tasksPer: function (momentFormat, dateSelector, taskList, durationDoneAndCreated) {
         // Now group by format, for example, by day 'YYYY-MM-DD':
         // Count by day:
         let countTasksBy = []
         taskList.forEach(task => {
           if (dateSelector(task)) {
             const selectedDay = this.$moment(dateSelector(task)).format(momentFormat)
-            countTasksBy.push({date: selectedDay, count: 1})
+            let durationTaskMs = 0
+            if (task.done && task.created) {
+              durationTaskMs = this.$moment(task.done).diff(this.$moment(task.created))
+            }
+            countTasksBy.push({date: selectedDay, count: 1, duration: durationTaskMs})
           }
         })
 
@@ -107,21 +116,36 @@
           {
             name: 'count',
             type: 'measure'
+          },
+          {
+            name: 'duration',
+            type: 'measure'
           }
         ]
         const dm = new DataModel(countTasksBy, schema)
         const groupBy = DataModel.Operators.groupBy
-        const groupedFn = groupBy(['date'], {count: 'count'})
+
+        let groupedFn
+        if (durationDoneAndCreated) {
+          groupedFn = groupBy(['date'], {duration: 'avg'})
+        } else {
+          groupedFn = groupBy(['date'], {count: 'count'})
+        }
         const outputDM = groupedFn(dm).sort([['date', 'ASC']])
         const env = muze()
         const canvas = env.canvas()
         const html = muze.Operators.html
 
+        let rows = ['count']
+        if (durationDoneAndCreated) {
+          rows = ['duration']
+        }
+
         canvas
           .data(outputDM)
           .width(700)
           .height(500)
-          .rows(['count']) /* Gets plotted on y-axis */
+          .rows(rows) /* Gets plotted on y-axis */
           .columns(['date']) /* Gets plotted on x-axis */
           .config({
             autoGroupBy: { disabled: true },
@@ -133,6 +157,12 @@
             },
             axes: {
               y: {
+                tickFormat: val => {
+                  if (durationDoneAndCreated) {
+                    return Math.floor(this.$moment.duration(val).asHours()) + ' hours'
+                  }
+                  return val
+                },
                 showAxisName: false
               },
               x: {
@@ -145,7 +175,8 @@
                   }
                   if (momentFormat === 'YYYY-WW') {
                     const weekNumber = val.substring(val.length - 2, val.length)
-                    const mondayOfWeek = this.$moment().day('Monday').week(weekNumber)
+                    const year = val.substr(0, 4)
+                    const mondayOfWeek = this.$moment().day('Monday').week(weekNumber).year(year)
                     return mondayOfWeek.format('YYYY-MM-DD')
                   }
                   return val
@@ -163,7 +194,13 @@
                   let tooltipContent = ''
                   tooltipData.forEach((dataArray, i) => {
                     const datePoint = dataArray[fieldConfig.date.index]
-                    const countPoint = dataArray[fieldConfig.count.index]
+                    let durationPoint
+                    let countPoint
+                    if (durationDoneAndCreated) {
+                      durationPoint = this.$moment.duration(dataArray[fieldConfig.duration.index]).humanize()
+                    } else {
+                      countPoint = dataArray[fieldConfig.count.index]
+                    }
 
                     if (momentFormat === 'YYYY-MM-WW') {
                       const week = datePoint.substring(datePoint.length - 2, datePoint.length)
@@ -177,11 +214,20 @@
                       tooltipContent += `${countPoint} on ${day}`
                     } else if (momentFormat === 'YYYY-WW') {
                       const weekNumber = datePoint.substring(datePoint.length - 2, datePoint.length)
-                      const mondayOfWeek = this.$moment().day('Monday').week(weekNumber)
+                      const year = datePoint.substr(0, 4)
+                      const mondayOfWeek = this.$moment().day('Monday').week(weekNumber).year(year)
                       const day = mondayOfWeek.format('YYYY-MM-DD')
-                      tooltipContent += `${countPoint} in week of ${day}`
+                      if (durationDoneAndCreated) {
+                        tooltipContent += `${durationPoint} in week of ${day}`
+                      } else {
+                        tooltipContent += `${countPoint} in week of ${day}`
+                      }
                     } else {
-                      tooltipContent += `${countPoint} on ${datePoint}`
+                      if (durationDoneAndCreated) {
+                        tooltipContent += `${durationPoint} on ${datePoint}`
+                      } else {
+                        tooltipContent += `${countPoint} on ${datePoint}`
+                      }
                     }
                   })
                   return html`${tooltipContent}`
@@ -217,6 +263,18 @@
       tasksCreatedPerWeek: function () {
         this.statsType = 'allCreatedTasksPerWeek'
         this.tasksPer('YYYY-WW', task => task.created, this.tasks.concat(this.doneTasks))
+      },
+      tasksDurationPerDay: function () {
+        this.statsType = 'allDurationTasksPerDay'
+        this.tasksPer('YYYY-MM-DD', task => task.done, this.doneTasks, true)
+      },
+      tasksDurationPerMonth: function () {
+        this.statsType = 'allDurationTasksPerMonth'
+        this.tasksPer('YYYY-MM', task => task.done, this.doneTasks, true)
+      },
+      tasksDurationPerWeek: function () {
+        this.statsType = 'allDurationTasksPerWeek'
+        this.tasksPer('YYYY-WW', task => task.done, this.doneTasks, true)
       },
       tasksCompletedPerMinute: function () {
         this.statsType = 'allCompletedTasksPerMinute'
