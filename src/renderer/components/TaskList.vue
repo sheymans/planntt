@@ -241,7 +241,7 @@
           if (keepTask) {
             newTasks.push(task)
           } else {
-            this.$taskDb.remove(task)
+            this.$taskDb.remove({id: task.id})
             // Archive Task
             let archivedTask = Object.assign({}, task)
             archivedTask.done = new Date()
