@@ -6,7 +6,7 @@
             </div>
             <input class="taskInput"
                    autofocus autocomplete="off"
-                   placeholder="Add a task to this project"
+                   placeholder="Filter tasks/press enter to add a new task"
                    v-model="newTaskText"
                    @keyup.enter="addTask">
 
@@ -131,10 +131,10 @@
           return -1
         })
 
-        mapOfTasksPerWhen['today'] = allTasksToShow.filter(t => t.when === 'today')
-        mapOfTasksPerWhen['thisweek'] = allTasksToShow.filter(t => t.when === 'thisweek')
-        mapOfTasksPerWhen['waitingfor'] = allTasksToShow.filter(t => t.when === 'waitingfor')
-        mapOfTasksPerWhen['someday'] = allTasksToShow.filter(t => t.when === 'someday')
+        mapOfTasksPerWhen['today'] = allTasksToShow.filter(t => t.when === 'today' && this.searchFilter(t, this.newTaskText))
+        mapOfTasksPerWhen['thisweek'] = allTasksToShow.filter(t => t.when === 'thisweek' && this.searchFilter(t, this.newTaskText))
+        mapOfTasksPerWhen['waitingfor'] = allTasksToShow.filter(t => t.when === 'waitingfor' && this.searchFilter(t, this.newTaskText))
+        mapOfTasksPerWhen['someday'] = allTasksToShow.filter(t => t.when === 'someday' && this.searchFilter(t, this.newTaskText))
 
         // If selected task is not in any of the mapOfTasksPerWhen, then unset it.
         if (this.selectedTask && !(mapOfTasksPerWhen['today'].includes(this.selectedTask) || mapOfTasksPerWhen['thisweek'].includes(this.selectedTask) || mapOfTasksPerWhen['waitingfor'].includes(this.selectedTask) || mapOfTasksPerWhen['someday'].includes(this.selectedTask))) {
@@ -197,6 +197,24 @@
       }
     },
     methods: {
+      searchFilter: function (task, textToSearch) {
+        if (!textToSearch) {
+          return true
+        }
+        let lSearch = textToSearch.toLowerCase()
+        const mandatoryFieldsContains = task.name.toLowerCase().includes(lSearch) || task.projectName.toLowerCase().includes(lSearch) || task.when.includes(lSearch)
+        if (mandatoryFieldsContains) {
+          return mandatoryFieldsContains
+        }
+        if (task.note) {
+          const optionalFieldsContains = task.note.toLowerCase().includes(lSearch)
+          if (optionalFieldsContains) {
+            return optionalFieldsContains
+          }
+        }
+        let doneDay = this.$moment(task.done).format('YYYY-MM-DD hh:mma')
+        return doneDay.includes(lSearch)
+      },
       setActiveTab: function (tab) {
         this.$store.commit('setSelectedTaskTab', tab)
         this.unsetSelectedTask()
@@ -219,6 +237,7 @@
         this.$taskDb.insert(newTask)
         // Expand the task tab corresponding to this task (open up someday if you add a someday task)
         this.setWhenStatusOpen(this.activeTab)
+        this.setSelectedTask(newTask)
       },
       removeCompleted: function () {
         let projectsToConsiderForRemoval = this.$store.getters.getStoredDescendantProjectIdsOfSelected
