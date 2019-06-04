@@ -7,7 +7,7 @@ import Vue from 'vue'
         </div>
         <div class="projectLabel">{{ getProjectName}}</div>
         <div :class="{selected: isSelectedTask}" @click="selectTask" draggable="true" @dragstart="dragTask" @dragend="dragEndTask" class="taskSummary">
-            <span v-if="task.blocked"><font-awesome-icon @click="blockTask" icon="ban" v-bind:class="{ blocked: blocked, notBlocked: !blocked }"/></span>
+            <!--<span v-if="task.blocked"><font-awesome-icon @click="blockTask" icon="ban" v-bind:class="{ blocked: blocked, notBlocked: !blocked }"/></span>-->
             <span v-if="task.due"  :class="{'is-late': isLate}">[ {{task.due | moment("YYYY-MM-DD")}} ]</span>
             {{ task.name }}</div>
     </div>

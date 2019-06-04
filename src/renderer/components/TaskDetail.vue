@@ -10,7 +10,7 @@ import Vue from 'vue'
                                        @click="startEditTaskName" icon="pencil-alt"
                                        class="iconTaskNameToEdit"/>
                     <font-awesome-icon v-tooltip.top="{content:'duplicate task', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
-                    <font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" v-bind:class="{ blocked: blocked, notBlocked: !blocked }"/>
+                    <!--<font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" v-bind:class="{ blocked: blocked, notBlocked: !blocked }"/>-->
                 </div>
                 <input v-show="editingTaskName"
                        type="text"
