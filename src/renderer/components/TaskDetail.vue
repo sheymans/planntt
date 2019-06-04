@@ -10,6 +10,7 @@ import Vue from 'vue'
                                        @click="startEditTaskName" icon="pencil-alt"
                                        class="iconTaskNameToEdit"/>
                     <font-awesome-icon v-tooltip.top="{content:'duplicate task', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
+                    <font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" v-bind:class="{ blocked: blocked, notBlocked: !blocked }"/>
                 </div>
                 <input v-show="editingTaskName"
                        type="text"
@@ -106,6 +107,9 @@ import Vue from 'vue'
         if (this.task.note) {
           return marked(this.task.note, {renderer: renderer})
         }
+      },
+      blocked: function () {
+        return this.task.blocked
       }
     },
     filters: {
@@ -135,6 +139,15 @@ import Vue from 'vue'
       },
       duplicateTask: function () {
         this.$emit('duplicateTask', this.task)
+      },
+      blockTask: function () {
+        let currentBlock = this.task.blocked
+        if (currentBlock) {
+          this.task.blocked = false
+        } else {
+          this.task.blocked = true
+        }
+        this.saveTask()
       },
       startEditTaskName: function () {
         console.log('starting to edit task name: ' + this.task.name)
@@ -381,6 +394,14 @@ import Vue from 'vue'
         font-family: Raleway;
         font-size: small;
         font-style: italic;
+    }
+
+    .blocked {
+        color: red;
+    }
+
+    .notBlocked {
+        color: gray;
     }
 
 </style>

@@ -282,6 +282,7 @@
         newTask.note = task.note
         newTask.project = task.project
         newTask.projectName = task.projectName
+        newTask.blocked = task.blocked
         this.tasks.push(newTask)
         this.$taskDb.insert(newTask)
         console.log('duplicated task')

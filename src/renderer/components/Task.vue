@@ -7,15 +7,18 @@ import Vue from 'vue'
         </div>
         <div class="projectLabel">{{ getProjectName}}</div>
         <div :class="{selected: isSelectedTask}" @click="selectTask" draggable="true" @dragstart="dragTask" @dragend="dragEndTask" class="taskSummary">
+            <span v-if="task.blocked"><font-awesome-icon @click="blockTask" icon="ban" v-bind:class="{ blocked: blocked, notBlocked: !blocked }"/></span>
             <span v-if="task.due"  :class="{'is-late': isLate}">[ {{task.due | moment("YYYY-MM-DD")}} ]</span>
             {{ task.name }}</div>
     </div>
 </template>
 
 <script>
+  import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+
   export default {
     name: 'Task',
-    components: {},
+    components: {FontAwesomeIcon},
     props: {
       task: {
         type: Object,
@@ -44,6 +47,9 @@ import Vue from 'vue'
         } else {
           return false
         }
+      },
+      blocked: function () {
+        return this.task.blocked
       }
     },
     created () {
@@ -65,6 +71,15 @@ import Vue from 'vue'
       }
     },
     methods: {
+      blockTask: function () {
+        let currentBlock = this.task.blocked
+        if (currentBlock) {
+          this.task.blocked = false
+        } else {
+          this.task.blocked = true
+        }
+        this.$taskDb.update({id: this.task.id}, {$set: {blocked: this.task.blocked}}, {})
+      },
       toggleTaskCheckbox: function () {
         // save the task when checkbox toggled
         console.log('update task DB for task with id ' + this.task.id + ' to set completed state to ' + this.task.completed)
@@ -135,6 +150,14 @@ import Vue from 'vue'
 
     .is-late {
         color: red
+    }
+
+    .blocked {
+        color: red;
+    }
+
+    .notBlocked {
+        color: gray;
     }
 
 </style>
