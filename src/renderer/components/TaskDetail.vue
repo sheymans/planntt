@@ -10,7 +10,7 @@ import Vue from 'vue'
                                        @click="startEditTaskName" icon="pencil-alt"
                                        class="iconTaskNameToEdit"/>
                     <font-awesome-icon v-tooltip.top="{content:'duplicate task', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
-                    <!--<font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" v-bind:class="{ blocked: blocked, notBlocked: !blocked }"/>-->
+                    <font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" :class="{'blocked': blocked, 'notBlocked': !blocked}"/>
                 </div>
                 <input v-show="editingTaskName"
                        type="text"
@@ -97,6 +97,9 @@ import Vue from 'vue'
       }
     },
     computed: {
+      blocked: function () {
+        return !!this.task.blocked
+      },
       selectedProject: function () {
         return this.$store.getters.getSelectedProject
       },
@@ -107,9 +110,6 @@ import Vue from 'vue'
         if (this.task.note) {
           return marked(this.task.note, {renderer: renderer})
         }
-      },
-      blocked: function () {
-        return this.task.blocked
       }
     },
     filters: {
@@ -143,9 +143,11 @@ import Vue from 'vue'
       blockTask: function () {
         let currentBlock = this.task.blocked
         if (currentBlock) {
-          this.task.blocked = false
+          console.log('unblocking task: ' + this.task.name)
+          this.$set(this.task, 'blocked', false)
         } else {
-          this.task.blocked = true
+          console.log('blocking task: ' + this.task.name)
+          this.$set(this.task, 'blocked', true)
         }
         this.saveTask()
       },

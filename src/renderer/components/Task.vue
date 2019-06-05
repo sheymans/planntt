@@ -7,7 +7,7 @@ import Vue from 'vue'
         </div>
         <div class="projectLabel">{{ getProjectName}}</div>
         <div :class="{selected: isSelectedTask}" @click="selectTask" draggable="true" @dragstart="dragTask" @dragend="dragEndTask" class="taskSummary">
-            <!--<span v-if="task.blocked"><font-awesome-icon @click="blockTask" icon="ban" v-bind:class="{ blocked: blocked, notBlocked: !blocked }"/></span>-->
+            <span v-if="blocked"><font-awesome-icon @click="unblockTask" icon="ban" class="blocked"/></span>
             <span v-if="task.due"  :class="{'is-late': isLate}">[ {{task.due | moment("YYYY-MM-DD")}} ]</span>
             {{ task.name }}</div>
     </div>
@@ -49,7 +49,7 @@ import Vue from 'vue'
         }
       },
       blocked: function () {
-        return this.task.blocked
+        return !!this.task.blocked
       }
     },
     created () {
@@ -71,14 +71,10 @@ import Vue from 'vue'
       }
     },
     methods: {
-      blockTask: function () {
-        let currentBlock = this.task.blocked
-        if (currentBlock) {
-          this.task.blocked = false
-        } else {
-          this.task.blocked = true
-        }
-        this.$taskDb.update({id: this.task.id}, {$set: {blocked: this.task.blocked}}, {})
+      unblockTask: function () {
+        console.log('unblocking task: ' + this.task.name)
+        this.$set(this.task, 'blocked', false)
+        this.$taskDb.update({id: this.task.id}, this.task, {})
       },
       toggleTaskCheckbox: function () {
         // save the task when checkbox toggled
@@ -154,10 +150,6 @@ import Vue from 'vue'
 
     .blocked {
         color: red;
-    }
-
-    .notBlocked {
-        color: gray;
     }
 
 </style>
