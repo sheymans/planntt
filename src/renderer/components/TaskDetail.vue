@@ -11,6 +11,7 @@ import Vue from 'vue'
                                        class="iconTaskNameToEdit"/>
                     <font-awesome-icon v-tooltip.top="{content:'duplicate task', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
                     <font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" :class="{'blocked': blocked, 'notBlocked': !blocked}"/>
+                    <router-link class="focusTask" :to="{ name: 'focusTask', params: { task } }"><font-awesome-icon v-tooltip.top="{content:'focus mode', class:'tooltip', delay: 50}" icon="headphones"/></router-link>
                 </div>
                 <input v-show="editingTaskName"
                        type="text"
@@ -404,6 +405,10 @@ import Vue from 'vue'
 
     .notBlocked {
         color: gray;
+    }
+
+    .focusTask {
+        color: black;
     }
 
 </style>

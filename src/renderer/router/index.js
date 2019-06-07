@@ -31,6 +31,12 @@ export default new Router({
       component: require('@/components/Stats').default
     },
     {
+      path: '/focusTask',
+      name: 'focusTask',
+      component: require('@/components/FocusTask').default,
+      props: true
+    },
+    {
       path: '*',
       redirect: '/'
     }
