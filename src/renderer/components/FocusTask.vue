@@ -40,6 +40,13 @@
         timer: 0
       }
     },
+    mounted () {
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' || event.keyCode === 27) {
+          this.$router.push('/')
+        }
+      })
+    },
     created () {
     },
     methods: {
@@ -70,6 +77,8 @@
         grid-template-rows: 1fr;
         grid-template-columns: 1fr 10px;
         grid-template-areas: ". close";
+        margin-right: 10px;
+        margin-top: 10px;
     }
 
     .close {
