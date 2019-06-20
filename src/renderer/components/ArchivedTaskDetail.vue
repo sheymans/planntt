@@ -9,6 +9,7 @@ import Vue from 'vue'
         <div class="taskNote" v-if="Object.keys(task).length !== 0">
                 <div class="noteDisplay" v-html="markedNote"></div>
         </div>
+        <div class="timers">#sessions: {{numberOfSessions}} | avg time: {{[averageTimePerSession(), 'seconds'] | duration('humanize')}} | total time: {{[totalTimeSpent, 'seconds'] | duration('humanize')}}</div>
     </div>
 </template>
 
@@ -36,9 +37,26 @@ import Vue from 'vue'
         if (this.task.note) {
           return marked(this.task.note, {renderer: renderer})
         }
+      },
+      totalTimeSpent: function () {
+        if (this.task.totalTimeSpent) {
+          return this.task.totalTimeSpent
+        } else {
+          return 0
+        }
+      },
+      numberOfSessions: function () {
+        if (this.task.numberOfSessions) {
+          return this.task.numberOfSessions
+        } else {
+          return 1
+        }
       }
     },
     methods: {
+      averageTimePerSession: function () {
+        return this.totalTimeSpent / this.numberOfSessions
+      }
     }
   }
 </script>
@@ -51,7 +69,8 @@ import Vue from 'vue'
         grid-template-rows: 40px 1fr;
         grid-template-columns: 1fr;
         grid-template-areas:    "taskName"
-        "taskNote";
+        "taskNote"
+        "timers";
         grid-row-gap: 10px;
         background-color: lightgrey;
         margin-right: 50px;
@@ -77,4 +96,13 @@ import Vue from 'vue'
         font-size: 10pt;
         -webkit-font-smoothing: antialiased;
     }
+
+    .timers {
+        display: grid;
+        grid-area: timers;
+        font-size: 9pt;
+        font-weight: lighter;
+        justify-content: center;
+    }
+
 </style>

@@ -2,9 +2,10 @@
     <div id="mainPage">
         <div class="header">
             <div></div>
-            <router-link class="close" to="/"><font-awesome-icon v-tooltip.left="{content:'leave focus mode', class:'tooltip', delay: 50}" icon="times"/></router-link>
+            <font-awesome-icon v-tooltip.left="{content:'leave focus mode', class:'tooltip close', delay: 50}" icon="times" @click="goBack"/>
         </div>
         <div class="content">
+            <div class="timers">#sessions: {{numberOfSessions}} | avg time: {{[averageTimePerSession(), 'seconds'] | duration('humanize')}} | total time: {{[totalTimeSpent, 'seconds'] | duration('humanize')}} | this session: {{[sessionSeconds, 'seconds'] | duration('humanize')}}</div>
             <div class="name">{{task.name }}</div>
             <div class="note" v-html="markedNote"></div>
         </div>
@@ -37,21 +38,63 @@
     },
     data () {
       return {
-        timer: 0
+        sessionSeconds: 0,
+        interval: null
       }
     },
     mounted () {
-      document.addEventListener('keydown', event => {
-        if (event.key === 'Escape' || event.keyCode === 27) {
-          this.$router.push('/')
-        }
-      })
+
     },
     created () {
+      this.interval = setInterval(() => ++this.sessionSeconds, 1000)
+      document.addEventListener('keydown', this.escapeHandler)
+      if (!this.task.numberOfSessions) {
+        this.task.numberOfSessions = 1
+      } else {
+        this.task.numberOfSessions += 1
+      }
+    },
+    destroyed () {
+      clearInterval(this.interval)
+      document.removeEventListener('keydown', this.escapeHandler)
     },
     methods: {
+      averageTimePerSession: function () {
+        return this.totalTimeSpent / this.numberOfSessions
+      },
+      escapeHandler: function (event) {
+        event.stopImmediatePropagation()
+        console.log('executing event listener')
+        if (event.key === 'Escape' || event.keyCode === 27) {
+          this.goBack()
+        }
+      },
+      goBack: function () {
+        if (!this.task.totalTimeSpent) {
+          this.task.totalTimeSpent = this.sessionSeconds
+        } else {
+          this.task.totalTimeSpent += this.sessionSeconds
+        }
+        this.$taskDb.update({id: this.task.id}, this.task, {})
+        console.log('added ' + this.sessionSeconds + ' seconds to make the total ' + this.task.totalTimeSpent)
+        this.$router.push('/')
+      }
     },
     computed: {
+      totalTimeSpent: function () {
+        if (this.task.totalTimeSpent) {
+          return this.task.totalTimeSpent
+        } else {
+          return 0
+        }
+      },
+      numberOfSessions: function () {
+        if (this.task.numberOfSessions) {
+          return this.task.numberOfSessions
+        } else {
+          return 1
+        }
+      },
       markedNote: function () {
         if (this.task.note) {
           return marked(this.task.note, {renderer: renderer})
@@ -89,10 +132,19 @@
     .content {
         display: grid;
         grid-area: content;
-        grid-template-rows: 200px 1fr;
+        grid-template-rows: 100px 200px 1fr;
         grid-template-columns: 1fr;
-        grid-template-areas: "name"
+        grid-template-areas: "timers"
+        "name"
         "note";
+    }
+
+    .timers {
+        display: grid;
+        grid-area: timers;
+        font-size: 9pt;
+        font-weight: lighter;
+        justify-content: center;
     }
 
     .name {

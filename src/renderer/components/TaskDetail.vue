@@ -66,6 +66,7 @@ import Vue from 'vue'
                     <textarea class="noteInput" placeholder="add your note here" v-model="task.note"></textarea>
                 </div>
         </div>
+        <div class="timers">#sessions: {{numberOfSessions}} | avg time: {{[averageTimePerSession(), 'seconds'] | duration('humanize')}} | total time: {{[totalTimeSpent, 'seconds'] | duration('humanize')}}</div>
     </div>
 </template>
 
@@ -107,6 +108,20 @@ import Vue from 'vue'
       selectedProjectName: function () {
         return this.$store.getters.getSelectedProjectName
       },
+      totalTimeSpent: function () {
+        if (this.task.totalTimeSpent) {
+          return this.task.totalTimeSpent
+        } else {
+          return 0
+        }
+      },
+      numberOfSessions: function () {
+        if (this.task.numberOfSessions) {
+          return this.task.numberOfSessions
+        } else {
+          return 1
+        }
+      },
       markedNote: function () {
         if (this.task.note) {
           return marked(this.task.note, {renderer: renderer})
@@ -130,6 +145,9 @@ import Vue from 'vue'
       }
     },
     methods: {
+      averageTimePerSession: function () {
+        return this.totalTimeSpent / this.numberOfSessions
+      },
       changeDate: function (currentValue) {
         this.saveTask()
       },
@@ -226,12 +244,13 @@ import Vue from 'vue'
     .taskDetail {
         grid-area: taskDetail;
         display: grid;
-        grid-template-rows: 20px 30px 20px 1fr;
+        grid-template-rows: 20px 30px 20px 1fr 20px;
         grid-template-columns: 1fr;
         grid-template-areas:    "editTask"
         "whenChoices"
         "addNote"
-        "taskNote";
+        "taskNote"
+        "timers";
         grid-row-gap: 10px;
         background-color: lightgrey;
         margin-right: 50px;
@@ -409,6 +428,14 @@ import Vue from 'vue'
 
     .focusTask {
         color: black;
+    }
+
+    .timers {
+        display: grid;
+        grid-area: timers;
+        font-size: 9pt;
+        font-weight: lighter;
+        justify-content: center;
     }
 
 </style>
