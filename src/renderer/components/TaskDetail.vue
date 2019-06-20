@@ -119,7 +119,7 @@ import Vue from 'vue'
         if (this.task.numberOfSessions) {
           return this.task.numberOfSessions
         } else {
-          return 1
+          return 0
         }
       },
       markedNote: function () {
@@ -146,7 +146,11 @@ import Vue from 'vue'
     },
     methods: {
       averageTimePerSession: function () {
-        return this.totalTimeSpent / this.numberOfSessions
+        if (this.numberOfSessions === 0) {
+          return 0
+        } else {
+          return this.totalTimeSpent / this.numberOfSessions
+        }
       },
       changeDate: function (currentValue) {
         this.saveTask()
