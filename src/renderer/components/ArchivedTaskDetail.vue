@@ -9,7 +9,7 @@ import Vue from 'vue'
         <div class="taskNote" v-if="Object.keys(task).length !== 0">
                 <div class="noteDisplay" v-html="markedNote"></div>
         </div>
-        <div class="timers">#sessions: {{numberOfSessions}} | avg time: {{[averageTimePerSession(), 'seconds'] | duration('humanize')}} | total time: {{[totalTimeSpent, 'seconds'] | duration('humanize')}}</div>
+        <div class="timers">#sessions: {{numberOfSessions}} | total time: {{[totalTimeSpent, 'seconds'] | duration().hours()}}h{{[totalTimeSpent, 'seconds'] | duration().minutes()}}m</div>
     </div>
 </template>
 

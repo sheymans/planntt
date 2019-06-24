@@ -5,7 +5,7 @@
             <font-awesome-icon v-tooltip.left="{content:'leave focus mode', class:'tooltip close', delay: 50}" icon="times" @click="goBack"/>
         </div>
         <div class="content">
-            <div class="timers">#sessions: {{numberOfSessions}} | avg time: {{[averageTimePerSession(), 'seconds'] | duration('humanize')}} | total time: {{[totalTimeSpent, 'seconds'] | duration('humanize')}} | this session: {{[sessionSeconds, 'seconds'] | duration('humanize')}}</div>
+            <div class="timers">#sessions: {{numberOfSessions}} | total time: {{[totalTimeSpent, 'seconds'] | duration().hours()}}h{{[totalTimeSpent, 'seconds'] | duration().minutes()}}m | this session: {{[sessionSeconds, 'seconds'] | duration().minutes()}}m{{[sessionSeconds, 'seconds'] | duration().seconds()}}s</div>
             <div class="name">{{task.name }}</div>
             <div class="note" v-html="markedNote"></div>
         </div>
@@ -75,9 +75,19 @@
         } else {
           this.task.totalTimeSpent += this.sessionSeconds
         }
+        this.updateFocusedTime(this.sessionSeconds)
         this.$taskDb.update({id: this.task.id}, this.task, {})
         console.log('added ' + this.sessionSeconds + ' seconds to make the total ' + this.task.totalTimeSpent)
         this.$router.push('/')
+      },
+      updateFocusedTime: function (sessionSeconds) {
+        // Update Vue store:
+        this.$store.commit('addFocusedTimeToday', sessionSeconds)
+        // Add it to the file-based storage:
+        const currentTodayFocusedTime = this.$store.getters.getFocusedTimeToday
+        console.log('when updating this is current today focused time: ' + currentTodayFocusedTime)
+        const today = this.$moment().format('YYYY-MM-DD')
+        this.$focusedTime.update({date: today}, {date: today, timeInSeconds: currentTodayFocusedTime}, {upsert: true})
       }
     },
     computed: {

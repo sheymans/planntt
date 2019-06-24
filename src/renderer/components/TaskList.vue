@@ -13,7 +13,10 @@
             <div class="theSelectableTaskList">
                 <div class="todayList">
                     <font-awesome-icon class="caretIcon" @click="setWhenStatus('today')" :icon="getWhenStatusExpandedIcon('today')"/>
-                    <a :class="{'is-active': isTabActive('today')}" class="taskTab" @click="setActiveTab('today')">today ({{projectTasks['today'].length}})</a>
+                    <span class="taskTab">
+                        <a :class="{'is-active': isTabActive('today')}" @click="setActiveTab('today')">today ({{projectTasks['today'].length}})</a>
+                        <span class="focusToday"><font-awesome-icon v-tooltip.top="{content:'time in focus mode today', class:'tooltip', delay: 50}" icon="headphones"/>{{[focusedTimeToday, 'seconds'] | duration().hours()}}h{{[focusedTimeToday, 'seconds'] | duration().minutes()}}m{{[focusedTimeToday, 'seconds'] | duration().seconds()}}s</span>
+                    </span>
                     <div class="tasksInTab" v-if="projectTasks['today'].length && todayStatus">
                         <Task v-for="task in projectTasks['today']"
                               :key="task.id"
@@ -85,10 +88,19 @@
       return {
         newTaskText: '',
         tasks: [],
-        selectedTask: {}
+        selectedTask: {},
+        focusedTime: []
       }
     },
     computed: {
+      focusedTimeToday: function () {
+        const currentFocusedSeconds = this.$store.getters.getFocusedTimeToday
+        if (currentFocusedSeconds) {
+          return currentFocusedSeconds
+        } else {
+          return 0
+        }
+      },
       activeTab: function () {
         return this.$store.getters.getSelectedTaskTab
       },
@@ -184,6 +196,21 @@
           self.tasks = docs
           console.log('read existing task list from db')
         }
+      })
+      // TODO: update this find to only get relevant dates (today, yesterday, this week, last week)
+      this.$focusedTime.find({}, function (err, docs) {
+        if (err) {
+          console.log(err.stack)
+          return
+        }
+        if (!docs || docs.length === 0) {
+          // There is nothing there yet. We don't bother adding it as we will also use a storex.
+        } else {
+          self.focusedTime = docs
+          console.log('read focusedTime from DB')
+        }
+        self.$store.commit('createFocusedTime', self.focusedTime)
+        console.log('created focused time in storex')
       })
     },
     filters: {
@@ -407,6 +434,15 @@
         grid-template-columns: 10px 1fr;
         grid-template-areas: "caretIcon taskTab"
         ". tasksInTab";
+    }
+
+    .focusToday {
+        color: gray;
+        text-decoration: none !important;
+        padding-right: 0px;
+        display: inline-block;
+        margin-left: 10px;
+        cursor: default;
     }
 
     .waitingforList {

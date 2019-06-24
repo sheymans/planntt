@@ -66,7 +66,7 @@ import Vue from 'vue'
                     <textarea class="noteInput" placeholder="add your note here" v-model="task.note"></textarea>
                 </div>
         </div>
-        <div class="timers">#sessions: {{numberOfSessions}} | avg time: {{[averageTimePerSession(), 'seconds'] | duration('humanize')}} | total time: {{[totalTimeSpent, 'seconds'] | duration('humanize')}}</div>
+        <div class="timers">#sessions: {{numberOfSessions}} | total time: {{[totalTimeSpent, 'seconds'] | duration().hours()}}h{{[totalTimeSpent, 'seconds'] | duration().minutes()}}m</div>
     </div>
 </template>
 

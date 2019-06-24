@@ -11,7 +11,8 @@ const state = {
   // Expand All Projects initially
   expanded: {'today': true, 'thisweek': true},
   selectedTaskTab: 'someday',
-  selectedTaskId: null
+  selectedTaskId: null,
+  focusedTime: {}
 }
 
 const getters = {
@@ -55,6 +56,11 @@ const getters = {
   },
   getDeletedProjects (state) {
     return state.deletedProjects
+  },
+  getFocusedTimeToday (state) {
+    let today = Vue.moment().format('YYYY-MM-DD')
+    console.log('getting focused time today: ' + today)
+    return state.focusedTime[today]
   }
 }
 
@@ -87,6 +93,29 @@ const mutations = {
       state.selected = 1
       state.selectedProjectName = 'INBOX'
     }
+  },
+  createFocusedTime (state, focusedTime) {
+    // focusedTime is a list of objects {'date': <date>, 'timeInSeconds': <numberInSeconds>} for each date.
+    // We're just storing today for now; later on we can do more.
+    focusedTime.forEach(focusedTimeObject => {
+      const date = focusedTimeObject['date']
+      const timeInSeconds = focusedTimeObject['timeInSeconds']
+      const today = Vue.moment().format('YYYY-MM-DD')
+      if (date === today) {
+        Vue.set(state.focusedTime, today, timeInSeconds)
+        console.log('store: set focusedTime for ' + date + ' to ' + timeInSeconds + ' seconds')
+      }
+    })
+  },
+  addFocusedTimeToday (state, sessionSeconds) {
+    const today = Vue.moment().format('YYYY-MM-DD')
+    let currentSeconds
+    if (state.focusedTime[today]) {
+      currentSeconds = state.focusedTime[today]
+    } else {
+      currentSeconds = 0
+    }
+    Vue.set(state.focusedTime, today, currentSeconds + sessionSeconds)
   },
   createProjectDependencies (state, projects) {
     let getDescendantProjectIds = (project) => {
