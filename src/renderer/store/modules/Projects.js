@@ -69,7 +69,12 @@ const getters = {
   getFocusedTime (state, day) {
     let dayNumber = day.day()
     let thisDay = day.format('YYYY-MM-DD')
-    let thisDaySeconds = state.focusedTime[thisDay]
+    let thisDaySeconds
+    if (state.focusedTime[thisDay]) {
+      thisDaySeconds = state.focusedTime[thisDay]
+    } else {
+      thisDaySeconds = 0
+    }
     console.log('getting focused time for week calculation for: ' + thisDay + ' is ' + thisDaySeconds)
     if (dayNumber === 1) {
       return thisDaySeconds
