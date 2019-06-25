@@ -15,7 +15,7 @@
                     <font-awesome-icon class="caretIcon" @click="setWhenStatus('today')" :icon="getWhenStatusExpandedIcon('today')"/>
                     <span class="taskTab">
                         <a :class="{'is-active': isTabActive('today')}" @click="setActiveTab('today')">today ({{projectTasks['today'].length}})</a>
-                        <span v-show="focusedTimeToday" class="focusToday"><font-awesome-icon v-tooltip.top="{content:'time in focus mode today', class:'tooltip', delay: 50}" icon="headphones"/>{{[focusedTimeToday, 'seconds'] | duration().hours()}}h{{[focusedTimeToday, 'seconds'] | duration().minutes()}}m{{[focusedTimeToday, 'seconds'] | duration().seconds()}}s</span>
+                        <span v-show="focusedTimeToday" class="focusToday"><font-awesome-icon v-tooltip.top="{content:'time in focus mode today', class:'tooltip', delay: 50}" icon="headphones"/> {{[focusedTimeToday, 'seconds'] | duration().hours()}}:{{[focusedTimeToday, 'seconds'] | duration().minutes()}}:{{[focusedTimeToday, 'seconds'] | duration().seconds()}}</span>
                     </span>
                     <div class="tasksInTab" v-if="projectTasks['today'].length && todayStatus">
                         <Task v-for="task in projectTasks['today']"
