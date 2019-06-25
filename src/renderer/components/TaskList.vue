@@ -26,7 +26,11 @@
                 </div>
                 <div class="thisweekList">
                     <font-awesome-icon class="caretIcon"  @click="setWhenStatus('thisweek')" :icon="getWhenStatusExpandedIcon('thisweek')"/>
-                    <a :class="{'is-active': isTabActive('thisweek')}" class="taskTab" @click="setActiveTab('thisweek')">this week ({{projectTasks['thisweek'].length}})</a>
+                    <span class="taskTab">
+                        <a :class="{'is-active': isTabActive('thisweek')}" @click="setActiveTab('thisweek')">this week ({{projectTasks['thisweek'].length}})</a>
+                        <span v-show="focusedTimeThisWeek" class="focusToday"><font-awesome-icon v-tooltip.top="{content:'time in focus mode since Monday', class:'tooltip', delay: 50}" icon="headphones"/> {{[focusedTimeThisWeek, 'seconds'] | duration().hours()}}:{{[focusedTimeThisWeek, 'seconds'] | duration().minutes()}}:{{[focusedTimeThisWeek, 'seconds'] | duration().seconds()}}</span>
+                    </span>
+
                     <div class="tasksInTab"  v-if="projectTasks['thisweek'].length && thisWeekStatus">
                         <Task v-for="task in projectTasks['thisweek']"
                               :key="task.id"
@@ -95,6 +99,14 @@
     computed: {
       focusedTimeToday: function () {
         const currentFocusedSeconds = this.$store.getters.getFocusedTimeToday
+        if (currentFocusedSeconds) {
+          return currentFocusedSeconds
+        } else {
+          return 0
+        }
+      },
+      focusedTimeThisWeek: function () {
+        const currentFocusedSeconds = this.$store.getters.getFocusedTimeThisWeek
         if (currentFocusedSeconds) {
           return currentFocusedSeconds
         } else {

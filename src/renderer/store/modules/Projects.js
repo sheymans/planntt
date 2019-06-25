@@ -61,6 +61,22 @@ const getters = {
     let today = Vue.moment().format('YYYY-MM-DD')
     console.log('getting focused time today: ' + today)
     return state.focusedTime[today]
+  },
+  getFocusedTimeThisWeek (state) {
+    let today = Vue.moment()
+    return getters.getFocusedTime(state, today)
+  },
+  getFocusedTime (state, day) {
+    let dayNumber = day.day()
+    let thisDay = day.format('YYYY-MM-DD')
+    let thisDaySeconds = state.focusedTime[thisDay]
+    console.log('getting focused time for week calculation for: ' + thisDay + ' is ' + thisDaySeconds)
+    if (dayNumber === 1) {
+      return thisDaySeconds
+    } else {
+      let yesterday = day.subtract(1, 'days')
+      return  thisDaySeconds + getters.getFocusedTime(state, yesterday)
+    }
   }
 }
 
@@ -96,15 +112,11 @@ const mutations = {
   },
   createFocusedTime (state, focusedTime) {
     // focusedTime is a list of objects {'date': <date>, 'timeInSeconds': <numberInSeconds>} for each date.
-    // We're just storing today for now; later on we can do more.
     focusedTime.forEach(focusedTimeObject => {
       const date = focusedTimeObject['date']
       const timeInSeconds = focusedTimeObject['timeInSeconds']
-      const today = Vue.moment().format('YYYY-MM-DD')
-      if (date === today) {
-        Vue.set(state.focusedTime, today, timeInSeconds)
-        console.log('store: set focusedTime for ' + date + ' to ' + timeInSeconds + ' seconds')
-      }
+      Vue.set(state.focusedTime, date, timeInSeconds)
+      console.log('store: set focusedTime for ' + date + ' to ' + timeInSeconds + ' seconds')
     })
   },
   addFocusedTimeToday (state, sessionSeconds) {
