@@ -15,6 +15,11 @@
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerMonth'}" class="statsChoice" @click="tasksCompletedPerMonth">completed tasks/month</li>
                 </ul>
                 <ul>
+                    <li :class="{'is-active': statsType === 'focusedTimePerDay'}" class="statsChoice" @click="focusedTimePerDay">focused time/day</li>
+                    <li :class="{'is-active': statsType === 'focusedTimePerWeek'}" class="statsChoice" @click="focusedTimePerWeek">focused time/week</li>
+                    <li :class="{'is-active': statsType === 'focusedTimePerMonth'}" class="statsChoice" @click="focusedTimePerMonth">focused time/month</li>
+                </ul>
+                <ul>
                     <li :class="{'is-active': statsType === 'allCreatedTasksPerDay'}" class="statsChoice" @click="tasksCreatedPerDay">created tasks/day</li>
                     <li :class="{'is-active': statsType === 'allCreatedTasksPerWeek'}" class="statsChoice" @click="tasksCreatedPerWeek">created tasks/week</li>
                     <li :class="{'is-active': statsType === 'allCreatedTasksPerMonth'}" class="statsChoice" @click="tasksCreatedPerMonth">created tasks/month</li>
@@ -52,6 +57,7 @@
       return {
         doneTasks: [],
         tasks: [],
+        focusedTimeObjects: [],
         statsType: 'allCompletedTasksPerDay'
       }
     },
@@ -90,8 +96,118 @@
           console.log('read task list from db for stats')
         }
       })
+      // Read focused time:
+      this.$focusedTime.find({}, function (err, docs) {
+        if (err) {
+          console.log(err.stack)
+          return
+        }
+        if (!docs || docs.length === 0) {
+          // There is nothing there yet.
+        } else {
+          self.focusedTimeObjects = docs
+          console.log('read focusedTime from db for stats')
+        }
+      })
     },
     methods: {
+      focusedTimePer: function (momentFormat) {
+        // Now group by format, for example, by day 'YYYY-MM-DD':
+        // Count by day:
+        let focusedTimeBy = []
+        this.focusedTimeObjects.forEach(focusedTimeObject => {
+          const date = focusedTimeObject['date']
+          const timeInSeconds = focusedTimeObject['timeInSeconds']
+          const transformedDate = this.$moment(date).format(momentFormat)
+          focusedTimeBy.push({date: transformedDate, timeInSeconds: timeInSeconds})
+        })
+
+        const DataModel = muze.DataModel
+        const schema = [
+          {
+            name: 'date', // Name of the variable
+            type: 'dimension' // Date time is a dimension
+          },
+          {
+            name: 'timeInSeconds',
+            type: 'measure'
+          }
+        ]
+        const dm = new DataModel(focusedTimeBy, schema)
+        const groupBy = DataModel.Operators.groupBy
+
+        let groupedFn = groupBy(['date'], {timeInSeconds: 'sum'})
+        const outputDM = groupedFn(dm).sort([['date', 'ASC']])
+        const env = muze()
+        const canvas = env.canvas()
+        const html = muze.Operators.html
+
+        let rows = ['timeInSeconds']
+
+        canvas
+          .data(outputDM)
+          .width(700)
+          .height(500)
+          .rows(rows) /* Gets plotted on y-axis */
+          .columns(['date']) /* Gets plotted on x-axis */
+          .config({
+            autoGroupBy: { disabled: true },
+            gridLines: {
+              y: { show: true }
+            },
+            border: {
+              showValueBorders: { left: false, bottom: false }
+            },
+            axes: {
+              y: {
+                tickFormat: val => {
+                  let xValue = this.$moment.duration(val, 'seconds').hours() + 'h' + this.$moment.duration(val, 'seconds').minutes() + 'm'
+                  return xValue
+                },
+                showAxisName: false
+              },
+              x: {
+                tickFormat: val => {
+                  if (momentFormat === 'YYYY-WW') {
+                    const weekNumber = val.substring(val.length - 2, val.length)
+                    const year = val.substr(0, 4)
+                    const mondayOfWeek = this.$moment().day('Monday').week(weekNumber).year(year)
+                    return mondayOfWeek.format('YYYY-MM-DD')
+                  }
+                  return val
+                },
+                showInnerTicks: true,
+                showAxisName: false
+              }
+            },
+            interaction: {
+              tooltip: {
+                formatter: (dataModel, context) => {
+                  const tooltipData = dataModel.getData().data
+                  const fieldConfig = dataModel.getFieldsConfig()
+
+                  let tooltipContent = ''
+                  tooltipData.forEach((dataArray, i) => {
+                    const datePoint = dataArray[fieldConfig.date.index]
+                    let timeInSecondsPoint = this.$moment.duration(dataArray[fieldConfig.timeInSeconds.index], 'seconds').humanize()
+
+                    if (momentFormat === 'YYYY-WW') {
+                      const week = datePoint.substring(datePoint.length - 2, datePoint.length)
+                      tooltipContent += `${timeInSecondsPoint} in week ${week}`
+                    } else {
+                      tooltipContent += `${timeInSecondsPoint} on ${datePoint}`
+                    }
+                  })
+                  return html`${tooltipContent}`
+                }
+              }
+            },
+            legend: {
+              size: { show: false }
+            }
+          })
+          .mount('#canvasStats') /* Attaching the canvas to DOM element */
+      },
       tasksPer: function (momentFormat, dateSelector, taskList, durationDoneAndCreated) {
         // Now group by format, for example, by day 'YYYY-MM-DD':
         // Count by day:
@@ -239,6 +355,18 @@
             }
           })
           .mount('#canvasStats') /* Attaching the canvas to DOM element */
+      },
+      focusedTimePerDay: function () {
+        this.statsType = 'focusedTimePerDay'
+        this.focusedTimePer('YYYY-MM-DD')
+      },
+      focusedTimePerMonth: function () {
+        this.statsType = 'focusedTimePerMonth'
+        this.focusedTimePer('YYYY-MM')
+      },
+      focusedTimePerWeek: function () {
+        this.statsType = 'focusedTimePerWeek'
+        this.focusedTimePer('YYYY-WW')
       },
       tasksCompletedPerDay: function () {
         this.statsType = 'allCompletedTasksPerDay'
