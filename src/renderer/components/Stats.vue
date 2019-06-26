@@ -112,6 +112,9 @@
     },
     methods: {
       focusedTimePer: function (momentFormat) {
+        // Clear canvas:
+        document.getElementById('canvasStats').innerHTML = ''
+
         // Now group by format, for example, by day 'YYYY-MM-DD':
         // Count by day:
         let focusedTimeBy = []
@@ -143,6 +146,11 @@
         const html = muze.Operators.html
 
         let rows = ['timeInSeconds']
+
+        if (focusedTimeBy.length === 0) {
+          document.getElementById('canvasStats').innerHTML = '<i>no time spent in focused mode</i>'
+          return
+        }
 
         canvas
           .data(outputDM)
@@ -209,6 +217,9 @@
           .mount('#canvasStats') /* Attaching the canvas to DOM element */
       },
       tasksPer: function (momentFormat, dateSelector, taskList, durationDoneAndCreated) {
+        // Clear canvas:
+        document.getElementById('canvasStats').innerHTML = ''
+
         // Now group by format, for example, by day 'YYYY-MM-DD':
         // Count by day:
         let countTasksBy = []

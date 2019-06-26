@@ -80,7 +80,7 @@ const getters = {
       return thisDaySeconds
     } else {
       let yesterday = day.subtract(1, 'days')
-      return  thisDaySeconds + getters.getFocusedTime(state, yesterday)
+      return thisDaySeconds + getters.getFocusedTime(state, yesterday)
     }
   }
 }
