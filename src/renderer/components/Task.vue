@@ -80,10 +80,16 @@ import Vue from 'vue'
         // save the task when checkbox toggled
         console.log('update task DB for task with id ' + this.task.id + ' to set completed state to ' + this.task.completed)
         this.$taskDb.update({id: this.task.id}, {$set: {completed: this.task.completed}}, {})
+        // unselect any selected task to avoid confusion with marking something as 'today', 'thisweek', 'waitingfor'
+        this.unSelectTask()
       },
       selectTask: function () {
         this.$emit('setSelectedTask', this.task)
         this.$store.commit('setSelectedTaskId', this.task.id)
+      },
+      unSelectTask: function () {
+        this.$emit('unsetSelectedTask')
+        this.$store.commit('unsetSelectedTaskId')
       },
       dragTask: function (event) {
         this.$store.commit('setProjectTargetTaskDrag', null)

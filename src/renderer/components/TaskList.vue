@@ -21,6 +21,7 @@
                         <Task v-for="task in projectTasks['today']"
                               :key="task.id"
                               @setSelectedTask="setSelectedTask"
+                              @unsetSelectedTask="unsetSelectedTask"
                               :task="task"/>
                     </div>
                 </div>
@@ -35,6 +36,7 @@
                         <Task v-for="task in projectTasks['thisweek']"
                               :key="task.id"
                               @setSelectedTask="setSelectedTask"
+                              @unsetSelectedTask="unsetSelectedTask"
                               :task="task"/>
                     </div>
                 </div>
@@ -46,6 +48,7 @@
                         <Task v-for="task in projectTasks['waitingfor']"
                               :key="task.id"
                               @setSelectedTask="setSelectedTask"
+                              @unsetSelectedTask="unsetSelectedTask"
                               :task="task"/>
                     </div>
                 </div>
@@ -57,6 +60,7 @@
                         <Task v-for="task in projectTasks['someday']"
                               :key="task.id"
                               @setSelectedTask="setSelectedTask"
+                              @unsetSelectedTask="unsetSelectedTask"
                               :task="task"/>
                     </div>
                 </div>

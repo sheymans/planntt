@@ -89,6 +89,9 @@ const mutations = {
   setSelectedTaskId (state, id) {
     state.selectedTaskId = id
   },
+  unsetSelectedTaskId (state) {
+    state.selectedTaskId = null
+  },
   setSelectedTaskTab (state, when) {
     state.selectedTaskTab = when
   },
