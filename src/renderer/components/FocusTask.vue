@@ -5,7 +5,7 @@
             <font-awesome-icon v-tooltip.left="{content:'leave focus mode', class:'tooltip close', delay: 50}" icon="times" @click="goBack"/>
         </div>
         <div class="content">
-            <div class="timers">#sessions: {{numberOfSessions}} | total time: {{[totalTimeSpent, 'seconds'] | duration().hours()}}h{{[totalTimeSpent, 'seconds'] | duration().minutes()}}m | this session: {{[sessionSeconds, 'seconds'] | duration().minutes()}}m{{[sessionSeconds, 'seconds'] | duration().seconds()}}s</div>
+            <div class="timers">#sessions: {{numberOfSessions}} | total time: {{[totalTimeSpent, 'seconds'] | duration().hours()}}h{{[totalTimeSpent, 'seconds'] | duration().minutes()}}m | this session: {{[totalTimeSpent, 'seconds'] | duration().hours()}}h{{[sessionSeconds, 'seconds'] | duration().minutes()}}m{{[sessionSeconds, 'seconds'] | duration().seconds()}}s</div>
             <div class="name">{{task.name }}</div>
             <div class="note" v-html="markedNote"></div>
         </div>
