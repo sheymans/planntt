@@ -169,7 +169,7 @@
             axes: {
               y: {
                 tickFormat: val => {
-                  let xValue = this.$moment.duration(val, 'seconds').hours() + 'h' + this.$moment.duration(val, 'seconds').minutes() + 'm'
+                  let xValue = this.prettyTotalTimeSpent(val)
                   return xValue
                 },
                 showAxisName: false
@@ -197,7 +197,7 @@
                   let tooltipContent = ''
                   tooltipData.forEach((dataArray, i) => {
                     const datePoint = dataArray[fieldConfig.date.index]
-                    let timeInSecondsPoint = this.$moment.duration(dataArray[fieldConfig.timeInSeconds.index], 'seconds').humanize()
+                    let timeInSecondsPoint = this.prettyTotalTimeSpent(dataArray[fieldConfig.timeInSeconds.index])
 
                     if (momentFormat === 'YYYY-WW') {
                       const week = datePoint.substring(datePoint.length - 2, datePoint.length)
@@ -426,6 +426,16 @@
       tasksCompletedPerDayOfWeek: function () {
         this.statsType = 'allCompletedTasksPerDayOfWeek'
         this.tasksPer('E', task => task.done, this.doneTasks)
+      },
+      prettyTotalTimeSpent: function (timeInSeconds) {
+        let totalTimeSpent = 0
+        if (timeInSeconds) {
+          totalTimeSpent = timeInSeconds
+        }
+        const hours = Math.floor(totalTimeSpent / 3600)
+        const minutes = Math.floor((totalTimeSpent - (hours * 3600)) / 60)
+        const seconds = totalTimeSpent - (hours * 3600) - (minutes * 60)
+        return hours + 'h:' + minutes + 'm:' + seconds + 's'
       }
     },
     computed: {

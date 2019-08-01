@@ -5,7 +5,7 @@
             <font-awesome-icon v-tooltip.left="{content:'leave focus mode', class:'tooltip close', delay: 50}" icon="times" @click="goBack"/>
         </div>
         <div class="content">
-            <div class="timers">#sessions: {{numberOfSessions}} | total time: {{[totalTimeSpent, 'seconds'] | duration().hours()}}h{{[totalTimeSpent, 'seconds'] | duration().minutes()}}m | this session: {{[totalTimeSpent, 'seconds'] | duration().hours()}}h{{[sessionSeconds, 'seconds'] | duration().minutes()}}m{{[sessionSeconds, 'seconds'] | duration().seconds()}}s</div>
+            <div class="timers">#sessions: {{numberOfSessions}} | total time: {{totalTimeSpent}} | this session: {{totalSessionSeconds}}</div>
             <div class="name">{{task.name }}</div>
             <div class="note" v-html="markedNote"></div>
         </div>
@@ -92,11 +92,25 @@
     },
     computed: {
       totalTimeSpent: function () {
+        let totalTimeSpent = 0
         if (this.task.totalTimeSpent) {
-          return this.task.totalTimeSpent
-        } else {
-          return 0
+          totalTimeSpent = this.task.totalTimeSpent
         }
+        totalTimeSpent += this.sessionSeconds
+        const hours = Math.floor(totalTimeSpent / 3600)
+        const minutes = Math.floor((totalTimeSpent - (hours * 3600)) / 60)
+        const seconds = totalTimeSpent - (hours * 3600) - (minutes * 60)
+        return hours + 'h:' + minutes + 'm:' + seconds + 's'
+      },
+      totalSessionSeconds: function () {
+        let totalTimeSpent = 0
+        if (this.sessionSeconds) {
+          totalTimeSpent = this.sessionSeconds
+        }
+        const hours = Math.floor(totalTimeSpent / 3600)
+        const minutes = Math.floor((totalTimeSpent - (hours * 3600)) / 60)
+        const seconds = totalTimeSpent - (hours * 3600) - (minutes * 60)
+        return hours + 'h:' + minutes + 'm:' + seconds + 's'
       },
       numberOfSessions: function () {
         if (this.task.numberOfSessions) {

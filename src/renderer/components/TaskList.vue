@@ -15,7 +15,7 @@
                     <font-awesome-icon class="caretIcon" @click="setWhenStatus('today')" :icon="getWhenStatusExpandedIcon('today')"/>
                     <span class="taskTab">
                         <a :class="{'is-active': isTabActive('today')}" @click="setActiveTab('today')">today ({{projectTasks['today'].length}})</a>
-                        <span v-show="focusedTimeToday" class="focusToday"><font-awesome-icon v-tooltip.top="{content:'time in focus mode today', class:'tooltip', delay: 50}" icon="headphones"/> {{[focusedTimeToday, 'seconds'] | duration().hours()}}:{{[focusedTimeToday, 'seconds'] | duration().minutes()}}:{{[focusedTimeToday, 'seconds'] | duration().seconds()}}</span>
+                        <span v-show="focusedTimeToday" class="focusToday"><font-awesome-icon v-tooltip.top="{content:'time in focus mode today', class:'tooltip', delay: 50}" icon="headphones"/> {{focusedTimeToday}}</span>
                     </span>
                     <div class="tasksInTab" v-if="projectTasks['today'].length && todayStatus">
                         <Task v-for="task in projectTasks['today']"
@@ -29,7 +29,7 @@
                     <font-awesome-icon class="caretIcon"  @click="setWhenStatus('thisweek')" :icon="getWhenStatusExpandedIcon('thisweek')"/>
                     <span class="taskTab">
                         <a :class="{'is-active': isTabActive('thisweek')}" @click="setActiveTab('thisweek')">this week ({{projectTasks['thisweek'].length}})</a>
-                        <span v-show="focusedTimeThisWeek" class="focusToday"><font-awesome-icon v-tooltip.top="{content:'time in focus mode since Monday', class:'tooltip', delay: 50}" icon="headphones"/> {{[focusedTimeThisWeek, 'seconds'] | duration().hours()}}:{{[focusedTimeThisWeek, 'seconds'] | duration().minutes()}}:{{[focusedTimeThisWeek, 'seconds'] | duration().seconds()}}</span>
+                        <span v-show="focusedTimeThisWeek" class="focusToday"><font-awesome-icon v-tooltip.top="{content:'time in focus mode since Monday', class:'tooltip', delay: 50}" icon="headphones"/> {{focusedTimeThisWeek}}</span>
                     </span>
 
                     <div class="tasksInTab"  v-if="projectTasks['thisweek'].length && thisWeekStatus">
@@ -102,20 +102,28 @@
     },
     computed: {
       focusedTimeToday: function () {
-        const currentFocusedSeconds = this.$store.getters.getFocusedTimeToday
-        if (currentFocusedSeconds) {
-          return currentFocusedSeconds
+        let totalTimeSpent = 0
+        if (this.$store.getters.getFocusedTimeToday) {
+          totalTimeSpent = this.$store.getters.getFocusedTimeToday
         } else {
-          return 0
+          return null
         }
+        const hours = Math.floor(totalTimeSpent / 3600)
+        const minutes = Math.floor((totalTimeSpent - (hours * 3600)) / 60)
+        const seconds = totalTimeSpent - (hours * 3600) - (minutes * 60)
+        return hours + 'h:' + minutes + 'm:' + seconds + 's'
       },
       focusedTimeThisWeek: function () {
-        const currentFocusedSeconds = this.$store.getters.getFocusedTimeThisWeek
-        if (currentFocusedSeconds) {
-          return currentFocusedSeconds
+        let totalTimeSpent = 0
+        if (this.$store.getters.getFocusedTimeThisWeek) {
+          totalTimeSpent = this.$store.getters.getFocusedTimeThisWeek
         } else {
-          return 0
+          return null
         }
+        const hours = Math.floor(totalTimeSpent / 3600)
+        const minutes = Math.floor((totalTimeSpent - (hours * 3600)) / 60)
+        const seconds = totalTimeSpent - (hours * 3600) - (minutes * 60)
+        return hours + 'h:' + minutes + 'm:' + seconds + 's'
       },
       activeTab: function () {
         return this.$store.getters.getSelectedTaskTab

@@ -9,7 +9,7 @@ import Vue from 'vue'
         <div class="taskNote" v-if="Object.keys(task).length !== 0">
                 <div class="noteDisplay" v-html="markedNote"></div>
         </div>
-        <div class="timers">#sessions: {{numberOfSessions}} | total time: {{[totalTimeSpent, 'seconds'] | duration().hours()}}h{{[totalTimeSpent, 'seconds'] | duration().minutes()}}m</div>
+        <div class="timers">#sessions: {{numberOfSessions}} | total time: {{prettyTotalTimeSpent}}</div>
     </div>
 </template>
 
@@ -38,19 +38,22 @@ import Vue from 'vue'
           return marked(this.task.note, {renderer: renderer})
         }
       },
-      totalTimeSpent: function () {
-        if (this.task.totalTimeSpent) {
-          return this.task.totalTimeSpent
-        } else {
-          return 0
-        }
-      },
       numberOfSessions: function () {
         if (this.task.numberOfSessions) {
           return this.task.numberOfSessions
         } else {
           return 0
         }
+      },
+      prettyTotalTimeSpent: function () {
+        let totalTimeSpent = 0
+        if (this.task.totalTimeSpent) {
+          totalTimeSpent = this.task.totalTimeSpent
+        }
+        const hours = Math.floor(totalTimeSpent / 3600)
+        const minutes = Math.floor((totalTimeSpent - (hours * 3600)) / 60)
+        const seconds = totalTimeSpent - (hours * 3600) - (minutes * 60)
+        return hours + 'h:' + minutes + 'm:' + seconds + 's'
       }
     },
     methods: {

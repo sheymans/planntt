@@ -66,7 +66,7 @@ import Vue from 'vue'
                     <textarea class="noteInput" placeholder="add your note here" v-model="task.note"></textarea>
                 </div>
         </div>
-        <div class="timers">#sessions: {{numberOfSessions}} | total time: {{[totalTimeSpent, 'seconds'] | duration().hours()}}h{{[totalTimeSpent, 'seconds'] | duration().minutes()}}m</div>
+        <div class="timers">#sessions: {{numberOfSessions}} | total time: {{prettyTotalTimeSpent}}</div>
     </div>
 </template>
 
@@ -108,12 +108,15 @@ import Vue from 'vue'
       selectedProjectName: function () {
         return this.$store.getters.getSelectedProjectName
       },
-      totalTimeSpent: function () {
+      prettyTotalTimeSpent: function () {
+        let totalTimeSpent = 0
         if (this.task.totalTimeSpent) {
-          return this.task.totalTimeSpent
-        } else {
-          return 0
+          totalTimeSpent = this.task.totalTimeSpent
         }
+        const hours = Math.floor(totalTimeSpent / 3600)
+        const minutes = Math.floor((totalTimeSpent - (hours * 3600)) / 60)
+        const seconds = totalTimeSpent - (hours * 3600) - (minutes * 60)
+        return hours + 'h:' + minutes + 'm:' + seconds + 's'
       },
       numberOfSessions: function () {
         if (this.task.numberOfSessions) {
