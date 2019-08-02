@@ -1,6 +1,6 @@
 <template>
     <div class="taskList">
-        <div class="tasks">
+        <div :class="{'tasks': isTaskSelected, 'tasksLarge': !isTaskSelected}">
             <div class="taskHeader">
                     <b>{{selectedProjectName | capitalize}} ({{numberOfProjectTasks}})</b>
             </div>
@@ -101,6 +101,9 @@
       }
     },
     computed: {
+      isTaskSelected: function () {
+        return Object.keys(this.selectedTask).length !== 0
+      },
       focusedTimeToday: function () {
         let totalTimeSpent = 0
         if (this.$store.getters.getFocusedTimeToday) {
@@ -209,6 +212,7 @@
       }
     },
     created () {
+      document.addEventListener('keydown', this.escapeHandler)
       // Load the data (note we need the self, cause of the callback scope; we could try using an arrow function here)
       let self = this
       this.$taskDb.find({}, function (err, docs) {
@@ -237,6 +241,9 @@
         console.log('created focused time in storex')
       })
     },
+    destroyed () {
+      document.removeEventListener('keydown', this.escapeHandler)
+    },
     filters: {
       pluralize: function (n) {
         return n === 1 ? 'task' : 'tasks'
@@ -248,6 +255,13 @@
       }
     },
     methods: {
+      escapeHandler: function (event) {
+        event.stopImmediatePropagation()
+        console.log('executing event listener to unset selection')
+        if (event.key === 'Escape' || event.keyCode === 27) {
+          this.unsetSelectedTask()
+        }
+      },
       searchFilter: function (task, textToSearch) {
         if (!textToSearch) {
           return true
@@ -416,6 +430,19 @@
     "theSelectableTaskList";
         grid-row-gap: 10px;
         height: 50vh;
+    }
+
+    .tasksLarge {
+        grid-area: tasks;
+        display: grid;
+        grid-template-rows: 20px 20px 20px 1fr;
+        grid-template-columns: 1fr;
+        grid-template-areas: "taskHeader"
+        "taskInput"
+        "removeTasksLine"
+        "theSelectableTaskList";
+        grid-row-gap: 10px;
+        height: 85vh;
     }
 
     .taskHeader {
