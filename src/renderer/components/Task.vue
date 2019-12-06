@@ -5,7 +5,7 @@ import Vue from 'vue'
         <div class="taskCheckbox">
             <input type="checkbox" v-model="task.completed" @change="toggleTaskCheckbox">
         </div>
-        <div class="projectLabel">{{ getProjectName}}</div>
+        <div class="projectLabel" @click="expandProject">{{ getProjectName}}</div>
         <div :class="{selected: isSelectedTask}" @click="selectTask" draggable="true" @dragstart="dragTask" @dragend="dragEndTask" class="taskSummary">
             <span v-if="blocked"><font-awesome-icon @click="unblockTask" icon="ban" class="blocked"/></span>
             <span v-if="task.due"  :class="{'is-late': isLate}">[ {{task.due | moment("YYYY-MM-DD")}} ]</span>
@@ -83,6 +83,9 @@ import Vue from 'vue'
         // unselect any selected task to avoid confusion with marking something as 'today', 'thisweek', 'waitingfor'
         this.unSelectTask()
       },
+      expandProject: function () {
+        this.$store.commit('setPathFromRootToProjectExpanded', this.task.project)
+      },
       selectTask: function () {
         this.$emit('setSelectedTask', this.task)
         this.$store.commit('setSelectedTaskId', this.task.id)
@@ -148,6 +151,7 @@ import Vue from 'vue'
         font-style: normal;
         font-size: 8px;
         -webkit-font-smoothing: antialiased;
+        cursor: pointer;
     }
 
     .is-late {

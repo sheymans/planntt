@@ -167,7 +167,6 @@
         display: grid;
         grid-area: timers;
         font-size: 9pt;
-        font-weight: lighter;
         justify-content: center;
     }
 

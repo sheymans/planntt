@@ -11,6 +11,7 @@ import Vue from 'vue'
                                        class="iconTaskNameToEdit"/>
                     <font-awesome-icon v-tooltip.top="{content:'duplicate task', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
                     <font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" :class="{'blocked': blocked, 'notBlocked': !blocked}"/>
+                    <font-awesome-icon v-tooltip.top="{content:'show project', class:'tooltip', delay: 50}" @click="expandProject" icon="crosshairs"/>
                     <router-link class="focusTask" :to="{ name: 'focusTask', params: { task } }"><font-awesome-icon v-tooltip.top="{content:'focus mode', class:'tooltip', delay: 50}" icon="headphones"/></router-link>
                 </div>
                 <input v-show="editingTaskName"
@@ -148,6 +149,9 @@ import Vue from 'vue'
       }
     },
     methods: {
+      expandProject: function () {
+        this.$store.commit('setPathFromRootToProjectExpanded', this.task.project)
+      },
       averageTimePerSession: function () {
         if (this.numberOfSessions === 0) {
           return 0
@@ -441,7 +445,6 @@ import Vue from 'vue'
         display: grid;
         grid-area: timers;
         font-size: 9pt;
-        font-weight: lighter;
         justify-content: center;
     }
 
