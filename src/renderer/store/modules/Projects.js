@@ -105,7 +105,7 @@ const mutations = {
     for (let id in state.subProjects) {
       let subProjects = state.subProjects[id]
       if (subProjects.includes(projectId)) {
-       Vue.set(state.expanded, id, true)
+        Vue.set(state.expanded, id, true)
       } else {
         // and close everything else
         Vue.set(state.expanded, id, false)
