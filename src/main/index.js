@@ -33,7 +33,12 @@ function createWindow () {
     height: 563,
     useContentSize: true,
     width: 1000,
-    icon: path.join(__dirname, 'assets/icons/png/64x64.png')
+    icon: path.join(__dirname, 'assets/icons/png/64x64.png'),
+    webPreferences: {
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true
+    },
+    backgroundColor: '#FFFFFF'
   })
 
   mainWindow.loadURL(winURL)
