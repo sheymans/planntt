@@ -52,10 +52,6 @@
         }
       ]
     },
-    "win": {
-      "target": "NSIS",
-      "icon": "build/icons/planntt_icon.ico"
-    },
     "mac": {
       "target": [
         "dmg",
