@@ -45,7 +45,7 @@
   }
 
   #app .mx-calendar-content .cell:hover {
-    background-color: chartreuse;
+    background-color: #4AD94A;
   }
 
 

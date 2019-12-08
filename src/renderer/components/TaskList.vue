@@ -430,6 +430,7 @@
     "theSelectableTaskList";
         grid-row-gap: 10px;
         height: 50vh;
+        border-bottom: inset #E0E0E0;
     }
 
     .tasksLarge {
@@ -557,11 +558,11 @@
     }
 
     input:focus {
-        outline-color: chartreuse;
+        outline-color: #4AD94A;
     }
 
     input::selection {
-        background-color: chartreuse;
+        background-color: #4AD94A;
     }
 
     button {

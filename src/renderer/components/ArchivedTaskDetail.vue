@@ -79,8 +79,7 @@ import Vue from 'vue'
         "taskNote"
         "timers";
         grid-row-gap: 10px;
-        background-color: lightgrey;
-        margin-right: 50px;
+        background-color: #E0E0E0;
         padding: 20px;
     }
 

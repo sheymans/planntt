@@ -9,10 +9,6 @@ import Vue from 'vue'
                     <font-awesome-icon v-tooltip.top="{content:'edit task name', class:'tooltip', delay: 50}"
                                        @click="startEditTaskName" icon="pencil-alt"
                                        class="iconTaskNameToEdit"/>
-                    <font-awesome-icon v-tooltip.top="{content:'duplicate task', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
-                    <font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" :class="{'blocked': blocked, 'notBlocked': !blocked}"/>
-                    <font-awesome-icon v-tooltip.top="{content:'show project', class:'tooltip', delay: 50}" @click="expandProject" icon="crosshairs"/>
-                    <router-link class="focusTask" :to="{ name: 'focusTask', params: { task } }"><font-awesome-icon v-tooltip.top="{content:'focus mode', class:'tooltip', delay: 50}" icon="headphones"/></router-link>
                 </div>
                 <input v-show="editingTaskName"
                        type="text"
@@ -24,10 +20,12 @@ import Vue from 'vue'
                        @focus="$event.target.select()"
                        v-focus="editingTaskName"/>
             </div>
-            <div v-show="task.created" class="editTaskCreatedDate">
-                created: {{ task.created | moment("YYYY-MM-DD hh:mma")}}
+            <div class="taskIcons">
+                <font-awesome-icon v-tooltip.top="{content:'duplicate task', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
+                <font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" :class="{'blocked': blocked, 'notBlocked': !blocked}"/>
+                <font-awesome-icon v-tooltip.top="{content:'show project', class:'tooltip', delay: 50}" @click="expandProject" icon="crosshairs"/>
+                <router-link class="focusTask" :to="{ name: 'focusTask', params: { task } }"><font-awesome-icon v-tooltip.top="{content:'focus mode', class:'tooltip', delay: 50}" icon="headphones"/></router-link>
             </div>
-
         </div>
 
         <div v-if="Object.keys(task).length !== 0" class="whenChoices">
@@ -67,7 +65,8 @@ import Vue from 'vue'
                     <textarea class="noteInput" placeholder="add your note here" v-model="task.note"></textarea>
                 </div>
         </div>
-        <div class="timers">#sessions: {{numberOfSessions}} | total time: {{prettyTotalTimeSpent}}</div>
+        <div class="timers">#sessions: {{numberOfSessions}} | total time: {{prettyTotalTimeSpent}}  | created: {{ task.created | moment("YYYY-MM-DD hh:mma")}}
+        </div>
     </div>
 </template>
 
@@ -263,8 +262,7 @@ import Vue from 'vue'
         "taskNote"
         "timers";
         grid-row-gap: 10px;
-        background-color: lightgrey;
-        margin-right: 50px;
+        background-color: #E0E0E0;
         padding: 20px;
     }
 
@@ -285,7 +283,7 @@ import Vue from 'vue'
         display: grid;
         grid-template-rows: 1fr;
         grid-template-columns: 5fr 1fr;
-        grid-template-areas:    "editTaskFirstPart editTaskCreatedDate";
+        grid-template-areas:    "editTaskFirstPart taskIcons";
     }
 
     .editTaskFirstPart {
@@ -305,7 +303,7 @@ import Vue from 'vue'
     }
 
     .inputTaskNameToEdit:focus {
-        outline-color: chartreuse;
+        outline-color: #4AD94A;
     }
 
     .iconTaskNameToEdit {
@@ -338,6 +336,11 @@ import Vue from 'vue'
 
     .whenChoiceSpecific {
         grid-area: whenChoiceSpecific;
+        justify-self: end;
+    }
+
+    .taskIcons {
+        grid-area: taskIcons;
         justify-self: end;
     }
 
@@ -386,7 +389,7 @@ import Vue from 'vue'
     }
 
     input::selection {
-        background-color: chartreuse;
+        background-color: #4AD94A;
     }
 
     textarea {
@@ -394,7 +397,7 @@ import Vue from 'vue'
     }
 
     textarea:focus {
-        outline-color: chartreuse;
+        outline-color: #4AD94A;
     }
 
     button {
@@ -421,12 +424,6 @@ import Vue from 'vue'
         text-decoration: none;
         color: white;
         background-color: forestgreen;
-    }
-
-    .editTaskCreatedDate {
-        font-family: Raleway;
-        font-size: small;
-        font-style: italic;
     }
 
     .blocked {

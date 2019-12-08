@@ -276,11 +276,11 @@ import Vue from 'vue'
     }
 
     input:focus {
-        outline-color: chartreuse;
+        outline-color: #4AD94A;
     }
 
     input::selection {
-        background-color: chartreuse;
+        background-color: #4AD94A;
     }
 
     #context-menu {
@@ -292,7 +292,7 @@ import Vue from 'vue'
     }
 
     #context-menu li:hover {
-        background-color: chartreuse;
+        background-color: #4AD94A;
     }
 
 </style>

@@ -100,7 +100,7 @@
     }
 
     .archiveTasks {
-        height: 70vh;
+        height: 60vh;
         overflow: auto;
     }
 
@@ -115,11 +115,11 @@
     }
 
     input:focus {
-        outline-color: chartreuse;
+        outline-color: #4AD94A;
     }
 
     input::selection {
-        background-color: chartreuse;
+        background-color: #4AD94A;
     }
 
 </style>

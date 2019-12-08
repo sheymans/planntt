@@ -38,7 +38,7 @@ import Vue from 'vue'
     }
 
     .taskSummary:hover {
-        background-color: chartreuse;
+        background-color: #4AD94A;
     }
 
     .taskSummary {

@@ -486,7 +486,7 @@
     .stats {
         grid-area: stats;
         text-decoration: underline;
-        color: forestgreen;
+        color:  forestgreen;
     }
 
     .content {
