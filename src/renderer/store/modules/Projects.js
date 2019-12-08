@@ -12,10 +12,14 @@ const state = {
   expanded: {'today': true, 'thisweek': true},
   selectedTaskTab: 'someday',
   selectedTaskId: null,
-  focusedTime: {}
+  focusedTime: {},
+  editingNote: false,
 }
 
 const getters = {
+  isEditingNote (state) {
+    return state.editingNote
+  },
   getSelectedTaskTab (state) {
     return state.selectedTaskTab
   },
@@ -86,6 +90,9 @@ const getters = {
 }
 
 const mutations = {
+  setEditingNote (state, stateChange) {
+    state.editingNote = stateChange
+  },
   setSelectedTaskId (state, id) {
     state.selectedTaskId = id
   },

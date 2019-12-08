@@ -335,6 +335,7 @@
         this.tasks = newTasks
       },
       setSelectedTask: function (task) {
+        this.$store.commit('setEditingNote', false)
         this.selectedTask = task
       },
       duplicateTask: function (task) {

@@ -81,6 +81,7 @@ import Vue from 'vue'
         grid-row-gap: 10px;
         background-color: #E0E0E0;
         padding: 20px;
+        margin-right: 50px;
     }
 
     .taskName {

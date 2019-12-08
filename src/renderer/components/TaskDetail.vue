@@ -94,11 +94,13 @@ import Vue from 'vue'
     },
     data: function () {
       return {
-        editingTaskName: false,
-        editingNote: false
+        editingTaskName: false
       }
     },
     computed: {
+      editingNote: function () {
+        return this.$store.getters.isEditingNote
+      },
       blocked: function () {
         return !!this.task.blocked
       },
@@ -206,11 +208,11 @@ import Vue from 'vue'
       startEditNote: function () {
         console.log('starting to edit note')
         this.noteBeforeEdit = this.task.note
-        this.editingNote = true
+        this.$store.commit('setEditingNote', true)
       },
       doneEditNote: function () {
         console.log('done to edit note')
-        this.editingNote = false
+        this.$store.commit('setEditingNote', false)
         this.noteBeforeEdit = null
         this.saveTask()
       },
@@ -218,13 +220,13 @@ import Vue from 'vue'
         console.log('cancel edit note')
         this.task.note = this.noteBeforeEdit
         this.noteBeforeEdit = null
-        this.editingNote = false
+        this.$store.commit('setEditingNote', false)
       },
       deleteEditNote: function () {
         console.log('delete edit note')
         this.task.note = null
         this.saveTask()
-        this.editingNote = false
+        this.$store.commit('setEditingNote', false)
       },
       saveTask: function () {
         this.$taskDb.update({id: this.task.id}, this.task, {})
@@ -264,6 +266,7 @@ import Vue from 'vue'
         grid-row-gap: 10px;
         background-color: #E0E0E0;
         padding: 20px;
+        margin-right: 50px;
     }
 
     .whenChoice {
