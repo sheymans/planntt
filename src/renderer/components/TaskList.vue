@@ -431,7 +431,6 @@
     "theSelectableTaskList";
         grid-row-gap: 10px;
         height: 50vh;
-        border-bottom: inset #E0E0E0;
     }
 
     .tasksLarge {
