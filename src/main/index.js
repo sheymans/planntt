@@ -73,20 +73,6 @@ app.on('activate', () => {
 })
 
 /**
- * ensureSafeQuitAndInstall
- *
- * @access  public
- * @return  void
- */
-function ensureSafeQuitAndInstall () {
-  app.removeAllListeners('window-all-closed')
-  let browserWindows = BrowserWindow.getAllWindows()
-  browserWindows.forEach(browserWindow => {
-    browserWindow.removeAllListeners('close')
-  })
-}
-
-/**
  * Auto Updater
  *
  * Uncomment the following code below and install `electron-updater` to
