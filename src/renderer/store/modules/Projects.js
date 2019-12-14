@@ -13,7 +13,7 @@ const state = {
   selectedTaskTab: 'someday',
   selectedTaskId: null,
   focusedTime: {},
-  editingNote: false,
+  editingNote: false
 }
 
 const getters = {

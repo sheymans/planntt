@@ -5,10 +5,8 @@ import Vue from 'vue'
         <div v-if="Object.keys(task).length !== 0" class="editTask">
             <div class="editTaskFirstPart">
                 <div v-show="!editingTaskName" class="taskNameToEdit">
+                    <font-awesome-icon v-tooltip.top="{content:'close detail', class:'tooltip', delay: 50}" @click="closeDetail" icon="arrow-left" class="iconArrowLeft"/>
                     <b>{{ task.name }}</b>
-                    <font-awesome-icon v-tooltip.top="{content:'edit task name', class:'tooltip', delay: 50}"
-                                       @click="startEditTaskName" icon="pencil-alt"
-                                       class="iconTaskNameToEdit"/>
                 </div>
                 <input v-show="editingTaskName"
                        type="text"
@@ -21,6 +19,9 @@ import Vue from 'vue'
                        v-focus="editingTaskName"/>
             </div>
             <div class="taskIcons">
+                <font-awesome-icon v-tooltip.top="{content:'edit task name', class:'tooltip', delay: 50}"
+                                   @click="startEditTaskName" icon="pencil-alt"
+                                   class="iconTaskNameToEdit"/>
                 <font-awesome-icon v-tooltip.top="{content:'duplicate task', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
                 <font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" :class="{'blocked': blocked, 'notBlocked': !blocked}"/>
                 <font-awesome-icon v-tooltip.top="{content:'show project', class:'tooltip', delay: 50}" @click="expandProject" icon="crosshairs"/>
@@ -171,6 +172,9 @@ import Vue from 'vue'
       duplicateTask: function () {
         this.$emit('duplicateTask', this.task)
       },
+      closeDetail: function () {
+        this.$emit('closeDetail', this.task)
+      },
       blockTask: function () {
         let currentBlock = this.task.blocked
         if (currentBlock) {
@@ -255,18 +259,14 @@ import Vue from 'vue'
 
     .taskDetail {
         grid-area: taskDetail;
-        display: grid;
-        grid-template-rows: 20px 30px 20px 1fr 20px;
-        grid-template-columns: 1fr;
-        grid-template-areas:    "editTask"
-        "whenChoices"
-        "addNote"
-        "taskNote"
-        "timers";
-        grid-row-gap: 10px;
-        background-color: #E0E0E0;
-        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        padding-left: 10px;
         margin-right: 50px;
+        margin-left: 20px;
+        border-left: 1px solid;
+        border-left-color: rgb(220, 220, 222);
+        flex: 1 1 auto;
     }
 
     .whenChoice {
@@ -285,7 +285,7 @@ import Vue from 'vue'
         grid-area: editTask;
         display: grid;
         grid-template-rows: 1fr;
-        grid-template-columns: 5fr 1fr;
+        grid-template-columns: 1fr 1fr;
         grid-template-areas:    "editTaskFirstPart taskIcons";
     }
 
@@ -319,6 +319,7 @@ import Vue from 'vue'
         grid-template-columns: 50px 70px 80px 70px 1fr;
         grid-template-areas:    "whenChoiceToday whenChoiceThisWeek whenChoiceWaitingFor whenChoiceSomeday whenChoiceSpecific";
         align-items: center;
+        margin-top: 20px;
     }
 
     .whenChoiceToday {
@@ -353,10 +354,16 @@ import Vue from 'vue'
 
     .taskNote {
         grid-area: taskNote;
+        position: relative;
+        overflow: scroll;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        padding-top: 0;
     }
 
     .noteDisplay {
-        width: 80%;
+        width: 100%;
         font-family: 'Raleway';
         font-style: normal;
         font-weight: 500;
@@ -365,8 +372,9 @@ import Vue from 'vue'
     }
 
     .noteInput {
-        width: 80%;
-        height: 14vh;
+        width: 99%;
+        height: 50vh;
+        margin-top: 10px;
         font-family: 'Raleway';
         font-style: normal;
         font-weight: 500;
@@ -375,7 +383,11 @@ import Vue from 'vue'
     }
 
     .controlsLine {
-        width: 80%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        width: 100%;
+        margin-top: 10px;
     }
 
     .editNoteControls {

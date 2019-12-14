@@ -10,8 +10,18 @@
                    v-model="newTaskText"
                    @keyup.enter="addTask">
 
+            <div class="removeTasksLine">
+                <button v-show="numberOfCompletedProjectTasks > 0" class="archiveTasks" @click="archiveCompleted">
+                    mark done
+                </button>
+                <button v-show="numberOfCompletedProjectTasks > 0" class="removeTasks" @click="removeCompleted">
+                    remove selected
+                </button>
+            </div>
+
             <div class="theSelectableTaskList">
-                <div class="todayList">
+                <div :class="{'taskListDivisions': isTaskSelected, 'taskListDivisionsLarge': !isTaskSelected}">
+                    <div class="todayList">
                     <font-awesome-icon class="caretIcon" @click="setWhenStatus('today')" :icon="getWhenStatusExpandedIcon('today')"/>
                     <span class="taskTab">
                         <a :class="{'is-active': isTabActive('today')}" @click="setActiveTab('today')">today ({{projectTasks['today'].length}})</a>
@@ -63,20 +73,12 @@
                               @unsetSelectedTask="unsetSelectedTask"
                               :task="task"/>
                     </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="removeTasksLine">
-                <button v-show="numberOfCompletedProjectTasks > 0" class="archiveTasks" @click="archiveCompleted">
-                    mark done
-                </button>
-                <button v-show="numberOfCompletedProjectTasks > 0" class="removeTasks" @click="removeCompleted">
-                    remove selected
-                </button>
-            </div>
+                    <TaskDetail :task="selectedTask" @duplicateTask="duplicateTask" @closeDetail="closeDetail"/>
+                </div>
         </div>
 
-        <TaskDetail :task="selectedTask" @duplicateTask="duplicateTask"/>
     </div>
 </template>
 
@@ -353,6 +355,9 @@
         this.$taskDb.insert(newTask)
         console.log('duplicated task')
       },
+      closeDetail: function (task) {
+        this.unsetSelectedTask()
+      },
       getWhenStatusExpandedIcon: function (when) {
         if (when === 'today' && this.todayStatus) {
           return 'caret-down'
@@ -412,11 +417,9 @@
 
     .taskList {
         grid-area: taskList;
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-areas: "tasks"
-                             "taskDetail";
-        grid-row-gap: 50px;
+        display: flex;
+        flex: 1 0 auto;
+        height: 89vh;
     }
 
     /** 2 children of .tasklist **/
@@ -430,11 +433,11 @@
                              "removeTasksLine"
     "theSelectableTaskList";
         grid-row-gap: 10px;
-        height: 50vh;
+        height: 85vh;
+        width: 100%;
     }
 
     .tasksLarge {
-        grid-area: tasks;
         display: grid;
         grid-template-rows: 20px 20px 20px 1fr;
         grid-template-columns: 1fr;
@@ -444,6 +447,7 @@
         "theSelectableTaskList";
         grid-row-gap: 10px;
         height: 85vh;
+        width: 100%;
     }
 
     .taskHeader {
@@ -458,7 +462,25 @@
 
     .theSelectableTaskList {
         grid-area: theSelectableTaskList;
-        overflow: auto;
+        display: flex;
+        flex: 1 0 auto;
+        height: 72vh;
+    }
+
+    .taskListDivisions {
+        display: flex;
+        flex-direction: column;
+        overflow: scroll;
+        flex-shrink: 0;
+        width: 500px;
+    }
+
+    .taskListDivisionsLarge {
+        display: flex;
+        flex-direction: column;
+        overflow: scroll;
+        flex-shrink: 0;
+        width: 100%;
     }
 
     .todayList {

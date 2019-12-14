@@ -168,7 +168,10 @@
     }
 
     .projectList {
-        grid-area: projectList
+        grid-area: projectList;
+        display: flex;
+        flex: 1 0 auto;
+        height: 89vh;
     }
 
     .footer {
