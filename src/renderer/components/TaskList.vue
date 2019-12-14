@@ -470,7 +470,7 @@
     .taskListDivisions {
         display: flex;
         flex-direction: column;
-        overflow: scroll;
+        overflow: auto;
         flex-shrink: 0;
         width: 500px;
     }
@@ -478,7 +478,7 @@
     .taskListDivisionsLarge {
         display: flex;
         flex-direction: column;
-        overflow: scroll;
+        overflow: auto;
         flex-shrink: 0;
         width: 100%;
     }

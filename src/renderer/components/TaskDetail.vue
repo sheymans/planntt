@@ -355,7 +355,7 @@ import Vue from 'vue'
     .taskNote {
         grid-area: taskNote;
         position: relative;
-        overflow: scroll;
+        overflow: auto;
         display: flex;
         flex-direction: column;
         flex: 1 1 auto;

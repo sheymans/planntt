@@ -156,7 +156,7 @@
     .content {
         display: grid;
         grid-area: content;
-        grid-template-rows: 100px 200px 1fr;
+        grid-template-rows: 100px 1fr 1fr;
         grid-template-columns: 1fr;
         grid-template-areas: "timers"
         "name"

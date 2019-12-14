@@ -96,17 +96,13 @@ function ensureSafeQuitAndInstall () {
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   const dialogOpts = {
     type: 'info',
-    buttons: ['Restart', 'Later'],
+    buttons: ['Ok'],
     title: 'plannt Update',
     message: 'planntt Update',
     detail: 'A new version has been downloaded. Restart the application to apply the updates.'
   }
 
   dialog.showMessageBox(dialogOpts, (response) => {
-    if (response === 0) {
-      ensureSafeQuitAndInstall()
-      autoUpdater.quitAndInstall()
-    }
   })
 })
 
