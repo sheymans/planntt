@@ -2,7 +2,7 @@
     <div id="mainPage">
         <div class="header">
             <div></div>
-            <font-awesome-icon v-tooltip.left="{content:'leave focus mode', class:'tooltip close', delay: 50}" icon="times" @click="goBack"/>
+            <font-awesome-icon v-tooltip.left="{content:'leave focus mode (ESC)', class:'tooltip close', delay: 50}" icon="times" @click="goBack"/>
         </div>
         <div class="content">
             <div class="timers">#sessions: {{numberOfSessions}} | total time: {{totalTimeSpent}} | this session: {{totalSessionSeconds}}</div>

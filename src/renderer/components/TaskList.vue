@@ -288,6 +288,7 @@
       },
       unsetSelectedTask: function () {
         this.selectedTask = {}
+        this.$store.commit('unsetSelectedTaskId')
       },
       isTabActive: function (tab) {
         return this.activeTab === tab

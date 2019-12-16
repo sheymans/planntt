@@ -92,7 +92,6 @@ import Vue from 'vue'
       },
       unSelectTask: function () {
         this.$emit('unsetSelectedTask')
-        this.$store.commit('unsetSelectedTaskId')
       },
       dragTask: function (event) {
         this.$store.commit('setProjectTargetTaskDrag', null)

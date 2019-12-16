@@ -5,7 +5,7 @@ import Vue from 'vue'
         <div v-if="Object.keys(task).length !== 0" class="editTask">
             <div class="editTaskFirstPart">
                 <div v-show="!editingTaskName" class="taskNameToEdit">
-                    <font-awesome-icon v-tooltip.top="{content:'close detail', class:'tooltip', delay: 50}" @click="closeDetail" icon="arrow-left" class="iconArrowLeft"/>
+                    <font-awesome-icon v-tooltip.top="{content:'close detail (ESC)', class:'tooltip', delay: 50}" @click="closeDetail" icon="arrow-left" class="iconArrowLeft"/>
                     <b>{{ task.name }}</b>
                 </div>
                 <input v-show="editingTaskName"
