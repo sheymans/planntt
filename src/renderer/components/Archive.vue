@@ -43,7 +43,7 @@
               return b.done - a.done
             })
             console.log('read archived task list from db for exporting to db')
-            let csv = 'created,done,name,projectName,note,when\n'
+            let csv = 'created,done,name,projectName,note,when,numberOfSessions,totalTimeSpentInSeconds\n'
             tasks.forEach(task => {
               csv += task.created + ','
               csv += task.done + ','
@@ -54,7 +54,18 @@
               } else {
                 csv += '"",'
               }
-              csv += task.when + '\n'
+              csv += task.when + ','
+              if (task.numberOfSessions) {
+                csv += '"' + task.numberOfSessions + '"' + ','
+              } else {
+                csv += '"",'
+              }
+              if (task.totalTimeSpent) {
+                csv += '"' + task.totalTimeSpent + '"' + ','
+              } else {
+                csv += '"",'
+              }
+              csv += '\n'
             })
             let hiddenElement = document.createElement('a')
             hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv)
