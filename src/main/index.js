@@ -73,6 +73,20 @@ app.on('activate', () => {
 })
 
 /**
+ * ensureSafeQuitAndInstall
+ *
+ * @access  public
+ * @return  void
+ */
+function ensureSafeQuitAndInstall () {
+  app.removeAllListeners('window-all-closed')
+  let browserWindows = BrowserWindow.getAllWindows()
+  browserWindows.forEach(browserWindow => {
+    browserWindow.removeAllListeners('close')
+  })
+}
+
+/**
  * Auto Updater
  *
  * Uncomment the following code below and install `electron-updater` to
@@ -82,13 +96,18 @@ app.on('activate', () => {
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   const dialogOpts = {
     type: 'info',
-    buttons: ['Ok'],
+    buttons: ['Restart', 'Later'],
     title: 'plannt Update',
     message: 'planntt Update',
     detail: 'A new version has been downloaded. Restart the application to apply the updates.'
   }
 
-  dialog.showMessageBox(dialogOpts, (response) => {
+  dialog.showMessageBox(dialogOpts).then((data) => {
+    let response = data.response
+    if (response === 0) {
+      ensureSafeQuitAndInstall()
+      autoUpdater.quitAndInstall()
+    }
   })
 })
 
