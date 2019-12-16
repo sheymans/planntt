@@ -75,8 +75,11 @@
         const { dialog } = require('electron').remote
         dialog.showOpenDialog({
           properties: ['openDirectory', 'createDirectory']
-        }, function (selectedDirectories) {
+        }).then((data) => {
+          let selectedDirectories = data.filePaths
+          console.log(data.filePaths)
           if (selectedDirectories && selectedDirectories.length > 0) {
+            console.log('we selected a directory ' + selectedDirectories[0])
             self.newDataLocation = selectedDirectories[0]
           }
         })
