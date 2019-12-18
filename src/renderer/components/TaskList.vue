@@ -12,10 +12,10 @@
 
             <div class="removeTasksLine">
                 <button v-show="numberOfCompletedProjectTasks > 0" class="archiveTasks" @click="archiveCompleted">
-                    mark done
+                    <font-awesome-icon icon="check"/> mark done
                 </button>
                 <button v-show="numberOfCompletedProjectTasks > 0" class="removeTasks" @click="removeCompleted">
-                    remove selected
+                    <font-awesome-icon icon="trash-alt"/> remove selected
                 </button>
             </div>
 
