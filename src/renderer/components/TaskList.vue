@@ -434,7 +434,6 @@
                              "removeTasksLine"
     "theSelectableTaskList";
         grid-row-gap: 10px;
-        height: 85vh;
         width: 100%;
     }
 
@@ -447,7 +446,6 @@
         "removeTasksLine"
         "theSelectableTaskList";
         grid-row-gap: 10px;
-        height: 85vh;
         width: 100%;
     }
 
@@ -464,8 +462,9 @@
     .theSelectableTaskList {
         grid-area: theSelectableTaskList;
         display: flex;
+        flex-direction: column;
         flex: 1 0 auto;
-        height: 72vh;
+        height: 78vh;
     }
 
     .taskListDivisions {
@@ -473,7 +472,7 @@
         flex-direction: column;
         overflow: auto;
         flex-shrink: 0;
-        width: 500px;
+        height: 40vh;
     }
 
     .taskListDivisionsLarge {
@@ -482,6 +481,7 @@
         overflow: auto;
         flex-shrink: 0;
         width: 100%;
+        height: 78vh;
     }
 
     .todayList {

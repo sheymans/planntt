@@ -258,14 +258,13 @@ import Vue from 'vue'
 <style scoped>
 
     .taskDetail {
-        grid-area: taskDetail;
         display: flex;
         flex-direction: column;
-        padding-left: 10px;
         margin-right: 50px;
-        margin-left: 20px;
-        border-left: 1px solid;
-        border-left-color: rgb(220, 220, 222);
+        margin-top: 50px;
+        padding-top: 10px;
+        border-top: 1px solid;
+        border-top-color: rgb(220, 220, 222);
         flex: 1 1 auto;
     }
 
@@ -369,11 +368,13 @@ import Vue from 'vue'
         font-weight: 500;
         font-size: 10pt;
         -webkit-font-smoothing: antialiased;
+        overflow: auto;
+        height: 15vh;
     }
 
     .noteInput {
         width: 99%;
-        height: 50vh;
+        height: 15vh;
         margin-top: 10px;
         font-family: 'Raleway';
         font-style: normal;
