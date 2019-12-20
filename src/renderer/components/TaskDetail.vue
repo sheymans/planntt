@@ -5,8 +5,11 @@ import Vue from 'vue'
         <div v-if="Object.keys(task).length !== 0" class="editTask">
             <div class="editTaskFirstPart">
                 <div v-show="!editingTaskName" class="taskNameToEdit">
-                    <font-awesome-icon v-tooltip.top="{content:'close detail (ESC)', class:'tooltip', delay: 50}" @click="closeDetail" icon="arrow-left" class="iconArrowLeft"/>
+                    <font-awesome-icon v-tooltip.top="{content:'close detail (ESC)', class:'tooltip', delay: 50}" @click="closeDetail" icon="times" class="iconCloseDetail"/>
                     <b>{{ task.name }}</b>
+                    <font-awesome-icon v-tooltip.top="{content:'edit task name', class:'tooltip', delay: 50}"
+                                       @click="startEditTaskName" icon="pencil-alt"
+                                       class="iconTaskNameToEdit"/>
                 </div>
                 <input v-show="editingTaskName"
                        type="text"
@@ -19,13 +22,10 @@ import Vue from 'vue'
                        v-focus="editingTaskName"/>
             </div>
             <div class="taskIcons">
-                <font-awesome-icon v-tooltip.top="{content:'edit task name', class:'tooltip', delay: 50}"
-                                   @click="startEditTaskName" icon="pencil-alt"
-                                   class="iconTaskNameToEdit"/>
-                <font-awesome-icon v-tooltip.top="{content:'duplicate task', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
+                <font-awesome-icon v-tooltip.top="{content:'duplicate task (ctrl+d)', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
                 <font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" :class="{'blocked': blocked, 'notBlocked': !blocked}"/>
-                <font-awesome-icon v-tooltip.top="{content:'show project', class:'tooltip', delay: 50}" @click="expandProject" icon="crosshairs"/>
-                <router-link class="focusTask" :to="{ name: 'focusTask', params: { task } }"><font-awesome-icon v-tooltip.top="{content:'focus mode', class:'tooltip', delay: 50}" icon="headphones"/></router-link>
+                <font-awesome-icon v-tooltip.top="{content:'show project (ctrl+p)', class:'tooltip', delay: 50}" @click="expandProject" icon="crosshairs"/>
+                <router-link class="focusTask" :to="{ name: 'focusTask', params: { task } }"><font-awesome-icon v-tooltip.top="{content:'focus mode (ctrl+f)', class:'tooltip', delay: 50}" icon="headphones"/></router-link>
             </div>
         </div>
 
@@ -309,8 +309,13 @@ import Vue from 'vue'
     }
 
     .iconTaskNameToEdit {
-        margin-left: 20px;
+        margin-left: 5px;
     }
+
+    .iconCloseDetail {
+        margin-right: 5px;
+    }
+
 
     .whenChoices {
         grid-area: whenChoices;
@@ -386,8 +391,7 @@ import Vue from 'vue'
     .controlsLine {
         display: flex;
         flex-direction: row;
-        justify-content: flex-end;
-        width: 100%;
+        justify-content: flex-start;
         margin-top: 10px;
     }
 

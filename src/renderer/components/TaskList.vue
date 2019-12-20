@@ -214,7 +214,7 @@
       }
     },
     created () {
-      document.addEventListener('keydown', this.escapeHandler)
+      document.addEventListener('keydown', this.keyHandler)
       // Load the data (note we need the self, cause of the callback scope; we could try using an arrow function here)
       let self = this
       this.$taskDb.find({}, function (err, docs) {
@@ -244,7 +244,7 @@
       })
     },
     destroyed () {
-      document.removeEventListener('keydown', this.escapeHandler)
+      document.removeEventListener('keydown', this.keyHandler)
     },
     filters: {
       pluralize: function (n) {
@@ -257,11 +257,32 @@
       }
     },
     methods: {
-      escapeHandler: function (event) {
+      keyHandler: function (event) {
         event.stopImmediatePropagation()
-        console.log('executing event listener to unset selection')
+        console.log('executing event listener to unset selection for key: ' + event.keyCode + event.ctrlKey)
         if (event.key === 'Escape' || event.keyCode === 27) {
           this.unsetSelectedTask()
+        }
+        if (event.keyCode === 70 && event.ctrlKey) { // ctrl+f for focus
+          console.log('key f pressed for focus mode')
+          if (this.selectedTask.name) {
+            let t = this.selectedTask
+            this.$router.push({name: 'focusTask', params: { task: t }})
+          }
+        }
+        if (event.keyCode === 68 && event.ctrlKey) { // ctrl+d for duplicate
+          console.log('key d pressed for duplication')
+          if (this.selectedTask.name) {
+            let t = this.selectedTask
+            this.duplicateTask(t)
+          }
+        }
+        if (event.keyCode === 80 && event.ctrlKey) { // ctrl+p for project expansion
+          console.log('key p pressed for project expansion')
+          if (this.selectedTask.name) {
+            let t = this.selectedTask
+            this.$store.commit('setPathFromRootToProjectExpanded', t.project)
+          }
         }
       },
       searchFilter: function (task, textToSearch) {
