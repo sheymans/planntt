@@ -22,10 +22,12 @@ import Vue from 'vue'
                        v-focus="editingTaskName"/>
             </div>
             <div class="taskIcons">
-                <font-awesome-icon v-tooltip.top="{content:'duplicate task (ctrl+d)', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
+                <font-awesome-icon v-tooltip.top="{content:'move task up (⌘+↑)', class:'tooltip', delay: 50}" @click="moveUp" icon="arrow-up"/>
+                <font-awesome-icon v-tooltip.top="{content:'move task down (⌘+↓)', class:'tooltip', delay: 50}" @click="moveDown" icon="arrow-down"/>
+                <font-awesome-icon v-tooltip.top="{content:'duplicate task (⌘+d)', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
                 <font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" :class="{'blocked': blocked, 'notBlocked': !blocked}"/>
-                <font-awesome-icon v-tooltip.top="{content:'show project (ctrl+p)', class:'tooltip', delay: 50}" @click="expandProject" icon="crosshairs"/>
-                <router-link class="focusTask" :to="{ name: 'focusTask', params: { task } }"><font-awesome-icon v-tooltip.top="{content:'focus mode (ctrl+f)', class:'tooltip', delay: 50}" icon="headphones"/></router-link>
+                <font-awesome-icon v-tooltip.top="{content:'show project (⌘+p)', class:'tooltip', delay: 50}" @click="expandProject" icon="crosshairs"/>
+                <router-link class="focusTask" :to="{ name: 'focusTask', params: { task } }"><font-awesome-icon v-tooltip.top="{content:'focus mode (⌘+f)', class:'tooltip', delay: 50}" icon="headphones"/></router-link>
             </div>
         </div>
 
@@ -165,12 +167,16 @@ import Vue from 'vue'
         this.saveTask()
       },
       setWhen: function (when) {
-        console.log('setting task to when: ' + when)
-        this.task.when = when
-        this.saveTask()
+        this.$emit('setWhen', this.task, when)
       },
       duplicateTask: function () {
         this.$emit('duplicateTask', this.task)
+      },
+      moveUp: function () {
+        this.$emit('moveUp', this.task)
+      },
+      moveDown: function () {
+        this.$emit('moveDown', this.task)
       },
       closeDetail: function () {
         this.$emit('closeDetail', this.task)

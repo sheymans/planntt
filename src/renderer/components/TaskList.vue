@@ -75,7 +75,7 @@
                     </div>
                     </div>
                 </div>
-                    <TaskDetail :task="selectedTask" @duplicateTask="duplicateTask" @closeDetail="closeDetail"/>
+                    <TaskDetail :task="selectedTask" @duplicateTask="duplicateTask" @setWhen="setWhen" @moveUp="moveUpTask" @moveDown="moveDownTask" @closeDetail="closeDetail"/>
                 </div>
         </div>
 
@@ -156,21 +156,56 @@
             this.$taskDb.update({id: task.id}, { $set: { project: task.project } }, {})
           }
         })
-        let projectsToConsider = this.$store.getters.getStoredDescendantProjectIdsOfSelected
-        let allTasksToShow = this.tasks.filter(task => projectsToConsider.includes(task.project))
 
-        let mapOfTasksPerWhen = {'today': [], 'thisweek': [], 'waitingfor': [], 'someday': []}
+        // Make a copy cause this.tasks does not seem to change when sorting.
+        let ts = this.tasks
 
-        // Sort with oldest created on top
-        allTasksToShow.sort((a, b) => {
-          if (a.created && b.created) {
-            return a.created - b.created
+        // Sort with oldest created on top, today before this week, this week before waiting for and waiting for before someday
+        ts.sort((a, b) => {
+          if (a.order && b.order) {
+            return a.order - b.order
           }
-          if (a.created) {
+          if (a.when === 'today' && (b.when === 'thisweek' || b.when === 'waitingfor' || b.when === 'someday')) {
+            return -1
+          }
+          if (a.when === 'thisweek' && (b.when === 'waitingfor' || b.when === 'someday')) {
+            return -1
+          }
+          if (a.when === 'waitingfor' && (b.when === 'someday')) {
+            return -1
+          }
+          if (a.when === 'someday' && b.when !== 'someday') {
             return 1
           }
-          return -1
+          if (a.when === b.when && a.created && b.created) {
+            return a.created - b.created
+          }
+          if (a.when === b.when && a.created) {
+            return 1
+          }
+          return 1
         })
+
+        // If there's no order on the first task, there's no order anywhere: set them all.
+        if (ts && ts.length > 0) {
+          let firstTask = ts[0]
+          if (!firstTask.order) {
+            let order = 1
+            console.log('setting order on each task fresh')
+            ts.forEach(task => {
+              this.$set(task, 'order', order)
+              this.$taskDb.update({id: task.id}, {$set: {order: task.order}}, {})
+              ++order
+            })
+          } else {
+            // don't do anything; order has been set already
+          }
+        }
+
+        let projectsToConsider = this.$store.getters.getStoredDescendantProjectIdsOfSelected
+        let allTasksToShow = ts.filter(task => projectsToConsider.includes(task.project))
+
+        let mapOfTasksPerWhen = {'today': [], 'thisweek': [], 'waitingfor': [], 'someday': []}
 
         mapOfTasksPerWhen['today'] = allTasksToShow.filter(t => t.when === 'today' && this.searchFilter(t, this.newTaskText))
         mapOfTasksPerWhen['thisweek'] = allTasksToShow.filter(t => t.when === 'thisweek' && this.searchFilter(t, this.newTaskText))
@@ -183,6 +218,14 @@
         }
 
         return mapOfTasksPerWhen
+      },
+      projectTasksFlat: function () {
+        let flat = []
+        flat = flat.concat(this.projectTasks['today'])
+        flat = flat.concat(this.projectTasks['thisweek'])
+        flat = flat.concat(this.projectTasks['waitingfor'])
+        flat = flat.concat(this.projectTasks['someday'])
+        return flat
       },
       selectedProject: function () {
         return this.$store.getters.getSelectedProject
@@ -259,29 +302,57 @@
     methods: {
       keyHandler: function (event) {
         event.stopImmediatePropagation()
-        console.log('executing event listener to unset selection for key: ' + event.keyCode + event.ctrlKey)
+        console.log('executing event listener to unset selection for key: ' + event.keyCode + '/meta: ' + event.metaKey)
         if (event.key === 'Escape' || event.keyCode === 27) {
           this.unsetSelectedTask()
         }
-        if (event.keyCode === 70 && event.ctrlKey) { // ctrl+f for focus
+        if (event.keyCode === 70 && event.metaKey) { // meta+f for focus
           console.log('key f pressed for focus mode')
           if (this.selectedTask.name) {
             let t = this.selectedTask
             this.$router.push({name: 'focusTask', params: { task: t }})
           }
         }
-        if (event.keyCode === 68 && event.ctrlKey) { // ctrl+d for duplicate
+        if (event.keyCode === 68 && event.metaKey) { // meta+d for duplicate
           console.log('key d pressed for duplication')
           if (this.selectedTask.name) {
             let t = this.selectedTask
             this.duplicateTask(t)
           }
         }
-        if (event.keyCode === 80 && event.ctrlKey) { // ctrl+p for project expansion
+        if (event.keyCode === 80 && event.metaKey) { // meta+p for project expansion
           console.log('key p pressed for project expansion')
           if (this.selectedTask.name) {
             let t = this.selectedTask
             this.$store.commit('setPathFromRootToProjectExpanded', t.project)
+          }
+        }
+        if (event.keyCode === 38 && event.metaKey) { // meta+up arrow for moving task up
+          console.log('meta key up arrow pressed for task move up')
+          if (this.selectedTask.name) {
+            let t = this.selectedTask
+            this.moveUpTask(t)
+          }
+        }
+        if (event.keyCode === 40 && event.metaKey) { // meta+down for moving task down
+          console.log('meta down arrow pressed for task move down')
+          if (this.selectedTask.name) {
+            let t = this.selectedTask
+            this.moveDownTask(t)
+          }
+        }
+        if (event.keyCode === 38 && !event.metaKey) { // up arrow for selecting previous task
+          console.log('up arrow pressed for select previous')
+          if (this.selectedTask.name) {
+            let t = this.selectedTask
+            this.selectPreviousTask(t)
+          }
+        }
+        if (event.keyCode === 40 && !event.metaKey) { // down for selecting next task
+          console.log('down arrow pressed for select next task')
+          if (this.selectedTask.name) {
+            let t = this.selectedTask
+            this.selectNextTask(t)
           }
         }
       },
@@ -320,6 +391,13 @@
           return
         }
         let newTask = {id: this.uuidv4(), name: taskName, project: this.selectedProject, projectName: this.selectedProjectName, when: this.activeTab, created: new Date()}
+        // Set the order
+        // The order where to add it is after the last order of this tab. For example, if last today item has index 6, we're adding at 7.
+        const whereToAddIndex = this.findLastIndex(this.activeTab) + 1
+        newTask.order = whereToAddIndex
+        // Make sure all indices in this.tasks higher than whereToAddIndex are increased one (as we inserted this in between)
+        this.insertIndex(whereToAddIndex)
+        // Order has been set now just add it to the tasks so it can be displayed
         this.tasks.push(newTask)
         this.newTaskText = ''
         // Add it to the DB as well
@@ -328,27 +406,213 @@
         this.setWhenStatusOpen(this.activeTab)
         this.setSelectedTask(newTask)
       },
+      moveUpTask: function (task) {
+        if (task.order === 1) {
+          return // can't move up further
+        }
+        // One task up depends on the project selected and the filter applied.
+        // Find the upper task to swap with in this project view
+        let taskUpToSwap = this.findPreviousVisible(task)
+        if (!taskUpToSwap) {
+          return
+        }
+
+        let newOrder = taskUpToSwap.order
+
+        if (task.when === 'thisweek') {
+          let lastIndexToday = this.findLastIndexInToday()
+          if (newOrder <= lastIndexToday) {
+            return // can't move further up
+          }
+        }
+
+        if (task.when === 'waitingfor') {
+          let lastIndexThisWeek = this.findLastIndexInThisWeek()
+          if (newOrder <= lastIndexThisWeek) {
+            return // can't move further up
+          }
+        }
+
+        if (task.when === 'someday') {
+          let lastIndexThisWaitingFor = this.findLastIndexInWaitingFor()
+          if (newOrder <= lastIndexThisWaitingFor) {
+            return // can't move further up
+          }
+        }
+
+        this.setSelectedTask(task)
+        taskUpToSwap.order = task.order
+        task.order = newOrder
+        this.$taskDb.update({id: taskUpToSwap.id}, taskUpToSwap, {})
+        this.$taskDb.update({id: task.id}, task, {})
+      },
+      selectPreviousTask: function (task) {
+        let previousTask = this.findPreviousVisible(task)
+        if (!previousTask) {
+          return
+        }
+        this.setSelectedTask(previousTask)
+      },
+      selectNextTask: function (task) {
+        let nextTask = this.findNextVisible(task)
+        if (!nextTask) {
+          return
+        }
+        this.setSelectedTask(nextTask)
+        console.log('selected task: ' + this.selectedTask.name)
+      },
+      moveDownTask: function (task) {
+        let taskDownToSwap = this.findNextVisible(task)
+
+        if (!taskDownToSwap) {
+          return
+        }
+
+        let newOrder = taskDownToSwap.order
+
+        if (task.when === 'today') {
+          let lastIndexToday = this.findLastIndexInToday()
+          if (newOrder > lastIndexToday) {
+            return // can't move further down
+          }
+        }
+
+        if (task.when === 'thisweek') {
+          let lastIndexThisWeek = this.findLastIndexInThisWeek()
+          if (newOrder > lastIndexThisWeek) {
+            return // can't move further down
+          }
+        }
+
+        if (task.when === 'waitingfor') {
+          let lastIndexThisWaitingFor = this.findLastIndexInWaitingFor()
+          if (newOrder > lastIndexThisWaitingFor) {
+            return // can't move further down
+          }
+        }
+
+        if (task.when === 'someday') {
+          let lastIndexSomeday = this.findLastIndexInSomeday()
+          if (newOrder > lastIndexSomeday) {
+            return // can't move further down
+          }
+        }
+
+        this.setSelectedTask(task)
+        taskDownToSwap.order = task.order
+        task.order = newOrder
+        this.$taskDb.update({id: taskDownToSwap.id}, taskDownToSwap, {})
+        this.$taskDb.update({id: task.id}, task, {})
+      },
+
+      findPreviousVisible: function (task) {
+        let previousTask
+        // The project tasks are the visible tasks and are ordered
+        this.projectTasksFlat.forEach(t => {
+          if (t.order < task.order) {
+            previousTask = t
+          }
+        })
+        // returns undef if there is no previous visible (aka this is the first visible)
+        return previousTask
+      },
+      findNextVisible: function (task) {
+        let nextTask
+        let nextTasks = this.projectTasksFlat.filter(t => t.order > task.order)
+
+        if (nextTasks.length > 0) {
+          nextTask = nextTasks[0]
+        }
+        return nextTask
+      },
+      findLastIndexInToday: function () {
+        let maxIndex = 0
+        this.tasks.forEach(t => {
+          if (t.when === 'today' && t.order > maxIndex) {
+            maxIndex = t.order
+          }
+        })
+        return maxIndex
+      },
+      findLastIndexInThisWeek: function () {
+        let maxIndex = this.findLastIndexInToday()
+        this.tasks.forEach(t => {
+          if (t.when === 'thisweek' && t.order > maxIndex) {
+            maxIndex = t.order
+          }
+        })
+        return maxIndex
+      },
+      findLastIndexInWaitingFor: function () {
+        let maxIndex = this.findLastIndexInThisWeek()
+        this.tasks.forEach(t => {
+          if (t.when === 'waitingfor' && t.order > maxIndex) {
+            maxIndex = t.order
+          }
+        })
+        return maxIndex
+      },
+      findLastIndexInSomeday: function () {
+        let maxIndex = this.findLastIndexInWaitingFor()
+        this.tasks.forEach(t => {
+          if (t.when === 'someday' && t.order > maxIndex) {
+            maxIndex = t.order
+          }
+        })
+        return maxIndex
+      },
+      findLastIndex: function (when) {
+        if (when === 'today') {
+          return this.findLastIndexInToday()
+        }
+        if (when === 'thisweek') {
+          return this.findLastIndexInThisWeek()
+        }
+        if (when === 'waitingfor') {
+          return this.findLastIndexInWaitingFor()
+        }
+        if (when === 'someday') {
+          return this.findLastIndexInSomeday()
+        }
+        return 0
+      },
+      insertIndex: function (index) {
+        this.tasks.forEach(t => {
+          if (t.order >= index) {
+            let newOrder = t.order + 1
+            this.$set(t, 'order', newOrder)
+            this.$taskDb.update({id: t.id}, {$set: {order: newOrder}}, {})
+          }
+        })
+      },
       removeCompleted: function () {
         let projectsToConsiderForRemoval = this.$store.getters.getStoredDescendantProjectIdsOfSelected
         let newTasks = []
+        let ordersOfRemovedTasks = []
         this.tasks.forEach(task => {
           let keepTask = !projectsToConsiderForRemoval.includes(task.project) || !task.completed
           if (keepTask) {
             newTasks.push(task)
           } else {
+            // Keep track of which orders have been removed
+            ordersOfRemovedTasks.push(task.order)
+            // Remove the task from the db
             this.$taskDb.remove({id: task.id})
           }
         })
+        this.removeIndices(newTasks, ordersOfRemovedTasks)
         this.tasks = newTasks
       },
       archiveCompleted: function () {
         let projectsToConsiderForRemoval = this.$store.getters.getStoredDescendantProjectIdsOfSelected
         let newTasks = []
+        let ordersOfRemovedTasks = []
         this.tasks.forEach(task => {
           let keepTask = !projectsToConsiderForRemoval.includes(task.project) || !task.completed
           if (keepTask) {
             newTasks.push(task)
           } else {
+            ordersOfRemovedTasks.push(task.order)
             this.$taskDb.remove({id: task.id})
             // Archive Task
             let archivedTask = Object.assign({}, task)
@@ -356,10 +620,34 @@
             this.$archivedTaskDb.insert(archivedTask)
           }
         })
+        this.removeIndices(newTasks, ordersOfRemovedTasks)
         this.tasks = newTasks
+      },
+      removeIndices: function (tasks, indices) {
+        if (indices.length > 0) {
+          const firstIndex = indices[0]
+          tasks.forEach(task => {
+            if (task.order >= firstIndex) {
+              task.order = task.order - 1
+              this.$taskDb.update({id: task.id}, {$set: {order: task.order}}, {})
+            }
+          })
+          // Remove first index, we're done with that one.
+          indices.shift()
+          // Depending on that firstIndex though the other indexes we have to remove have changed.
+          // For example, if we before had to remove index 5, and 7, and we removed 5, then next up is index 6 (7-1) for removal.
+          let newIndices = []
+          indices.forEach(index => {
+            if (index > firstIndex) {
+              newIndices.push(index - 1)
+            }
+          })
+          this.removeIndices(tasks, newIndices)
+        }
       },
       setSelectedTask: function (task) {
         this.$store.commit('setEditingNote', false)
+        this.$store.commit('setSelectedTaskId', task.id)
         this.selectedTask = task
       },
       duplicateTask: function (task) {
@@ -373,9 +661,25 @@
         newTask.project = task.project
         newTask.projectName = task.projectName
         newTask.blocked = task.blocked
+
+        let lastIndex = this.findLastIndex(task.when)
+        newTask.order = lastIndex + 1
+        this.insertIndex(newTask.order)
+
         this.tasks.push(newTask)
         this.$taskDb.insert(newTask)
         console.log('duplicated task')
+      },
+      setWhen: function (task, when) {
+        // Remove it from its original:
+        this.removeIndices(this.tasks, [task.order])
+        // The index where the task need to move to (last one of the when tab)
+        let newIndex = this.findLastIndex(when) + 1
+        this.insertIndex(newIndex)
+        this.setSelectedTask(task)
+        task.when = when
+        task.order = newIndex
+        this.$taskDb.update({id: task.id}, task, {})
       },
       closeDetail: function (task) {
         this.unsetSelectedTask()
