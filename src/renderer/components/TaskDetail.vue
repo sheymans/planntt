@@ -22,8 +22,8 @@ import Vue from 'vue'
                        v-focus="editingTaskName"/>
             </div>
             <div class="taskIcons">
-                <font-awesome-icon v-tooltip.top="{content:'move task up (⌘+↑)', class:'tooltip', delay: 50}" @click="moveUp" icon="arrow-up"/>
-                <font-awesome-icon v-tooltip.top="{content:'move task down (⌘+↓)', class:'tooltip', delay: 50}" @click="moveDown" icon="arrow-down"/>
+                <font-awesome-icon v-tooltip.top="{content:'move task up (ctrl+⌘+↑)', class:'tooltip', delay: 50}" @click="moveUp" icon="arrow-up"/>
+                <font-awesome-icon v-tooltip.top="{content:'move task down (ctrl+⌘+↓)', class:'tooltip', delay: 50}" @click="moveDown" icon="arrow-down"/>
                 <font-awesome-icon v-tooltip.top="{content:'duplicate task (⌘+d)', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
                 <font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" :class="{'blocked': blocked, 'notBlocked': !blocked}"/>
                 <font-awesome-icon v-tooltip.top="{content:'show project (⌘+p)', class:'tooltip', delay: 50}" @click="expandProject" icon="crosshairs"/>

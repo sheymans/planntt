@@ -327,14 +327,14 @@
             this.$store.commit('setPathFromRootToProjectExpanded', t.project)
           }
         }
-        if (event.keyCode === 38 && event.metaKey) { // meta+up arrow for moving task up
+        if (event.keyCode === 38 && event.metaKey && event.ctrlKey) { // ctrl+meta+up arrow for moving task up
           console.log('meta key up arrow pressed for task move up')
           if (this.selectedTask.name) {
             let t = this.selectedTask
             this.moveUpTask(t)
           }
         }
-        if (event.keyCode === 40 && event.metaKey) { // meta+down for moving task down
+        if (event.keyCode === 40 && event.metaKey && event.ctrlKey) { // ctrl+meta+down for moving task down
           console.log('meta down arrow pressed for task move down')
           if (this.selectedTask.name) {
             let t = this.selectedTask
