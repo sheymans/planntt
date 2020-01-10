@@ -346,6 +346,10 @@
           if (this.selectedTask.name) {
             let t = this.selectedTask
             this.selectPreviousTask(t)
+          } else {
+            // if there is no task selected, select the last task in list on an up-arrow
+            let t = this.findLastVisible()
+            this.setSelectedTask(t)
           }
         }
         if (event.keyCode === 40 && !event.metaKey) { // down for selecting next task
@@ -353,6 +357,10 @@
           if (this.selectedTask.name) {
             let t = this.selectedTask
             this.selectNextTask(t)
+          } else {
+            // if there is no task selected, select the first task in list on an down-arrow
+            let t = this.findFirstVisible()
+            this.setSelectedTask(t)
           }
         }
       },
@@ -504,7 +512,18 @@
         this.$taskDb.update({id: taskDownToSwap.id}, taskDownToSwap, {})
         this.$taskDb.update({id: task.id}, task, {})
       },
-
+      findFirstVisible: function () {
+        let taskList = this.projectTasksFlat
+        if (taskList.length > 0) {
+          return taskList[0]
+        }
+      },
+      findLastVisible: function () {
+        let taskList = this.projectTasksFlat
+        if (taskList.length > 0) {
+          return taskList[taskList.length - 1]
+        }
+      },
       findPreviousVisible: function (task) {
         let previousTask
         // The project tasks are the visible tasks and are ordered
