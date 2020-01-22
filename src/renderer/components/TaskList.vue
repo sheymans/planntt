@@ -103,6 +103,9 @@
       }
     },
     computed: {
+      editingNote: function () {
+        return this.$store.getters.isEditingNote
+      },
       isTaskSelected: function () {
         return Object.keys(this.selectedTask).length !== 0
       },
@@ -341,7 +344,7 @@
             this.moveDownTask(t)
           }
         }
-        if (event.keyCode === 38 && !event.metaKey) { // up arrow for selecting previous task
+        if (event.keyCode === 38 && !event.metaKey && !this.editingNote) { // up arrow for selecting previous task, make sure you're not editing the task
           console.log('up arrow pressed for select previous')
           if (this.selectedTask.name) {
             let t = this.selectedTask
@@ -352,7 +355,7 @@
             this.setSelectedTask(t)
           }
         }
-        if (event.keyCode === 40 && !event.metaKey) { // down for selecting next task
+        if (event.keyCode === 40 && !event.metaKey && !this.editingNote) { // down for selecting next task
           console.log('down arrow pressed for select next task')
           if (this.selectedTask.name) {
             let t = this.selectedTask
