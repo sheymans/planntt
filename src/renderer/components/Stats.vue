@@ -3,6 +3,7 @@
         <div class="header">
             <img class="logo" id="logo" src="~@/assets/planntt.png" alt="planntt">
             <router-link class="home" to="/">Projects</router-link>
+            <router-link class="journal" to="/journal">Journal</router-link>
             <router-link class="deadlines" to="/deadlines">Deadlines</router-link>
             <router-link class="archive" to="/archive">Archive</router-link>
             <router-link class="stats" to="/stats">Stats</router-link>

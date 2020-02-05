@@ -9,10 +9,10 @@
             <router-link class="stats" to="/stats">Stats</router-link>
         </div>
         <div class="content">
-            <div class="projectList">
-                <ProjectList/>
+            <div class="journalStructure">
+                <!-- Add structure -->
             </div>
-            <TaskList/>
+            <journalEntryList/>
         </div>
         <div class="footer">
             <modal name="dataLocationModal">
@@ -35,17 +35,15 @@
 </template>
 
 <script>
-  import ProjectList from './ProjectList.vue'
-  import TaskList from './TaskList.vue'
+  import JournalEntryList from './JournalEntryList.vue'
   import Planntt from '../App'
   import { remote } from 'electron'
 
   export default {
-    name: 'MainPage',
+    name: 'Journal',
     components: {
       Planntt,
-      ProjectList,
-      TaskList
+      JournalEntryList
     },
     data () {
       return {
@@ -130,8 +128,8 @@
         display: grid;
         grid-area: header;
         grid-template-rows: 1fr;
-        grid-template-columns: 1fr 60px 70px 54px 60px;
-        grid-template-areas: "logo home deadlines archive stats";
+        grid-template-columns: 1fr 60px 70px 54px 54px 60px;
+        grid-template-areas: "logo home deadlines journal archive stats";
     }
 
     .logo {
@@ -144,10 +142,16 @@
         color: forestgreen;
     }
 
+    .journal {
+        grid-area: journal;
+        text-decoration: underline;
+        color: black;
+    }
+
     .archive {
         grid-area: archive;
         text-decoration: underline;
-        color: black;
+        color: forestgreen;
     }
 
     .deadlines {
@@ -166,13 +170,13 @@
         display: grid;
         grid-template-rows: 1fr;
         grid-template-columns: 200px 1fr;
-        grid-template-areas: "projectList   taskList";
+        grid-template-areas: "journalStructure journalEntryList";
         height: 89vh;
         min-height: 89vh;
     }
 
-    .projectList {
-        grid-area: projectList;
+    .journalStructure {
+        grid-area: journalStructure;
         height: 89vh;
     }
 

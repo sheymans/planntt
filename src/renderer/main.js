@@ -8,6 +8,7 @@ import projectDb from './datastore/projects'
 import taskDb from './datastore/tasks'
 import archivedTaskDb from './datastore/archivedTasks'
 import focusedTime from './datastore/focusedTime'
+import journal from './datastore/journal'
 import 'typeface-roboto/index.css'
 import 'typeface-roboto-mono/index.css'
 import 'typeface-raleway/index.css'
@@ -49,6 +50,7 @@ Vue.prototype.$projectDb = projectDb
 Vue.prototype.$taskDb = taskDb
 Vue.prototype.$archivedTaskDb = archivedTaskDb
 Vue.prototype.$focusedTime = focusedTime
+Vue.prototype.$journal = journal
 
 /* eslint-disable no-new */
 new Vue({

@@ -16,6 +16,11 @@ export default new Router({
       component: require('@/components/MainPage').default
     },
     {
+      path: '/journal',
+      name: 'journal',
+      component: require('@/components/Journal').default
+    },
+    {
       path: '/archive',
       name: 'archive',
       component: require('@/components/Archive').default
