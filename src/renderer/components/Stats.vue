@@ -458,8 +458,8 @@
         display: grid;
         grid-area: header;
         grid-template-rows: 1fr;
-        grid-template-columns: 1fr 60px 70px 54px 60px;
-        grid-template-areas: "logo home deadlines archive stats";
+        grid-template-columns: 1fr 60px 70px 54px 54px 60px;
+        grid-template-areas: "logo home deadlines journal archive stats";
     }
 
     .logo {
@@ -480,6 +480,12 @@
 
     .deadlines {
         grid-area: deadlines;
+        text-decoration: underline;
+        color: black;
+    }
+
+    .journal {
+        grid-area: journal;
         text-decoration: underline;
         color: black;
     }
