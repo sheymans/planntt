@@ -31,7 +31,7 @@ import Vue from 'vue'
     computed: {
       isSelectedJournalEntry: function () {
         let selectedJournalEntryId = this.$store.getters.getSelectedJournalEntryId
-        return selectedJournalEntryId === this.task.id
+        return selectedJournalEntryId === this.journalEntry.id
       }
     },
     created () {
@@ -95,12 +95,11 @@ import Vue from 'vue'
     }
 
     .journalEntryLabel {
-        grid-area: projectLabel;
+        grid-area: journalEntryLabel;
         color: darkslategrey;
         font-family: 'Roboto Mono';
         font-style: normal;
         font-size: 8px;
         -webkit-font-smoothing: antialiased;
-        cursor: pointer;
     }
 </style>

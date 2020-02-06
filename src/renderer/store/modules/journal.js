@@ -36,7 +36,7 @@ const getters = {
     return state.selectedJournalEntryId
   },
   isEditingJournalNote (state) {
-    return state.editingNote
+    return state.editingJournalNote
   }
 }
 

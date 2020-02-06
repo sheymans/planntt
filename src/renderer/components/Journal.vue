@@ -139,19 +139,19 @@
     .home {
         grid-area: home;
         text-decoration: underline;
-        color: forestgreen;
+        color: black;
     }
 
     .journal {
         grid-area: journal;
         text-decoration: underline;
-        color: black;
+        color: forestgreen;
     }
 
     .archive {
         grid-area: archive;
         text-decoration: underline;
-        color: forestgreen;
+        color: black;
     }
 
     .deadlines {

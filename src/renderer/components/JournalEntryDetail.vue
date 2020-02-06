@@ -21,10 +21,9 @@ import Vue from 'vue'
                        @focus="$event.target.select()"
                        v-focus="editingJournalEntryName"/>
             </div>
-        </div>
-
-        <div v-if="Object.keys(journalEntry).length !== 0" class="whenChoices">
-            <date-picker class="whenChoiceSpecific" lang="en" @change="changeDate" placeholder="journal date" v-model="journalEntry.journalDate" :first-day-of-week="1"></date-picker>
+            <div v-if="Object.keys(journalEntry).length !== 0" class="whenChoices">
+                <date-picker class="whenChoiceSpecific" lang="en" @change="changeDate" :clearable=false placeholder="journal date" v-model="journalEntry.journalDate" :first-day-of-week="1"></date-picker>
+            </div>
         </div>
 
         <button v-if="Object.keys(journalEntry).length !== 0" v-show="!editingNote && !journalEntry.note" class="is-active addNote" @click="startEditNote">
@@ -196,7 +195,7 @@ import Vue from 'vue'
         display: grid;
         grid-template-rows: 1fr;
         grid-template-columns: 1fr 1fr;
-        grid-template-areas:    "editJournalEntryFirstPart .";
+        grid-template-areas:    "editJournalEntryFirstPart whenChoices";
     }
 
     .editJournalEntryFirstPart {
@@ -233,7 +232,6 @@ import Vue from 'vue'
         grid-template-columns: 1fr;
         grid-template-areas:    "whenChoiceSpecific";
         align-items: center;
-        margin-top: 20px;
     }
 
     .whenChoiceSpecific {
@@ -243,6 +241,7 @@ import Vue from 'vue'
 
     .addNote {
         grid-area: addNote;
+        margin-top: 10px;
     }
 
     .journalEntryNote {

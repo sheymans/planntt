@@ -18,17 +18,14 @@
 
             <div class="theSelectableJournalEntryList">
                 <div :class="{'journalEntryDivisions': isJournalEntrySelected, 'journalEntryDivisionsLarge': !isJournalEntrySelected}">
-                    <div class="journalEntriesInTab" v-if="projectTasks['today'].length && todayStatus">
                         <JournalEntry v-for="journalEntry in viewableJournalEntries"
                               :key="journalEntry.id"
-                              @setSelectedProjectEntry="setSelectedProjectEntry"
-                              @unsetSelectedProjectEntry="unsetSelectedProjectEntry"
+                              @setSelectedJournalEntry="setSelectedJournalEntry"
+                              @unsetSelectedJournalEntry="unsetSelectedJournalEntry"
                               :journalEntry="journalEntry"/>
-                    </div>
                 </div>
+                <JournalEntryDetail :journalEntry="selectedJournalEntry" @closeDetail="closeDetail"/>
             </div>
-
-            <JournalEntryDetail :task="selectedProjectEntry" @closeDetail="closeDetail"/>
         </div>
     </div>
 </template>
@@ -62,17 +59,18 @@
 
         // Sort with newest created on top
         entries.sort((a, b) => {
-          if (a.journalDate && b.journalDate) {
-            return this.$moment(b.journalDate).format('YYYY-MM-DD') - this.$moment(a.journalDate).format('YYYY-MM-DD')
+          const bDate = this.$moment(b.journalDate).format('YYYY-MM-DD')
+          const aDate = this.$moment(a.journalDate).format('YYYY-MM-DD')
+          if (bDate < aDate) {
+            return -1
           }
-          if (a.created && b.created) {
+          if (bDate === aDate) {
             return b.created - a.created
-          }
-          if (a.created) {
-            return 1
           }
           return 1
         })
+
+        entries = entries.filter(j => this.searchFilter(j, this.newJournalEntryText))
         return entries
       },
       numberOfEntriesSelected: function () {
@@ -92,6 +90,7 @@
       }
     },
     created () {
+      document.addEventListener('keydown', this.keyHandler)
       // Load the data (note we need the self, cause of the callback scope; we could try using an arrow function here)
       let self = this
       this.$journal.find({}, function (err, docs) {
@@ -106,10 +105,17 @@
       })
     },
     destroyed () {
+      document.removeEventListener('keydown', this.keyHandler)
     },
     filters: {
     },
     methods: {
+      keyHandler: function (event) {
+        event.stopImmediatePropagation()
+        if (event.key === 'Escape' || event.keyCode === 27) {
+          this.unsetSelectedJournalEntry()
+        }
+      },
       searchFilter: function (journalEntry, textToSearch) {
         if (!textToSearch) {
           return true
@@ -137,7 +143,7 @@
         if (!journalEntryName) {
           return
         }
-        let newJournalEntry = {id: this.uuidv4(), name: journalEntryName, created: new Date()}
+        let newJournalEntry = {id: this.uuidv4(), name: journalEntryName, created: new Date(), journalDate: new Date()}
         this.journalEntries.push(newJournalEntry)
         this.newJournalEntryText = ''
         // Add it to the DB as well
@@ -179,7 +185,7 @@
 <style scoped>
 
     .journalEntryList {
-        grid-area: taskList;
+        grid-area: journalEntryList;
         display: flex;
         flex: 1 0 auto;
         height: 89vh;
@@ -246,10 +252,6 @@
         height: 78vh;
     }
 
-    .journalEntriesInTab {
-        grid-area: journalEntriesInTab;
-    }
-
     .removeJournalEntriesLine {
         grid-area: removeJournalEntriesLine;
         grid-area: removeJournalEntriesLine;
@@ -261,7 +263,7 @@
 
     .removeJournalEntries {
         grid-area: removeJournalEntries;
-        justify-self: end;
+        justify-self: start;
     }
 
     ul {
