@@ -9,10 +9,14 @@
             <router-link class="stats" to="/stats">Stats</router-link>
         </div>
         <div class="content">
-            <div class="journalStructure">
-                <!-- Add structure -->
+            <div class="journalOverview">
+                <ul>
+                    <li :class="{'is-active': journalType === 'all'}" class="journalChoice" @click="all">all</li>
+                    <li :class="{'is-active': journalType === 'today'}" class="journalChoice" @click="today">today</li>
+                    <li :class="{'is-active': journalType === 'yesterday'}" class="journalChoice" @click="yesterday">yesterday</li>
+                </ul>
             </div>
-            <journalEntryList/>
+            <journalEntryList :journalType="journalType"/>
         </div>
         <div class="footer">
             <modal name="dataLocationModal">
@@ -48,7 +52,8 @@
     data () {
       return {
         preference: {'dataLocation': remote.app.getPath('userData')},
-        newDataLocation: null
+        newDataLocation: null,
+        journalType: 'all'
       }
     },
     created () {
@@ -66,6 +71,15 @@
       }
     },
     methods: {
+      all: function () {
+        this.journalType = 'all'
+      },
+      today: function () {
+        this.journalType = 'today'
+      },
+      yesterday: function () {
+        this.journalType = 'yesterday'
+      },
       openDataLocationChange: function () {
         this.$modal.show('dataLocationModal')
       },
@@ -170,7 +184,7 @@
         display: grid;
         grid-template-rows: 1fr;
         grid-template-columns: 200px 1fr;
-        grid-template-areas: "journalStructure journalEntryList";
+        grid-template-areas: "journalOverview journalEntryList";
         height: 89vh;
         min-height: 89vh;
     }
@@ -256,6 +270,28 @@
         margin-bottom: 20px;
         margin-left: 10px;
         margin-top: 10px;
+    }
+
+    ul {
+        padding-left: 1em;
+        line-height: 1.5em;
+        list-style-type: dot;
+        margin-bottom: 1em;
+    }
+
+    li {
+        list-style: none;
+    }
+
+    .is-active {
+        text-decoration: underline;
+        cursor:pointer;
+        color: forestgreen;
+    }
+
+    .journalChoice {
+        text-decoration: underline;
+        cursor:pointer;
     }
 
 </style>

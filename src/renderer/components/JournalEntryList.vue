@@ -42,6 +42,12 @@
       JournalEntry,
       FontAwesomeIcon
     },
+    props: {
+      journalType: {
+        type: String,
+        required: true
+      }
+    },
     data () {
       return {
         newJournalEntryText: '',
@@ -70,7 +76,15 @@
           return 1
         })
 
-        entries = entries.filter(j => this.searchFilter(j, this.newJournalEntryText))
+        let matching = j => true
+        if (this.journalType === 'today') {
+          matching = this.matchToday
+        }
+        if (this.journalType === 'yesterday') {
+          matching = this.matchYesterday
+        }
+
+        entries = entries.filter(j => matching(j) && this.searchFilter(j, this.newJournalEntryText))
         return entries
       },
       numberOfEntriesSelected: function () {
@@ -110,6 +124,16 @@
     filters: {
     },
     methods: {
+      matchToday: function (journalEntry) {
+        const today = this.$moment().format('MM-DD')
+        const journalD = this.$moment(journalEntry.journalDate).format('MM-DD')
+        return today === journalD
+      },
+      matchYesterday: function (journalEntry) {
+        const yesterday = this.$moment().add(-1, 'days').format('MM-DD')
+        const journalD = this.$moment(journalEntry.journalDate).format('MM-DD')
+        return yesterday === journalD
+      },
       keyHandler: function (event) {
         event.stopImmediatePropagation()
         if (event.key === 'Escape' || event.keyCode === 27) {
