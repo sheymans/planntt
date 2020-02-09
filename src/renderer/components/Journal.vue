@@ -15,6 +15,9 @@
                     <li :class="{'is-active': journalType === 'today'}" class="journalChoice" @click="today">today</li>
                     <li :class="{'is-active': journalType === 'yesterday'}" class="journalChoice" @click="yesterday">yesterday</li>
                 </ul>
+                <ul>
+                    <li class="journalChoice" @click="importCsv" v-tooltip.top="{content:'1st row of CSV needs to be column headers Date, Name, Note', class:'tooltip', delay: 50}">import your own CSV</li>
+                </ul>
             </div>
             <journalEntryList :journalType="journalType"/>
         </div>
@@ -97,6 +100,44 @@
           }
         })
       },
+      importCsv: function () {
+        const { dialog } = require('electron').remote
+        const fs = require('fs')
+        const csv = require('csv-parser')
+        dialog.showOpenDialog({
+          properties: ['openFile'],
+          filter: [{name: 'CSV', extensions: ['csv']}]
+        }).then((data) => {
+          let selectedFiles = data.filePaths
+          console.log(data.filePaths)
+          if (selectedFiles && selectedFiles.length > 0) {
+            const selectedCsv = selectedFiles[0]
+            console.log('we selected a file to import:  ' + selectedCsv)
+            fs.createReadStream(selectedCsv)
+              .pipe(csv())
+              .on('data', (row) => {
+                let newJournalEntry = {id: this.uuidv4(), name: row['Name'], note: row['Note'], created: new Date(), journalDate: row['Date']}
+                // Check whether a similar note already exists:
+                let self = this
+                this.$journal.find({name: row['Name'], note: row['Note'], journalDate: row['Date']}, function (err, docs) {
+                  if (err) {
+                    console.log(err.stack)
+                    return
+                  }
+                  if (docs && docs.length > 0) {
+                    console.log('already added journal entry, skipping')
+                  } else {
+                    console.log('adding a new entry with name: ' + row['Date'])
+                    self.$journal.insert(newJournalEntry)
+                  }
+                })
+              })
+              .on('end', () => {
+                console.log('CSV file successfully processed')
+              })
+          }
+        })
+      },
       resetDirectory: function () {
         let userDir = remote.app.getPath('userData')
         this.newDataLocation = userDir
@@ -121,6 +162,14 @@
         this.newDataLocation = null
         this.$modal.hide('dataLocationModal')
         console.log('user aborted data location change')
+      },
+      // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+      uuidv4: function () {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+          let r = Math.random() * 16 | 0
+          let v = c === 'x' ? r : (r & 0x3 | 0x8)
+          return v.toString(16)
+        })
       }
     }
   }

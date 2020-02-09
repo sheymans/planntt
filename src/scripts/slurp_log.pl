@@ -18,58 +18,53 @@
 #     REVISION: ---
 #===============================================================================
 
-# {"id":"df1bcebb-d2eb-4765-96c4-ea6ee91d713c","name":"last year today","created":{"$$date":1581044273190},"journalDate":{"$$date":1549440000000},"_id":"pUqixqyjkXhWzHhf"}
-use warnings;
 use strict;
+use warnings;
 use utf8;
-
 
 use File::Slurp qw(read_file write_file append_file);
 use DateTime::Format::Flexible;
-use Data::Random;
-
+use Text::CSV qw(csv);
 
 if (scalar @ARGV == 0) {
-  print "Needs a file to convert.\n";
+    print "Needs a file to convert.\n";
 }
 
 my $file_name = $ARGV[0];
 
-my $file_name_db = $file_name . ".db";
+my $file_name_csv = $file_name . ".csv";
 my @file_content = read_file($file_name);
+my $csv = Text::CSV->new({ binary => 1, auto_diag => 1 });
+open my $fh, ">:encoding(utf8)", $file_name_csv or die "$file_name_csv: $!";
 
 my $current_month;
-my $date = DateTime::Format::Flexible->parse_datetime('1 January 2010');
+my $short_date = "";
+my $current_row = [];
 my $content = "";
 
+$csv->say($fh, [ 'Date', 'Note', 'Name' ]);
 foreach my $line (@file_content) {
-
     if ($line =~ /^\# (.*)/) {
-          my $line_match = $1;
-          if ($line_match =~ /\d/) {
-              # create object and append to file
-              my $id = Data::Random::rand_chars(set => 'alphanumeric', min => 16, max => 16);
-              my $short_content = $content;
-              $short_content =~ s/^\s+//; # trim whitespace
-              $short_content = substr($short_content, 0, 20);
-              $short_content =~ s/\s+$//; # trim trailing ;
-              my $ep = $date->epoch();
-
-              my $journal_object = "{\"id\":\"$id\",\"name\":\"$short_content\",\"note\": \"$content\", \"created\":{\"\$\$date\":$ep},\"journalDate\":{\"\$\$date\":$ep},\"_id\":\"$id\"}\n";
-              append_file($file_name_db, $journal_object);
-              # reset
-              $content = "";
-              $current_month = $line_match;
-          }
-        }
-	elsif ($line =~ /^\#\# \/(\d*)/) {
         my $line_match = $1;
-        my $current_day = "$line_match $current_month";
-        $date = DateTime::Format::Flexible->parse_datetime($current_day);
+        if ($line_match =~ /\d/) {
+            $current_month = $line_match;
         }
-        else {
-        $line =~ tr/"/'/;
-        chomp($line);
-        $content = $content . $line . "\\n";
-        }
-      }
+    }
+    elsif ($line =~ /^\#\# \/(\d*)/) {
+        # we found a date, finish up the previous entry
+        push @$current_row, $content;
+        my $name = "zip notes of $short_date";
+        push @$current_row, $name;
+        $csv->say($fh, $current_row);
+
+        # reset
+        my $line_match = $1;
+        my $date = DateTime::Format::Flexible->parse_datetime("$line_match $current_month");
+        $short_date = substr($date, 0, 10);
+        $current_row = [ $short_date ];
+        $content = "";
+    }
+    else {
+        $content = $content . $line;
+    }
+}
