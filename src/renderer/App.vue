@@ -48,5 +48,8 @@
     background-color: #4AD94A;
   }
 
+  #app pre {
+    white-space: pre-wrap;
+  }
 
 </style>
