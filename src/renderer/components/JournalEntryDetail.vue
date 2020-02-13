@@ -177,10 +177,10 @@ import Vue from 'vue'
         display: flex;
         flex-direction: column;
         margin-right: 50px;
-        margin-top: 50px;
-        padding-top: 10px;
-        border-top: 1px solid;
-        border-top-color: rgb(220, 220, 222);
+        margin-left: 20px;
+        padding-left: 10px;
+        border-left: 1px solid;
+        border-left-color: rgb(220, 220, 222);
         flex: 1 1 auto;
     }
 
@@ -262,12 +262,12 @@ import Vue from 'vue'
         font-size: 10pt;
         -webkit-font-smoothing: antialiased;
         overflow: auto;
-        height: 15vh;
+        height: 65vh;
     }
 
     .noteInput {
         width: 99%;
-        height: 15vh;
+        height: 65vh;
         margin-top: 10px;
         font-family: 'Raleway';
         font-style: normal;

@@ -56,6 +56,9 @@
       }
     },
     computed: {
+      editingJournalNote: function () {
+        return this.$store.getters.isEditingJournalNote
+      },
       isJournalEntrySelected: function () {
         return Object.keys(this.selectedJournalEntry).length !== 0
       },
@@ -138,6 +141,68 @@
         event.stopImmediatePropagation()
         if (event.key === 'Escape' || event.keyCode === 27) {
           this.unsetSelectedJournalEntry()
+        }
+        if (event.keyCode === 38 && !event.metaKey && !this.editingJournalNote) { // up arrow for selecting previous journal entry
+          console.log('up arrow pressed for select previous journal entry')
+          if (this.selectedJournalEntry.name) {
+            let t = this.selectedJournalEntry
+            this.selectPreviousJournalEntry(t)
+          } else {
+            // if there is no journal entry selected, select the last journal entry in list on an up-arrow
+            let t = this.findLastVisible()
+            this.setSelectedJournalEntry(t)
+          }
+        }
+        if (event.keyCode === 40 && !event.metaKey && !this.editingJournalNote) { // down for selecting next journal entry
+          console.log('down arrow pressed for select next journal entry')
+          if (this.selectedJournalEntry.name) {
+            let t = this.selectedJournalEntry
+            this.selectNextJournalEntry(t)
+          } else {
+            // if there is no journal entry selected, select the first journal entry in list on an down-arrow
+            let t = this.findFirstVisible()
+            this.setSelectedJournalEntry(t)
+          }
+        }
+      },
+      selectPreviousJournalEntry: function (entry) {
+        let previousJournalEntry = this.findPreviousVisible(entry)
+        if (!previousJournalEntry) {
+          return
+        }
+        this.setSelectedJournalEntry(previousJournalEntry)
+      },
+      selectNextJournalEntry: function (entry) {
+        let nextJournalEntry = this.findNextVisible(entry)
+        if (!nextJournalEntry) {
+          return
+        }
+        this.setSelectedJournalEntry(nextJournalEntry)
+      },
+      findPreviousVisible: function (entry) {
+        let previousJournalEntry
+        const thisEntryIndex = this.viewableJournalEntries.findIndex(e => e === entry)
+        if (thisEntryIndex > 0) {
+          previousJournalEntry = this.viewableJournalEntries[thisEntryIndex - 1]
+        }
+        return previousJournalEntry
+      },
+      findNextVisible: function (entry) {
+        let nextJournalEntry
+        const thisEntryIndex = this.viewableJournalEntries.findIndex(e => e === entry)
+        if (thisEntryIndex < this.viewableJournalEntries.length - 1) {
+          nextJournalEntry = this.viewableJournalEntries[thisEntryIndex + 1]
+        }
+        return nextJournalEntry
+      },
+      findFirstVisible: function () {
+        if (this.viewableJournalEntries.length > 0) {
+          return this.viewableJournalEntries[0]
+        }
+      },
+      findLastVisible: function () {
+        if (this.viewableJournalEntries.length > 0) {
+          return this.viewableJournalEntries[this.viewableJournalEntries.length - 1]
         }
       },
       searchFilter: function (journalEntry, textToSearch) {
@@ -254,7 +319,7 @@
     .theSelectableJournalEntryList {
         grid-area: theSelectableJournalEntryList;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         flex: 1 0 auto;
         height: 78vh;
     }
@@ -264,7 +329,8 @@
         flex-direction: column;
         overflow: auto;
         flex-shrink: 0;
-        height: 40vh;
+        height: 78vh;
+        width: 25vw;
     }
 
     .journalEntryDivisionsLarge {
