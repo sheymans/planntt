@@ -263,6 +263,7 @@ import Vue from 'vue'
         -webkit-font-smoothing: antialiased;
         overflow: auto;
         height: 65vh;
+        word-break: break-all;
     }
 
     .noteInput {
