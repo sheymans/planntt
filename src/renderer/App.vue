@@ -50,6 +50,11 @@
 
   #app pre {
     white-space: pre-wrap;
+    border-top: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+    padding: 5px 0 5px 20px;
+    margin: 0 0 0 0;
+    background: #FCFCFC;
   }
 
 </style>
