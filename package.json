@@ -1,6 +1,6 @@
 {
   "name": "planntt",
-  "version": "0.0.87",
+  "version": "0.0.88",
   "author": "Stijn Heymans <stijn.heymans@gmail.com>",
   "description": "A Simple ToDo Application",
   "homepage": "http://planntt.com",
@@ -81,7 +81,7 @@
     "electron-log": "^2.2.14",
     "electron-updater": "^4.2.0",
     "marked": "^0.3.19",
-    "muze": "^1.0.3",
+    "muze": "^1.3.2",
     "nedb": "^1.8.0",
     "npm": "^6.4.1",
     "open": "0.0.5",
