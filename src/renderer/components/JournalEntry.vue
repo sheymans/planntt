@@ -87,6 +87,9 @@ import Vue from 'vue'
     }
     .journalEntrySummary {
         grid-area: journalEntrySummary;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
     }
 
     .selected {

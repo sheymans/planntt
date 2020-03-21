@@ -155,8 +155,8 @@
 
         canvas
           .data(outputDM)
-          .width(700)
-          .height(500)
+          // .width(700)
+          // .height(500)
           .rows(rows) /* Gets plotted on y-axis */
           .columns(['date']) /* Gets plotted on x-axis */
           .config({
@@ -271,8 +271,8 @@
 
         canvas
           .data(outputDM)
-          .width(700)
-          .height(500)
+          // .width(700)
+          // .height(500)
           .rows(rows) /* Gets plotted on y-axis */
           .columns(['date']) /* Gets plotted on x-axis */
           .config({
