@@ -57,4 +57,9 @@
     background: #FCFCFC;
   }
 
+  #app blockquote {
+    border-left: 2px solid forestgreen;
+    padding-left: 10px;
+  }
+
 </style>
