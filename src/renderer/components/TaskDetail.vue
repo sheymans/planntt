@@ -334,7 +334,7 @@ import Vue from 'vue'
     .whenChoices {
         grid-area: whenChoices;
         display: grid;
-        grid-template-columns: 50px 70px 80px 70px 1fr;
+        grid-template-columns: 55px 85px 100px 90px 1fr;
         grid-template-areas:    "whenChoiceToday whenChoiceThisWeek whenChoiceWaitingFor whenChoiceSomeday whenChoiceSpecific";
         align-items: center;
         margin-top: 20px;
