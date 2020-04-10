@@ -97,7 +97,7 @@ import Vue from 'vue'
 
     .noteDisplay {
         width: 80%;
-        font-family: 'Raleway';
+        font-family: 'JetBrains Mono';
         font-style: normal;
         font-weight: 500;
         font-size: 10pt;

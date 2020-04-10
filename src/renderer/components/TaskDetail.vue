@@ -305,9 +305,17 @@ import Vue from 'vue'
     }
 
     .taskNameToEdit {
+        font-family: 'JetBrains Mono';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 13pt;
     }
 
     .inputTaskNameToEdit {
+        font-family: 'JetBrains Mono';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 13pt;
     }
 
     .inputTaskNameToEdit:focus {
@@ -374,10 +382,10 @@ import Vue from 'vue'
 
     .noteDisplay {
         width: 100%;
-        font-family: 'Raleway';
+        font-family: 'JetBrains Mono';
         font-style: normal;
         font-weight: 500;
-        font-size: 10pt;
+        font-size: 13pt;
         -webkit-font-smoothing: antialiased;
         overflow: auto;
         height: 15vh;
@@ -387,10 +395,10 @@ import Vue from 'vue'
         width: 99%;
         height: 15vh;
         margin-top: 10px;
-        font-family: 'Raleway';
+        font-family: 'JetBrains Mono';
         font-style: normal;
         font-weight: 500;
-        font-size: 10pt;
+        font-size: 13pt;
         -webkit-font-smoothing: antialiased;
     }
 

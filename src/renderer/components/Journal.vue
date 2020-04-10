@@ -178,7 +178,7 @@
 <style scoped>
 
     #mainPage {
-        font-family: 'Raleway';
+        font-family: 'JetBrains Mono';
         font-style: normal;
         font-weight: 500;
         font-size: 10pt;
@@ -191,7 +191,7 @@
         display: grid;
         grid-area: header;
         grid-template-rows: 1fr;
-        grid-template-columns: 1fr 60px 70px 54px 54px 60px;
+        grid-template-columns: 1fr 70px 80px 64px 64px 70px;
         grid-template-areas: "logo home deadlines journal archive stats";
     }
 

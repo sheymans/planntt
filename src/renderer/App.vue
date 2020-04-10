@@ -15,7 +15,7 @@
 
   #app .mx-datepicker {
     font: initial;
-    font-family: 'Raleway';
+    font-family: 'JetBrains Mono';
     font-style: normal;
     font-weight: 500;
     font-size: 10pt;
@@ -24,7 +24,7 @@
 
   #app .mx-input {
     font: initial;
-    font-family: 'Raleway';
+    font-family: 'JetBrains Mono';
     font-style: normal;
     font-weight: 500;
     font-size: 10pt;
@@ -33,7 +33,7 @@
 
   #app .mx-calendar {
     font: initial;
-    font-family: 'Raleway';
+    font-family: 'JetBrains Mono';
     font-style: normal;
     font-weight: 500;
     font-size: 10pt;
