@@ -55,6 +55,8 @@
     padding: 5px 0 5px 20px;
     margin: 0 0 0 0;
     background: #FCFCFC;
+    width: 40vw;
+    overflow-x: auto;
   }
 
   #app blockquote {

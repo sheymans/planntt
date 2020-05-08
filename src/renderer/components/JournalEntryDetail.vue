@@ -212,14 +212,14 @@ import Vue from 'vue'
         font-family: 'JetBrains Mono';
         font-style: normal;
         font-weight: 500;
-        font-size: 13pt;
+        font-size: 11pt;
     }
 
     .inputJournalEntryNameToEdit {
         font-family: 'JetBrains Mono';
         font-style: normal;
         font-weight: 500;
-        font-size: 13pt;
+        font-size: 11pt;
     }
 
     .inputJournalEntryNameToEdit:focus {
@@ -267,11 +267,10 @@ import Vue from 'vue'
         font-family: 'JetBrains Mono';
         font-style: normal;
         font-weight: 500;
-        font-size: 13pt;
+        font-size: 11pt;
         -webkit-font-smoothing: antialiased;
         overflow: auto;
         height: 65vh;
-        word-break: break-all;
     }
 
     .noteInput {
@@ -281,7 +280,7 @@ import Vue from 'vue'
         font-family: 'JetBrains Mono';
         font-style: normal;
         font-weight: 500;
-        font-size: 13pt;
+        font-size: 11pt;
         -webkit-font-smoothing: antialiased;
     }
 

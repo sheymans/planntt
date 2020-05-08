@@ -308,14 +308,14 @@ import Vue from 'vue'
         font-family: 'JetBrains Mono';
         font-style: normal;
         font-weight: 500;
-        font-size: 13pt;
+        font-size: 11pt;
     }
 
     .inputTaskNameToEdit {
         font-family: 'JetBrains Mono';
         font-style: normal;
         font-weight: 500;
-        font-size: 13pt;
+        font-size: 11pt;
     }
 
     .inputTaskNameToEdit:focus {
@@ -385,7 +385,7 @@ import Vue from 'vue'
         font-family: 'JetBrains Mono';
         font-style: normal;
         font-weight: 500;
-        font-size: 13pt;
+        font-size: 11pt;
         -webkit-font-smoothing: antialiased;
         overflow: auto;
         height: 15vh;
@@ -398,7 +398,7 @@ import Vue from 'vue'
         font-family: 'JetBrains Mono';
         font-style: normal;
         font-weight: 500;
-        font-size: 13pt;
+        font-size: 11pt;
         -webkit-font-smoothing: antialiased;
     }
 

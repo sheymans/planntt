@@ -12,7 +12,7 @@ import journal from './datastore/journal'
 import 'typeface-roboto/index.css'
 import 'typeface-roboto-mono/index.css'
 import 'typeface-raleway/index.css'
-import 'typeface-jetbrains-mono/index.css'
+import 'typeface-jetbrains-mono/dist/index.css'
 import VModal from 'vue-js-modal'
 
 /* Fonts */
