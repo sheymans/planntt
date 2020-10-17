@@ -35,11 +35,12 @@ import faTrashAlt from '@fortawesome/fontawesome-free-solid/faTrashAlt'
 import faCheck from '@fortawesome/fontawesome-free-solid/faCheck'
 import faArrowUp from '@fortawesome/fontawesome-free-solid/faArrowUp'
 import faArrowDown from '@fortawesome/fontawesome-free-solid/faArrowDown'
+import faClipboard from '@fortawesome/fontawesome-free-solid/faClipboard'
 import 'muze/dist/muze.css'
 import Tooltip from 'vue-directive-tooltip'
 import 'vue-directive-tooltip/css/index.css'
 
-fontawesome.library.add(faSpinner, faFolder, faFolderOpen, faFolderReg, faFolderOpenReg, faPencilAlt, faCaretDown, faCaretRight, faClone, faBan, faHeadphones, faTimes, faCrosshairs, faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown)
+fontawesome.library.add(faClipboard, faSpinner, faFolder, faFolderOpen, faFolderReg, faFolderOpenReg, faPencilAlt, faCaretDown, faCaretRight, faClone, faBan, faHeadphones, faTimes, faCrosshairs, faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.use(require('vue-moment'))
