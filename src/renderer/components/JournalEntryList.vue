@@ -164,6 +164,10 @@
             this.setSelectedJournalEntry(t)
           }
         }
+        if (event.keyCode === 69 && event.metaKey) { // meta+d for copy filtered entires to clipboard
+          console.log('key e pressed for copy to clipboard')
+          this.exportToMarkdown()
+        }
       },
       selectPreviousJournalEntry: function (entry) {
         let previousJournalEntry = this.findPreviousVisible(entry)
@@ -266,6 +270,23 @@
           let v = c === 'x' ? r : (r & 0x3 | 0x8)
           return v.toString(16)
         })
+      },
+      exportToMarkdown: function () {
+        console.log('copying selected journal entries to Markdown on clipboard')
+        let markdown = ''
+        const title = this.newJournalEntryText + '\n\n'
+        markdown += title
+
+        this.viewableJournalEntries.forEach(journalEntry => {
+          markdown += '# ' + journalEntry.name + '\n\n'
+          if (journalEntry.note) {
+            markdown += journalEntry.note + '\n\n'
+          }
+          markdown += '(_' + this.$moment(journalEntry.journalDate).format('YYYY-MM-DD') + '_)\n\n'
+        })
+        const { clipboard } = require('electron')
+        clipboard.writeText(markdown)
+        console.log('done copying to clipboard')
       }
     }
   }
