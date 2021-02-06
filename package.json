@@ -1,6 +1,6 @@
 {
   "name": "planntt",
-  "version": "0.0.95",
+  "version": "0.0.96",
   "author": "Stijn Heymans <stijn.heymans@gmail.com>",
   "description": "A Simple ToDo Application",
   "homepage": "http://planntt.com",
@@ -24,7 +24,7 @@
   "build": {
     "productName": "planntt",
     "appId": "com.planntt",
-    "copyright": "Copyright © 2018-2020 Stijn Heymans",
+    "copyright": "Copyright © 2018-2021 Stijn Heymans",
     "directories": {
       "output": "build"
     },

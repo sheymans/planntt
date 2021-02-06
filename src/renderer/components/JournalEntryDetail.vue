@@ -23,6 +23,7 @@ import Vue from 'vue'
             </div>
             <div class="journalIcons">
               <font-awesome-icon v-tooltip.top="{content:'copy to clipboard', class:'tooltip', delay: 50}" @click="copyNoteToClipboard" icon="clipboard" class="iconCopyToClip"/>
+              <router-link class="focusJournalEntry" :to="{ name: 'focusJournalEntry', params: { journalEntry } }"><font-awesome-icon v-tooltip.top="{content:'focus mode (⌘+f)', class:'tooltip', delay: 50}" icon="headphones"/></router-link>
             </div>
         </div>
 
@@ -354,6 +355,10 @@ import Vue from 'vue'
         grid-area: timers;
         font-size: 9pt;
         justify-content: center;
+    }
+
+    .focusJournalEntry {
+      color: black;
     }
 
 </style>

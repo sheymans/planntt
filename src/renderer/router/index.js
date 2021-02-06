@@ -42,6 +42,12 @@ export default new Router({
       props: true
     },
     {
+      path: '/focusJournalEntry',
+      name: 'focusJournalEntry',
+      component: require('@/components/FocusJournalEntry').default,
+      props: true
+    },
+    {
       path: '*',
       redirect: '/'
     }

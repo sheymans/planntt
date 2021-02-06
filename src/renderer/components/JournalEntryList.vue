@@ -164,9 +164,16 @@
             this.setSelectedJournalEntry(t)
           }
         }
-        if (event.keyCode === 69 && event.metaKey) { // meta+d for copy filtered entires to clipboard
+        if (event.keyCode === 69 && event.metaKey) { // meta+d for copy filtered entries to clipboard
           console.log('key e pressed for copy to clipboard')
           this.exportToMarkdown()
+        }
+        if (event.keyCode === 70 && event.metaKey) { // meta+f for focus
+          console.log('key f pressed for focus mode')
+          if (this.selectedJournalEntry.name) {
+            let j = this.selectedJournalEntry
+            this.$router.push({name: 'focusJournalEntry', params: { journalEntry: j }})
+          }
         }
       },
       selectPreviousJournalEntry: function (entry) {
