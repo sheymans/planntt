@@ -47,7 +47,7 @@
 
 <script>
   import Planntt from '../App'
-  import muze from 'muze'
+  import muze from '@chartshq/muze'
 
   export default {
     name: 'Stats',
@@ -112,7 +112,7 @@
       })
     },
     methods: {
-      focusedTimePer: function (momentFormat) {
+      focusedTimePer: async function (momentFormat) {
         // Clear canvas:
         document.getElementById('canvasStats').innerHTML = ''
 
@@ -126,7 +126,7 @@
           focusedTimeBy.push({date: transformedDate, timeInSeconds: timeInSeconds})
         })
 
-        const DataModel = muze.DataModel
+        const DataModel = await muze.DataModel.onReady()
         const schema = [
           {
             name: 'date', // Name of the variable
@@ -137,12 +137,13 @@
             type: 'measure'
           }
         ]
-        const dm = new DataModel(focusedTimeBy, schema)
-        const groupBy = DataModel.Operators.groupBy
+        const formattedData = await DataModel.loadData(focusedTimeBy, schema)
+        const dm = new DataModel(formattedData)
+        const { SUM } = DataModel.AggregationFunctions
 
-        let groupedFn = groupBy(['date'], {timeInSeconds: 'sum'})
-        const outputDM = groupedFn(dm).sort([['date', 'ASC']])
-        const env = muze()
+        let groupedFn = dm.groupBy(['date'], ['timeInSeconds', SUM])
+        const outputDM = groupedFn.sort([['date', 'ASC']])
+        const env = await muze()
         const canvas = env.canvas()
         const html = muze.Operators.html
 
@@ -193,12 +194,11 @@
               tooltip: {
                 formatter: (dataModel, context) => {
                   const tooltipData = dataModel.getData().data
-                  const fieldConfig = dataModel.getFieldsConfig()
 
                   let tooltipContent = ''
                   tooltipData.forEach((dataArray, i) => {
-                    const datePoint = dataArray[fieldConfig.date.index]
-                    let timeInSecondsPoint = this.prettyTotalTimeSpent(dataArray[fieldConfig.timeInSeconds.index])
+                    const datePoint = dataArray[dataModel.getFieldIndex('date')]
+                    let timeInSecondsPoint = this.prettyTotalTimeSpent(dataArray[dataModel.getFieldIndex('timeInSeconds')])
 
                     if (momentFormat === 'YYYY-WW') {
                       const week = datePoint.substring(datePoint.length - 2, datePoint.length)
@@ -217,7 +217,7 @@
           })
           .mount('#canvasStats') /* Attaching the canvas to DOM element */
       },
-      tasksPer: function (momentFormat, dateSelector, taskList, durationDoneAndCreated) {
+      tasksPer: async function (momentFormat, dateSelector, taskList, durationDoneAndCreated) {
         // Clear canvas:
         document.getElementById('canvasStats').innerHTML = ''
 
@@ -235,7 +235,7 @@
           }
         })
 
-        const DataModel = muze.DataModel
+        const DataModel = await muze.DataModel.onReady()
         const schema = [
           {
             name: 'date', // Name of the variable
@@ -250,17 +250,18 @@
             type: 'measure'
           }
         ]
-        const dm = new DataModel(countTasksBy, schema)
-        const groupBy = DataModel.Operators.groupBy
+        const formattedData = await DataModel.loadData(countTasksBy, schema)
+        const dm = new DataModel(formattedData)
+        const { AVG, COUNT } = DataModel.AggregationFunctions
 
         let groupedFn
         if (durationDoneAndCreated) {
-          groupedFn = groupBy(['date'], {duration: 'avg'})
+          groupedFn = dm.groupBy(['date'], ['duration', AVG])
         } else {
-          groupedFn = groupBy(['date'], {count: 'count'})
+          groupedFn = dm.groupBy(['date'], ['count', COUNT])
         }
-        const outputDM = groupedFn(dm).sort([['date', 'ASC']])
-        const env = muze()
+        const outputDM = groupedFn.sort([['date', 'ASC']])
+        const env = await muze()
         const canvas = env.canvas()
         const html = muze.Operators.html
 
@@ -315,19 +316,18 @@
             },
             interaction: {
               tooltip: {
-                formatter: (dataModel, context) => {
+                formatter: (dataModel, config, context) => {
                   const tooltipData = dataModel.getData().data
-                  const fieldConfig = dataModel.getFieldsConfig()
 
                   let tooltipContent = ''
                   tooltipData.forEach((dataArray, i) => {
-                    const datePoint = dataArray[fieldConfig.date.index]
+                    const datePoint = dataArray[dataModel.getFieldIndex('date')]
                     let durationPoint
                     let countPoint
                     if (durationDoneAndCreated) {
-                      durationPoint = this.$moment.duration(dataArray[fieldConfig.duration.index]).humanize()
+                      durationPoint = this.$moment.duration(dataArray[dataModel.getFieldIndex('duration')]).humanize()
                     } else {
-                      countPoint = dataArray[fieldConfig.count.index]
+                      countPoint = dataArray[dataModel.getFieldIndex('count')]
                     }
 
                     if (momentFormat === 'YYYY-MM-WW') {

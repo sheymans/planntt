@@ -35,8 +35,10 @@ function createWindow () {
     width: 1000,
     icon: path.join(__dirname, 'assets/icons/png/64x64.png'),
     webPreferences: {
+      contextIsolation: false,
       nodeIntegration: true,
-      nodeIntegrationInWorker: true
+      nodeIntegrationInWorker: true,
+      enableRemoteModule: true
     },
     backgroundColor: '#FFFFFF'
   })
@@ -56,6 +58,16 @@ function createWindow () {
 
   // Get in custom menu
   require('./menu/mainmenu')
+
+  // Open dev tools initially when in development mode
+  if (process.env.NODE_ENV === 'development') {
+    mainWindow.webContents.on('did-frame-finish-load', () => {
+      mainWindow.webContents.once('devtools-opened', () => {
+        mainWindow.focus()
+      })
+      mainWindow.webContents.openDevTools()
+    })
+  }
 }
 
 app.on('ready', createWindow)

@@ -11,3 +11,4 @@ thumbs.db
 *.iml
 !.gitkeep
 .env
+package-lock.json

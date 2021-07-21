@@ -123,7 +123,17 @@ let rendererConfig = {
         : false
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve("node_modules", "@chartshq/muze/dist"),
+        to: '.'
+      },
+      {
+        from: path.resolve("node_modules", "vue-directive-tooltip/dist"),
+        to: '.'
+      },
+    ])
   ],
   output: {
     filename: '[name].js',
