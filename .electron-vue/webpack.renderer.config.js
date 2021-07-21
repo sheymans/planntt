@@ -123,7 +123,15 @@ let rendererConfig = {
         : false
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new CopyWebpackPlugin([
+      {
+        // Provide your node_modules path where @chartshq/muze
+        // package is installed.
+        from: path.resolve("node_modules", "@chartshq/muze/dist"),
+        to: '.'
+      },
+    ])
   ],
   output: {
     filename: '[name].js',

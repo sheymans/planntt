@@ -36,9 +36,9 @@ import faCheck from '@fortawesome/fontawesome-free-solid/faCheck'
 import faArrowUp from '@fortawesome/fontawesome-free-solid/faArrowUp'
 import faArrowDown from '@fortawesome/fontawesome-free-solid/faArrowDown'
 import faClipboard from '@fortawesome/fontawesome-free-solid/faClipboard'
-import 'muze/dist/muze.css'
+import '@chartshq/muze/dist/muze.css'
 import Tooltip from 'vue-directive-tooltip'
-import 'vue-directive-tooltip/css/index.css'
+import 'vue-directive-tooltip/dist/vueDirectiveTooltip.css'
 
 fontawesome.library.add(faClipboard, faSpinner, faFolder, faFolderOpen, faFolderReg, faFolderOpenReg, faPencilAlt, faCaretDown, faCaretRight, faClone, faBan, faHeadphones, faTimes, faCrosshairs, faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown)
 
