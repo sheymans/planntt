@@ -126,9 +126,11 @@ let rendererConfig = {
     new webpack.NoEmitOnErrorsPlugin(),
     new CopyWebpackPlugin([
       {
-        // Provide your node_modules path where @chartshq/muze
-        // package is installed.
         from: path.resolve("node_modules", "@chartshq/muze/dist"),
+        to: '.'
+      },
+      {
+        from: path.resolve("node_modules", "vue-directive-tooltip/dist"),
         to: '.'
       },
     ])

@@ -1,6 +1,6 @@
 # planntt
 
-> An Automatic Scheduler.
+> Manage your tasks on your computer.
 
 #### Build Setup
 
