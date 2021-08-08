@@ -44,7 +44,7 @@
 <script>
   import JournalEntryList from './JournalEntryList.vue'
   import Planntt from '../App'
-  import { remote } from 'electron'
+  const app = require('@electron/remote').app
 
   export default {
     name: 'Journal',
@@ -54,7 +54,7 @@
     },
     data () {
       return {
-        preference: {'dataLocation': remote.app.getPath('userData')},
+        preference: {'dataLocation': app.getPath('userData')},
         newDataLocation: null,
         journalType: 'all'
       }
@@ -62,15 +62,15 @@
     created () {
       const fs = require('fs')
       try {
-        const contents = JSON.parse(fs.readFileSync(remote.app.getPath('userData') + '/preferences.db').toString())
+        const contents = JSON.parse(fs.readFileSync(app.getPath('userData') + '/preferences.db').toString())
         if (contents) {
           this.preference = contents
           console.log('preference file exists and using it: ' + this.preference['dataLocation'])
         }
       } catch (err) {
         console.log('no preferences.db exists. will create it now')
-        let preference = {'dataLocation': remote.app.getPath('userData')}
-        fs.writeFileSync(remote.app.getPath('userData') + '/preferences.db', JSON.stringify(preference))
+        let preference = {'dataLocation': app.getPath('userData')}
+        fs.writeFileSync(app.getPath('userData') + '/preferences.db', JSON.stringify(preference))
       }
     },
     methods: {
@@ -88,7 +88,7 @@
       },
       selectDirectory: function () {
         let self = this
-        const { dialog } = require('electron').remote
+        const { dialog } = require('@electron/remote')
         dialog.showOpenDialog({
           properties: ['openDirectory', 'createDirectory']
         }).then((data) => {
@@ -101,7 +101,7 @@
         })
       },
       importCsv: function () {
-        const { dialog } = require('electron').remote
+        const { dialog } = require('@electron/remote')
         const fs = require('fs')
         const csv = require('csv-parser')
         dialog.showOpenDialog({
@@ -139,7 +139,7 @@
         })
       },
       resetDirectory: function () {
-        let userDir = remote.app.getPath('userData')
+        let userDir = app.getPath('userData')
         this.newDataLocation = userDir
       },
       confirmLocationChange: function () {
@@ -147,14 +147,14 @@
           let preference = {'dataLocation': this.newDataLocation}
           console.log('writing new preferences to file')
           const fs = require('fs')
-          fs.writeFileSync(remote.app.getPath('userData') + '/preferences.db', JSON.stringify(preference))
+          fs.writeFileSync(app.getPath('userData') + '/preferences.db', JSON.stringify(preference))
           console.log('done writing new preferences to file')
           this.preference = preference
           this.newDataLocation = null
           this.$modal.hide('dataLocationModal')
           console.log('user has changed data location to ' + this.preference['dataLocation'])
           console.log('reloading the app now')
-          const {getCurrentWindow} = require('electron').remote
+          const {getCurrentWindow} = require('@electron/remote')
           getCurrentWindow().reload()
         }
       },

@@ -6,6 +6,9 @@ import { autoUpdater } from 'electron-updater'
 autoUpdater.logger = require('electron-log')
 autoUpdater.logger.transports.file.level = 'info'
 
+// for using remote, see https://github.com/electron/remote
+require('@electron/remote/main').initialize()
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
