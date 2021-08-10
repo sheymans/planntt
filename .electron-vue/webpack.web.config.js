@@ -10,6 +10,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 let webConfig = {
   devtool: 'eval-cheap-module-source-map',
@@ -18,17 +19,6 @@ let webConfig = {
   },
   module: {
     rules: [
-      {
-        test: /\.(js|vue)$/,
-        enforce: 'pre',
-        exclude: /node_modules/,
-        use: {
-          loader: 'eslint-loader',
-          options: {
-            formatter: require('eslint-friendly-formatter')
-          }
-        }
-      },
       {
         test: /\.css$/,
         use: ['vue-style-loader', 'css-loader']
@@ -81,6 +71,10 @@ let webConfig = {
     ]
   },
   plugins: [
+    new ESLintPlugin({
+      extensions: [`js`, `vue`],
+      formatter: require('eslint-friendly-formatter')
+    }),
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({filename: 'styles.css'}),
     new HtmlWebpackPlugin({
