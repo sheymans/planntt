@@ -15,16 +15,16 @@
 </template>
 
 <script>
-  import Planntt from '../App'
-  import DeadlineList from './DeadlineList.vue'
+import Planntt from '../App'
+import DeadlineList from './DeadlineList.vue'
 
-  export default {
-    name: 'Deadlines',
-    components: {
-      Planntt,
-      DeadlineList
-    }
+export default {
+  name: 'Deadlines',
+  components: {
+    Planntt,
+    DeadlineList
   }
+}
 </script>
 
 <style scoped>
@@ -61,13 +61,11 @@
         color: black;
     }
 
-
     .deadlines {
         grid-area: deadlines;
         text-decoration: underline;
         color: forestgreen;
     }
-
 
     .journal {
         grid-area: journal;

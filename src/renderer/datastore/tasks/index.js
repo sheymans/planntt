@@ -9,7 +9,7 @@ let contents = null
 try {
   contents = JSON.parse(fs.readFileSync(app.getPath('userData') + '/preferences.db').toString())
   if (contents) {
-    dataLocation = contents['dataLocation']
+    dataLocation = contents.dataLocation
     console.log('using data location: ' + dataLocation)
   }
 } catch (err) {

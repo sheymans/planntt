@@ -9,7 +9,7 @@ const state = {
   projectNames: {},
   projectTargetTaskDrag: null,
   // Expand All Projects initially
-  expanded: {'today': true, 'thisweek': true},
+  expanded: { today: true, thisweek: true },
   selectedTaskTab: 'someday',
   selectedTaskId: null,
   focusedTime: {},
@@ -36,13 +36,13 @@ const getters = {
     return state.selectedProjectName
   },
   getProjectName (state) {
-    let getProjectNameTemp = (id) => {
+    const getProjectNameTemp = (id) => {
       return state.projectNames[id]
     }
     return getProjectNameTemp
   },
   isExpanded (state) {
-    let isExpandedTemp = (projectIdOrTaskTab) => {
+    const isExpandedTemp = (projectIdOrTaskTab) => {
       return state.expanded[projectIdOrTaskTab]
     }
     return isExpandedTemp
@@ -51,8 +51,8 @@ const getters = {
     if (!state.selected) {
       return []
     }
-    let descendantsIncludingSelected = [state.selected]
-    let storedIds = state.subProjects[state.selected]
+    const descendantsIncludingSelected = [state.selected]
+    const storedIds = state.subProjects[state.selected]
     if (storedIds) {
       descendantsIncludingSelected.push(...storedIds)
     }
@@ -62,17 +62,17 @@ const getters = {
     return state.deletedProjects
   },
   getFocusedTimeToday (state) {
-    let today = Vue.moment().format('YYYY-MM-DD')
+    const today = Vue.moment().format('YYYY-MM-DD')
     console.log('getting focused time today: ' + today)
     return state.focusedTime[today]
   },
   getFocusedTimeThisWeek (state) {
-    let today = Vue.moment()
+    const today = Vue.moment()
     return getters.getFocusedTime(state, today)
   },
   getFocusedTime (state, day) {
-    let dayNumber = day.day()
-    let thisDay = day.format('YYYY-MM-DD')
+    const dayNumber = day.day()
+    const thisDay = day.format('YYYY-MM-DD')
     let thisDaySeconds
     if (state.focusedTime[thisDay]) {
       thisDaySeconds = state.focusedTime[thisDay]
@@ -83,7 +83,7 @@ const getters = {
     if (dayNumber === 1) {
       return thisDaySeconds
     } else {
-      let yesterday = day.subtract(1, 'days')
+      const yesterday = day.subtract(1, 'days')
       return thisDaySeconds + getters.getFocusedTime(state, yesterday)
     }
   }
@@ -109,8 +109,8 @@ const mutations = {
     Vue.set(state.expanded, projectIdOrTaskTab.what, projectIdOrTaskTab.state)
   },
   setPathFromRootToProjectExpanded (state, projectId) {
-    for (let id in state.subProjects) {
-      let subProjects = state.subProjects[id]
+    for (const id in state.subProjects) {
+      const subProjects = state.subProjects[id]
       if (subProjects.includes(projectId)) {
         Vue.set(state.expanded, id, true)
       } else {
@@ -126,7 +126,7 @@ const mutations = {
     state.selectedProjectName = name
   },
   deleteProject (state, projectId) {
-    let storedIds = state.subProjects[projectId]
+    const storedIds = state.subProjects[projectId]
     if (storedIds) {
       state.deletedProjects.push(...storedIds)
     }
@@ -139,8 +139,8 @@ const mutations = {
   createFocusedTime (state, focusedTime) {
     // focusedTime is a list of objects {'date': <date>, 'timeInSeconds': <numberInSeconds>} for each date.
     focusedTime.forEach(focusedTimeObject => {
-      const date = focusedTimeObject['date']
-      const timeInSeconds = focusedTimeObject['timeInSeconds']
+      const date = focusedTimeObject.date
+      const timeInSeconds = focusedTimeObject.timeInSeconds
       Vue.set(state.focusedTime, date, timeInSeconds)
       console.log('store: set focusedTime for ' + date + ' to ' + timeInSeconds + ' seconds')
     })
@@ -156,23 +156,23 @@ const mutations = {
     Vue.set(state.focusedTime, today, currentSeconds + sessionSeconds)
   },
   createProjectDependencies (state, projects) {
-    let getDescendantProjectIds = (project) => {
-      let descendantProjectIds = []
+    const getDescendantProjectIds = (project) => {
+      const descendantProjectIds = []
       descendantProjectIds.push(project.id)
       if (project.children) {
         project.children.forEach(child => {
-          let descendants = getDescendantProjectIds(child)
+          const descendants = getDescendantProjectIds(child)
           descendantProjectIds.push(...descendants)
         })
       }
       return descendantProjectIds
     }
     projects.forEach(project => {
-      let projectDependencies = state.subProjects[project.id]
+      const projectDependencies = state.subProjects[project.id]
       if (!projectDependencies) {
         Vue.set(state.subProjects, project.id, [])
       }
-      let descendantProjectIds = getDescendantProjectIds(project)
+      const descendantProjectIds = getDescendantProjectIds(project)
       Vue.set(state.subProjects, project.id, descendantProjectIds)
       // And do the same for all its children:
       if (project.children) {

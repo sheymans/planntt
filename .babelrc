@@ -11,20 +11,18 @@
     },
     "renderer": {
       "presets": [
-        ["env", {
+        ["@babel/preset-env", {
           "modules": false
         }],
-        "stage-0"
       ]
     },
     "web": {
       "presets": [
-        ["env", {
+        ["@babel/preset-env", {
           "modules": false
         }],
-        "stage-0"
       ]
     }
   },
-  "plugins": ["transform-runtime"]
+  "plugins": ["@babel/plugin-transform-runtime"]
 }

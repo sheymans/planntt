@@ -18,70 +18,70 @@
 </template>
 
 <script>
-  import ArchivedTask from './ArchivedTask.vue'
-  import ArchivedTaskDetail from './ArchivedTaskDetail.vue'
+import ArchivedTask from './ArchivedTask.vue'
+import ArchivedTaskDetail from './ArchivedTaskDetail.vue'
 
-  export default {
-    name: 'ArchiveList',
-    components: {
-      ArchivedTask,
-      ArchivedTaskDetail
-    },
-    data () {
-      return {
-        tasks: [],
-        selectedTask: {},
-        searchText: ''
+export default {
+  name: 'ArchiveList',
+  components: {
+    ArchivedTask,
+    ArchivedTaskDetail
+  },
+  data () {
+    return {
+      tasks: [],
+      selectedTask: {},
+      searchText: ''
+    }
+  },
+  created () {
+    // Load the data (note we need the self, cause of the callback scope; we could try using an arrow function here)
+    const self = this
+    this.$archivedTaskDb.find({}, function (err, docs) {
+      if (err) {
+        console.log(err.stack)
+        return
       }
-    },
-    created () {
-      // Load the data (note we need the self, cause of the callback scope; we could try using an arrow function here)
-      let self = this
-      this.$archivedTaskDb.find({}, function (err, docs) {
-        if (err) {
-          console.log(err.stack)
-          return
-        }
-        if (docs && docs.length > 0) {
-          self.tasks = docs
-          // Sort tasks by date (latest first):
-          self.tasks.sort((a, b) => {
-            return b.done - a.done
-          })
-          console.log('read archived task list from db')
-        }
-      })
-    },
-    methods: {
-      setSelectedTask: function (task) {
-        this.selectedTask = task
-      }
-    },
-    computed: {
-      searchedTasks: function () {
-        let self = this
-        let lSearch = self.searchText.toLowerCase()
-        const tasksToShow = this.tasks.filter(task => {
-          const mandatoryFieldsContains = task.name.toLowerCase().includes(lSearch) || task.projectName.toLowerCase().includes(lSearch) || task.when.includes(lSearch)
-          if (mandatoryFieldsContains) {
-            return mandatoryFieldsContains
-          }
-          if (task.note) {
-            const optionalFieldsContains = task.note.toLowerCase().includes(lSearch)
-            if (optionalFieldsContains) {
-              return optionalFieldsContains
-            }
-          }
-          let doneDay = this.$moment(task.done).format('YYYY-MM-DD hh:mma')
-          return doneDay.includes(lSearch)
+      if (docs && docs.length > 0) {
+        self.tasks = docs
+        // Sort tasks by date (latest first):
+        self.tasks.sort((a, b) => {
+          return b.done - a.done
         })
-        return tasksToShow
-      },
-      numberOfArchivedTasks: function () {
-        return this.searchedTasks.length
+        console.log('read archived task list from db')
       }
+    })
+  },
+  methods: {
+    setSelectedTask: function (task) {
+      this.selectedTask = task
+    }
+  },
+  computed: {
+    searchedTasks: function () {
+      const self = this
+      const lSearch = self.searchText.toLowerCase()
+      const tasksToShow = this.tasks.filter(task => {
+        const mandatoryFieldsContains = task.name.toLowerCase().includes(lSearch) || task.projectName.toLowerCase().includes(lSearch) || task.when.includes(lSearch)
+        if (mandatoryFieldsContains) {
+          return mandatoryFieldsContains
+        }
+        if (task.note) {
+          const optionalFieldsContains = task.note.toLowerCase().includes(lSearch)
+          if (optionalFieldsContains) {
+            return optionalFieldsContains
+          }
+        }
+        const doneDay = this.$moment(task.done).format('YYYY-MM-DD hh:mma')
+        return doneDay.includes(lSearch)
+      })
+      return tasksToShow
+    },
+    numberOfArchivedTasks: function () {
+      return this.searchedTasks.length
     }
   }
+}
 </script>
 
 <style scoped>
@@ -108,7 +108,6 @@
         grid-area: searchInput;
         width: 500px;
     }
-
 
     input {
         font: inherit;

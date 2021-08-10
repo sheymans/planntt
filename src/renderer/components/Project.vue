@@ -49,196 +49,196 @@ import Vue from 'vue'
 </template>
 
 <script>
-  import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-  import contextMenu from 'vue-context-menu'
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import contextMenu from 'vue-context-menu'
 
-  export default {
-    name: 'Project',
-    components: {FontAwesomeIcon, contextMenu},
-    props: {
-      project: {
-        type: Object,
-        required: true
-      }
-    },
-    data: function () {
-      return {
-        editing: false,
-        dragHappening: false
-      }
-    },
-    computed: {
-      isNonEmptyFolder: function () {
-        return this.project.children &&
+export default {
+  name: 'Project',
+  components: { FontAwesomeIcon, contextMenu },
+  props: {
+    project: {
+      type: Object,
+      required: true
+    }
+  },
+  data: function () {
+    return {
+      editing: false,
+      dragHappening: false
+    }
+  },
+  computed: {
+    isNonEmptyFolder: function () {
+      return this.project.children &&
           this.project.children.length
-      },
-      getFolderIcon: function () {
-        if (this.open && this.isNonEmptyFolder) {
-          return 'folder-open'
-        } else if (!this.open && this.isNonEmptyFolder) {
-          return 'folder'
-        } else {
-          return ['far', 'folder']
-        }
-      },
-      isSelectedProject: function () {
-        let currentlySelected = this.$store.getters.getSelectedProject
-        return (currentlySelected === this.project.id)
-      },
-      open: function () {
-        return this.$store.getters.isExpanded(this.project.id)
+    },
+    getFolderIcon: function () {
+      if (this.open && this.isNonEmptyFolder) {
+        return 'folder-open'
+      } else if (!this.open && this.isNonEmptyFolder) {
+        return 'folder'
+      } else {
+        return ['far', 'folder']
       }
     },
-    methods: {
-      toggle: function () {
-        if (this.isNonEmptyFolder) {
-          this.$store.commit('setExpanded', {what: this.project.id, state: !this.open})
-        }
-      },
-      isInbox: function () {
-        return this.project.id === 1
-      },
-      handleDrop: function (event) {
-        event.preventDefault()
-        let objectString = event.dataTransfer.getData('text')
-        let object = JSON.parse(objectString)
+    isSelectedProject: function () {
+      const currentlySelected = this.$store.getters.getSelectedProject
+      return (currentlySelected === this.project.id)
+    },
+    open: function () {
+      return this.$store.getters.isExpanded(this.project.id)
+    }
+  },
+  methods: {
+    toggle: function () {
+      if (this.isNonEmptyFolder) {
+        this.$store.commit('setExpanded', { what: this.project.id, state: !this.open })
+      }
+    },
+    isInbox: function () {
+      return this.project.id === 1
+    },
+    handleDrop: function (event) {
+      event.preventDefault()
+      const objectString = event.dataTransfer.getData('text')
+      const object = JSON.parse(objectString)
 
-        // The object is a task
-        if (object.project) {
-          this.handleDropTask(object)
-        } else {
-          this.handleDropProject(object)
-        }
-      },
-      dragProject: function (event) {
-        event.dataTransfer.setData('text', JSON.stringify(this.project))
-      },
-      handleDropTask: function (task) {
-        console.log('dropped task: ' + task.name + ' in project ' + this.project.name)
-        this.$set(task, 'project', this.project.id)
-        this.$taskDb.update({id: task.id}, { $set: { project: task.project, projectName: this.project.name } }, {})
-        this.$store.commit('setProjectTargetTaskDrag', this.project)
-        this.dragHappening = false
-      },
-      handleDropProject: function (project) {
-        console.log('dropping project: ' + project.name + ' in project ' + this.project.name)
-        // You cannot drop All Project or INBOX something else
-        if (project.id === 1 || project.id === 2) {
-          return
-        }
-        // You cannot drop a project into itself
-        if (this.project.id === project.id) {
-          return
-        }
-        // Remove the project you want to drop from the tree
-        this.removeFromRoot(project.id)
-        // And add it now as a child of this project you're dropping it on
-        if (!this.isNonEmptyFolder) {
-          this.$set(this.project, 'children', [])
-        }
-        console.log('project that is added to children: ' + project)
-        console.log('of this project: ' + this.project.name)
-        this.project.children.push(project)
-        this.updateProjects()
-        this.$store.commit('setExpanded', {what: this.project.id, state: true})
-        this.dragHappening = false
-      },
-      handleDragOver: function (event) {
-        event.preventDefault()
-        this.dragHappening = true
-      },
-      handleDragLeave: function (event) {
-        event.preventDefault()
-        this.dragHappening = false
-      },
-      isSpecialProject: function () {
-        // INBOX or All Projects
-        return (this.project.id === 1 || this.project.id === 2)
-      },
-      selectProject: function () {
-        // See store/modules/Projects.js for this Vuex store.
-        // We should combine this in 1 call maybe just emit the whole project
-        this.$store.commit('setSelectedProject', this.project.id)
-        this.$store.commit('setSelectedProjectName', this.project.name)
-      },
-      addSubProject: function () {
-        if (this.isNonEmptyFolder) {
-          this.addChild()
-        } else {
-          this.$set(this.project, 'children', [])
-          this.addChild()
-        }
-        this.$store.commit('setExpanded', {what: this.project.id, state: true})
-      },
-      addChild: function () {
-        let newChildProject = {name: 'new project', id: this.uuidv4()}
-        this.project.children.push(newChildProject)
-        this.$store.commit('setProjectName', newChildProject)
-        this.updateProjects()
-      },
-      removeChild: function (uuid) {
-        let filtered = this.project.children.filter(p => p.id !== uuid)
-        this.$set(this.project, 'children', filtered)
-        this.$store.commit('deleteProject', uuid)
-        this.updateProjects()
-      },
-      // You want to drag something on this project and involves deleting a project with id uuid that could be somewhere entirely different
-      // We want to go up to the root project list and from there we'll initiate a recursive removeChild, so any project here will just propogate the event up
-      removeFromRoot: function (uuid) {
-        this.$emit('removeFromRoot', uuid)
-      },
-      startEdit: function () {
-        // You can't edit special projects
-        if (this.isSpecialProject()) {
-          console.log('you cannot edit special project: ' + this.project.id)
-          return
-        }
-        console.log('starting to edit: ' + this.project.name)
-        this.projectNameBeforeEdit = this.project.name
-        this.editing = true
-      },
-      doneEdit: function () {
-        if (!this.editing) {
-          return
-        }
-        this.project.name = this.project.name.trim()
-        if (!this.project.name) {
-          this.cancelEdit()
-        }
-        this.editing = false
-        this.projectNameBeforeEdit = null
-        this.selectProject()
-        this.$store.commit('setProjectName', this.project)
-        this.updateProjects()
-      },
-      cancelEdit: function () {
-        this.project.name = this.projectNameBeforeEdit
-        this.projectNameBeforeEdit = null
-        this.editing = false
-      },
-      updateProjects: function () {
-        // Saves stuff to DB on any change
-        console.log('project with id ' + this.project.id + ' emitted an updateProjects save to DB')
-        this.$emit('updateProjects')
-      },
-      // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-      uuidv4: function () {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-          let r = Math.random() * 16 | 0
-          let v = c === 'x' ? r : (r & 0x3 | 0x8)
-          return v.toString(16)
-        })
+      // The object is a task
+      if (object.project) {
+        this.handleDropTask(object)
+      } else {
+        this.handleDropProject(object)
       }
     },
-    // https://vuejs.org/v2/guide/custom-directive.html
-    directives: {
-      focus: function (el, binding) {
-        if (binding.value) {
-          el.focus()
-        }
+    dragProject: function (event) {
+      event.dataTransfer.setData('text', JSON.stringify(this.project))
+    },
+    handleDropTask: function (task) {
+      console.log('dropped task: ' + task.name + ' in project ' + this.project.name)
+      this.$set(task, 'project', this.project.id)
+      this.$taskDb.update({ id: task.id }, { $set: { project: task.project, projectName: this.project.name } }, {})
+      this.$store.commit('setProjectTargetTaskDrag', this.project)
+      this.dragHappening = false
+    },
+    handleDropProject: function (project) {
+      console.log('dropping project: ' + project.name + ' in project ' + this.project.name)
+      // You cannot drop All Project or INBOX something else
+      if (project.id === 1 || project.id === 2) {
+        return
+      }
+      // You cannot drop a project into itself
+      if (this.project.id === project.id) {
+        return
+      }
+      // Remove the project you want to drop from the tree
+      this.removeFromRoot(project.id)
+      // And add it now as a child of this project you're dropping it on
+      if (!this.isNonEmptyFolder) {
+        this.$set(this.project, 'children', [])
+      }
+      console.log('project that is added to children: ' + project)
+      console.log('of this project: ' + this.project.name)
+      this.project.children.push(project)
+      this.updateProjects()
+      this.$store.commit('setExpanded', { what: this.project.id, state: true })
+      this.dragHappening = false
+    },
+    handleDragOver: function (event) {
+      event.preventDefault()
+      this.dragHappening = true
+    },
+    handleDragLeave: function (event) {
+      event.preventDefault()
+      this.dragHappening = false
+    },
+    isSpecialProject: function () {
+      // INBOX or All Projects
+      return (this.project.id === 1 || this.project.id === 2)
+    },
+    selectProject: function () {
+      // See store/modules/Projects.js for this Vuex store.
+      // We should combine this in 1 call maybe just emit the whole project
+      this.$store.commit('setSelectedProject', this.project.id)
+      this.$store.commit('setSelectedProjectName', this.project.name)
+    },
+    addSubProject: function () {
+      if (this.isNonEmptyFolder) {
+        this.addChild()
+      } else {
+        this.$set(this.project, 'children', [])
+        this.addChild()
+      }
+      this.$store.commit('setExpanded', { what: this.project.id, state: true })
+    },
+    addChild: function () {
+      const newChildProject = { name: 'new project', id: this.uuidv4() }
+      this.project.children.push(newChildProject)
+      this.$store.commit('setProjectName', newChildProject)
+      this.updateProjects()
+    },
+    removeChild: function (uuid) {
+      const filtered = this.project.children.filter(p => p.id !== uuid)
+      this.$set(this.project, 'children', filtered)
+      this.$store.commit('deleteProject', uuid)
+      this.updateProjects()
+    },
+    // You want to drag something on this project and involves deleting a project with id uuid that could be somewhere entirely different
+    // We want to go up to the root project list and from there we'll initiate a recursive removeChild, so any project here will just propogate the event up
+    removeFromRoot: function (uuid) {
+      this.$emit('removeFromRoot', uuid)
+    },
+    startEdit: function () {
+      // You can't edit special projects
+      if (this.isSpecialProject()) {
+        console.log('you cannot edit special project: ' + this.project.id)
+        return
+      }
+      console.log('starting to edit: ' + this.project.name)
+      this.projectNameBeforeEdit = this.project.name
+      this.editing = true
+    },
+    doneEdit: function () {
+      if (!this.editing) {
+        return
+      }
+      this.project.name = this.project.name.trim()
+      if (!this.project.name) {
+        this.cancelEdit()
+      }
+      this.editing = false
+      this.projectNameBeforeEdit = null
+      this.selectProject()
+      this.$store.commit('setProjectName', this.project)
+      this.updateProjects()
+    },
+    cancelEdit: function () {
+      this.project.name = this.projectNameBeforeEdit
+      this.projectNameBeforeEdit = null
+      this.editing = false
+    },
+    updateProjects: function () {
+      // Saves stuff to DB on any change
+      console.log('project with id ' + this.project.id + ' emitted an updateProjects save to DB')
+      this.$emit('updateProjects')
+    },
+    // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+    uuidv4: function () {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0
+        const v = c === 'x' ? r : (r & 0x3 | 0x8)
+        return v.toString(16)
+      })
+    }
+  },
+  // https://vuejs.org/v2/guide/custom-directive.html
+  directives: {
+    focus: function (el, binding) {
+      if (binding.value) {
+        el.focus()
       }
     }
   }
+}
 </script>
 
 <style scoped>

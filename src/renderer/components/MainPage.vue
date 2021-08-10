@@ -35,83 +35,83 @@
 </template>
 
 <script>
-  import ProjectList from './ProjectList.vue'
-  import TaskList from './TaskList.vue'
-  import Planntt from '../App'
-  const app = require('@electron/remote').app
+import ProjectList from './ProjectList.vue'
+import TaskList from './TaskList.vue'
+import Planntt from '../App'
+const app = require('@electron/remote').app
 
-  export default {
-    name: 'MainPage',
-    components: {
-      Planntt,
-      ProjectList,
-      TaskList
-    },
-    data () {
-      return {
-        preference: {'dataLocation': app.getPath('userData')},
-        newDataLocation: null
+export default {
+  name: 'MainPage',
+  components: {
+    Planntt,
+    ProjectList,
+    TaskList
+  },
+  data () {
+    return {
+      preference: { dataLocation: app.getPath('userData') },
+      newDataLocation: null
+    }
+  },
+  created () {
+    const fs = require('fs')
+    try {
+      const contents = JSON.parse(fs.readFileSync(app.getPath('userData') + '/preferences.db').toString())
+      if (contents) {
+        this.preference = contents
+        console.log('preference file exists and using it: ' + this.preference.dataLocation)
       }
+    } catch (err) {
+      console.log('no preferences.db exists. will create it now')
+      const preference = { dataLocation: app.getPath('userData') }
+      fs.writeFileSync(app.getPath('userData') + '/preferences.db', JSON.stringify(preference))
+    }
+  },
+  methods: {
+    openDataLocationChange: function () {
+      this.$modal.show('dataLocationModal')
     },
-    created () {
-      const fs = require('fs')
-      try {
-        const contents = JSON.parse(fs.readFileSync(app.getPath('userData') + '/preferences.db').toString())
-        if (contents) {
-          this.preference = contents
-          console.log('preference file exists and using it: ' + this.preference['dataLocation'])
+    selectDirectory: function () {
+      const self = this
+      const { dialog } = require('@electron/remote')
+      dialog.showOpenDialog({
+        properties: ['openDirectory', 'createDirectory']
+      }).then((data) => {
+        const selectedDirectories = data.filePaths
+        console.log(data.filePaths)
+        if (selectedDirectories && selectedDirectories.length > 0) {
+          console.log('we selected a directory ' + selectedDirectories[0])
+          self.newDataLocation = selectedDirectories[0]
         }
-      } catch (err) {
-        console.log('no preferences.db exists. will create it now')
-        let preference = {'dataLocation': app.getPath('userData')}
+      })
+    },
+    resetDirectory: function () {
+      const userDir = app.getPath('userData')
+      this.newDataLocation = userDir
+    },
+    confirmLocationChange: function () {
+      if (this.newDataLocation) {
+        const preference = { dataLocation: this.newDataLocation }
+        console.log('writing new preferences to file')
+        const fs = require('fs')
         fs.writeFileSync(app.getPath('userData') + '/preferences.db', JSON.stringify(preference))
-      }
-    },
-    methods: {
-      openDataLocationChange: function () {
-        this.$modal.show('dataLocationModal')
-      },
-      selectDirectory: function () {
-        let self = this
-        const { dialog } = require('@electron/remote')
-        dialog.showOpenDialog({
-          properties: ['openDirectory', 'createDirectory']
-        }).then((data) => {
-          let selectedDirectories = data.filePaths
-          console.log(data.filePaths)
-          if (selectedDirectories && selectedDirectories.length > 0) {
-            console.log('we selected a directory ' + selectedDirectories[0])
-            self.newDataLocation = selectedDirectories[0]
-          }
-        })
-      },
-      resetDirectory: function () {
-        let userDir = app.getPath('userData')
-        this.newDataLocation = userDir
-      },
-      confirmLocationChange: function () {
-        if (this.newDataLocation) {
-          let preference = {'dataLocation': this.newDataLocation}
-          console.log('writing new preferences to file')
-          const fs = require('fs')
-          fs.writeFileSync(app.getPath('userData') + '/preferences.db', JSON.stringify(preference))
-          console.log('done writing new preferences to file')
-          this.preference = preference
-          this.newDataLocation = null
-          this.$modal.hide('dataLocationModal')
-          console.log('user has changed data location to ' + this.preference['dataLocation'])
-          console.log('reloading the app now')
-          const {getCurrentWindow} = require('@electron/remote')
-          getCurrentWindow().reload()
-        }
-      },
-      abortLocationChange: function () {
+        console.log('done writing new preferences to file')
+        this.preference = preference
         this.newDataLocation = null
         this.$modal.hide('dataLocationModal')
-        console.log('user aborted data location change')
+        console.log('user has changed data location to ' + this.preference.dataLocation)
+        console.log('reloading the app now')
+        const { getCurrentWindow } = require('@electron/remote')
+        getCurrentWindow().reload()
       }
+    },
+    abortLocationChange: function () {
+      this.newDataLocation = null
+      this.$modal.hide('dataLocationModal')
+      console.log('user aborted data location change')
     }
   }
+}
 </script>
 
 <style scoped>

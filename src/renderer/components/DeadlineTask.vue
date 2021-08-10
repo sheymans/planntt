@@ -9,18 +9,18 @@ import Vue from 'vue'
 </template>
 
 <script>
-  export default {
-    name: 'DeadlineTask',
-    components: {},
-    props: {
-      task: {
-        type: Object,
-        required: true
-      }
-    },
-    methods: {
+export default {
+  name: 'DeadlineTask',
+  components: {},
+  props: {
+    task: {
+      type: Object,
+      required: true
     }
+  },
+  methods: {
   }
+}
 </script>
 
 <style scoped>

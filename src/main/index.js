@@ -18,15 +18,15 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 // Open links using user's preferred application
-let open = require('open')
+const open = require('open')
 
 // Icons
-let path = require('path')
+const path = require('path')
 
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
+  ? 'http://localhost:9080'
+  : path.join('file://', __dirname, path.sep, 'index.html')
 
 function createWindow () {
   /**
@@ -95,7 +95,7 @@ app.on('activate', () => {
  */
 function ensureSafeQuitAndInstall () {
   app.removeAllListeners('window-all-closed')
-  let browserWindows = BrowserWindow.getAllWindows()
+  const browserWindows = BrowserWindow.getAllWindows()
   browserWindows.forEach(browserWindow => {
     browserWindow.removeAllListeners('close')
   })
@@ -118,7 +118,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   }
 
   dialog.showMessageBox(dialogOpts).then((data) => {
-    let response = data.response
+    const response = data.response
     if (response === 0) {
       ensureSafeQuitAndInstall()
       autoUpdater.quitAndInstall()

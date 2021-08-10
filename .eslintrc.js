@@ -1,21 +1,21 @@
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
   parserOptions: {
-    sourceType: 'module'
+    parser: 'babel-eslint',
+    sourceType: 'module',
   },
   env: {
     browser: true,
     node: true
   },
-  extends: 'standard',
+  extends: ['standard', 'plugin:vue/base'],
   globals: {
     __static: true
   },
   plugins: [
     'html'
   ],
-  'rules': {
+  rules: {
     // allow paren-less arrow functions
     'arrow-parens': 0,
     // allow async-await

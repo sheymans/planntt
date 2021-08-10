@@ -46,402 +46,402 @@
 </template>
 
 <script>
-  import Planntt from '../App'
-  import muze from '@chartshq/muze'
+import Planntt from '../App'
+import muze from '@chartshq/muze'
 
-  export default {
-    name: 'Stats',
-    components: {
-      Planntt
-    },
-    data () {
-      return {
-        doneTasks: [],
-        tasks: [],
-        focusedTimeObjects: [],
-        statsType: 'allCompletedTasksPerDay'
-      }
-    },
-    created () {
-      // Load the data (note we need the self, cause of the callback scope; we could try using an arrow function here)
-      let self = this
-      // Read the archived tasks:
-      this.$archivedTaskDb.find({}, function (err, docs) {
-        if (err) {
-          console.log(err.stack)
-          return
-        }
-        if (docs && docs.length > 0) {
-          self.doneTasks = docs
-          // Sort doneTasks by date (latest first):
-          self.doneTasks.sort((a, b) => {
-            return b.done - a.done
-          })
-          console.log('read archived task list from db for stats')
-          // Always initialize tasks completed per day
-          self.tasksCompletedPerDay()
-        }
-      })
-      // Read the current tasks:
-      this.$taskDb.find({}, function (err, docs) {
-        if (err) {
-          console.log(err.stack)
-          return
-        }
-        if (docs && docs.length > 0) {
-          self.tasks = docs
-          // Sort tasks by created date (latest first):
-          self.tasks.sort((a, b) => {
-            return b.created - a.created
-          })
-          console.log('read task list from db for stats')
-        }
-      })
-      // Read focused time:
-      this.$focusedTime.find({}, function (err, docs) {
-        if (err) {
-          console.log(err.stack)
-          return
-        }
-        if (!docs || docs.length === 0) {
-          // There is nothing there yet.
-        } else {
-          self.focusedTimeObjects = docs
-          console.log('read focusedTime from db for stats')
-        }
-      })
-    },
-    methods: {
-      focusedTimePer: async function (momentFormat) {
-        // Clear canvas:
-        document.getElementById('canvasStats').innerHTML = ''
-
-        // Now group by format, for example, by day 'YYYY-MM-DD':
-        // Count by day:
-        let focusedTimeBy = []
-        this.focusedTimeObjects.forEach(focusedTimeObject => {
-          const date = focusedTimeObject['date']
-          const timeInSeconds = focusedTimeObject['timeInSeconds']
-          const transformedDate = this.$moment(date).format(momentFormat)
-          focusedTimeBy.push({date: transformedDate, timeInSeconds: timeInSeconds})
-        })
-
-        const DataModel = await muze.DataModel.onReady()
-        const schema = [
-          {
-            name: 'date', // Name of the variable
-            type: 'dimension' // Date time is a dimension
-          },
-          {
-            name: 'timeInSeconds',
-            type: 'measure'
-          }
-        ]
-        const formattedData = await DataModel.loadData(focusedTimeBy, schema)
-        const dm = new DataModel(formattedData)
-        const { SUM } = DataModel.AggregationFunctions
-
-        let groupedFn = dm.groupBy(['date'], ['timeInSeconds', SUM])
-        const outputDM = groupedFn.sort([['date', 'ASC']])
-        const env = await muze()
-        const canvas = env.canvas()
-        const html = muze.Operators.html
-
-        let rows = ['timeInSeconds']
-
-        if (focusedTimeBy.length === 0) {
-          document.getElementById('canvasStats').innerHTML = '<i>no time spent in focused mode</i>'
-          return
-        }
-
-        canvas
-          .data(outputDM)
-          // .width(700)
-          // .height(500)
-          .rows(rows) /* Gets plotted on y-axis */
-          .columns(['date']) /* Gets plotted on x-axis */
-          .config({
-            autoGroupBy: { disabled: true },
-            gridLines: {
-              y: { show: true }
-            },
-            border: {
-              showValueBorders: { left: false, bottom: false }
-            },
-            axes: {
-              y: {
-                tickFormat: val => {
-                  let xValue = this.prettyTotalTimeSpent(val)
-                  return xValue
-                },
-                showAxisName: false
-              },
-              x: {
-                tickFormat: val => {
-                  if (momentFormat === 'YYYY-WW') {
-                    const weekNumber = val.substring(val.length - 2, val.length)
-                    const year = val.substr(0, 4)
-                    const mondayOfWeek = this.$moment().day('Monday').week(weekNumber).year(year)
-                    return mondayOfWeek.format('YYYY-MM-DD')
-                  }
-                  return val
-                },
-                showInnerTicks: true,
-                showAxisName: false
-              }
-            },
-            interaction: {
-              tooltip: {
-                formatter: (dataModel, context) => {
-                  const tooltipData = dataModel.getData().data
-
-                  let tooltipContent = ''
-                  tooltipData.forEach((dataArray, i) => {
-                    const datePoint = dataArray[dataModel.getFieldIndex('date')]
-                    let timeInSecondsPoint = this.prettyTotalTimeSpent(dataArray[dataModel.getFieldIndex('timeInSeconds')])
-
-                    if (momentFormat === 'YYYY-WW') {
-                      const week = datePoint.substring(datePoint.length - 2, datePoint.length)
-                      tooltipContent += `${timeInSecondsPoint} in week ${week}`
-                    } else {
-                      tooltipContent += `${timeInSecondsPoint} on ${datePoint}`
-                    }
-                  })
-                  return html`${tooltipContent}`
-                }
-              }
-            },
-            legend: {
-              size: { show: false }
-            }
-          })
-          .mount('#canvasStats') /* Attaching the canvas to DOM element */
-      },
-      tasksPer: async function (momentFormat, dateSelector, taskList, durationDoneAndCreated) {
-        // Clear canvas:
-        document.getElementById('canvasStats').innerHTML = ''
-
-        // Now group by format, for example, by day 'YYYY-MM-DD':
-        // Count by day:
-        let countTasksBy = []
-        taskList.forEach(task => {
-          if (dateSelector(task)) {
-            const selectedDay = this.$moment(dateSelector(task)).format(momentFormat)
-            let durationTaskMs = 0
-            if (task.done && task.created) {
-              durationTaskMs = this.$moment(task.done).diff(this.$moment(task.created))
-            }
-            countTasksBy.push({date: selectedDay, count: 1, duration: durationTaskMs})
-          }
-        })
-
-        const DataModel = await muze.DataModel.onReady()
-        const schema = [
-          {
-            name: 'date', // Name of the variable
-            type: 'dimension' // Date time is a dimension
-          },
-          {
-            name: 'count',
-            type: 'measure'
-          },
-          {
-            name: 'duration',
-            type: 'measure'
-          }
-        ]
-        const formattedData = await DataModel.loadData(countTasksBy, schema)
-        const dm = new DataModel(formattedData)
-        const { AVG, COUNT } = DataModel.AggregationFunctions
-
-        let groupedFn
-        if (durationDoneAndCreated) {
-          groupedFn = dm.groupBy(['date'], ['duration', AVG])
-        } else {
-          groupedFn = dm.groupBy(['date'], ['count', COUNT])
-        }
-        const outputDM = groupedFn.sort([['date', 'ASC']])
-        const env = await muze()
-        const canvas = env.canvas()
-        const html = muze.Operators.html
-
-        let rows = ['count']
-        if (durationDoneAndCreated) {
-          rows = ['duration']
-        }
-
-        canvas
-          .data(outputDM)
-          // .width(700)
-          // .height(500)
-          .rows(rows) /* Gets plotted on y-axis */
-          .columns(['date']) /* Gets plotted on x-axis */
-          .config({
-            autoGroupBy: { disabled: true },
-            gridLines: {
-              y: { show: true }
-            },
-            border: {
-              showValueBorders: { left: false, bottom: false }
-            },
-            axes: {
-              y: {
-                tickFormat: val => {
-                  if (durationDoneAndCreated) {
-                    return Math.floor(this.$moment.duration(val).asHours()) + ' hours'
-                  }
-                  return val
-                },
-                showAxisName: false
-              },
-              x: {
-                tickFormat: val => {
-                  if (momentFormat === 'E') {
-                    return this.$moment().weekday(val).format('ddd')
-                  }
-                  if (momentFormat === 'HH:mm') {
-                    return ''
-                  }
-                  if (momentFormat === 'YYYY-WW') {
-                    const weekNumber = val.substring(val.length - 2, val.length)
-                    const year = val.substr(0, 4)
-                    const mondayOfWeek = this.$moment().day('Monday').week(weekNumber).year(year)
-                    return mondayOfWeek.format('YYYY-MM-DD')
-                  }
-                  return val
-                },
-                showInnerTicks: true,
-                showAxisName: false
-              }
-            },
-            interaction: {
-              tooltip: {
-                formatter: (dataModel, config, context) => {
-                  const tooltipData = dataModel.getData().data
-
-                  let tooltipContent = ''
-                  tooltipData.forEach((dataArray, i) => {
-                    const datePoint = dataArray[dataModel.getFieldIndex('date')]
-                    let durationPoint
-                    let countPoint
-                    if (durationDoneAndCreated) {
-                      durationPoint = this.$moment.duration(dataArray[dataModel.getFieldIndex('duration')]).humanize()
-                    } else {
-                      countPoint = dataArray[dataModel.getFieldIndex('count')]
-                    }
-
-                    if (momentFormat === 'YYYY-MM-WW') {
-                      const week = datePoint.substring(datePoint.length - 2, datePoint.length)
-                      tooltipContent += `${countPoint} in week ${week}`
-                    } else if (momentFormat === 'HH:mm') {
-                      tooltipContent += `${countPoint} at ${datePoint}`
-                    } else if (momentFormat === 'HH') {
-                      tooltipContent += `${countPoint} at ${datePoint}h`
-                    } else if (momentFormat === 'E') {
-                      const day = this.$moment().weekday(datePoint).format('ddd')
-                      tooltipContent += `${countPoint} on ${day}`
-                    } else if (momentFormat === 'YYYY-WW') {
-                      const weekNumber = datePoint.substring(datePoint.length - 2, datePoint.length)
-                      const year = datePoint.substr(0, 4)
-                      const mondayOfWeek = this.$moment().day('Monday').week(weekNumber).year(year)
-                      const day = mondayOfWeek.format('YYYY-MM-DD')
-                      if (durationDoneAndCreated) {
-                        tooltipContent += `${durationPoint} in week of ${day}`
-                      } else {
-                        tooltipContent += `${countPoint} in week of ${day}`
-                      }
-                    } else {
-                      if (durationDoneAndCreated) {
-                        tooltipContent += `${durationPoint} on ${datePoint}`
-                      } else {
-                        tooltipContent += `${countPoint} on ${datePoint}`
-                      }
-                    }
-                  })
-                  return html`${tooltipContent}`
-                }
-              }
-            },
-            legend: {
-              size: { show: false }
-            }
-          })
-          .mount('#canvasStats') /* Attaching the canvas to DOM element */
-      },
-      focusedTimePerDay: function () {
-        this.statsType = 'focusedTimePerDay'
-        this.focusedTimePer('YYYY-MM-DD')
-      },
-      focusedTimePerMonth: function () {
-        this.statsType = 'focusedTimePerMonth'
-        this.focusedTimePer('YYYY-MM')
-      },
-      focusedTimePerWeek: function () {
-        this.statsType = 'focusedTimePerWeek'
-        this.focusedTimePer('YYYY-WW')
-      },
-      tasksCompletedPerDay: function () {
-        this.statsType = 'allCompletedTasksPerDay'
-        this.tasksPer('YYYY-MM-DD', task => task.done, this.doneTasks)
-      },
-      tasksCompletedPerMonth: function () {
-        this.statsType = 'allCompletedTasksPerMonth'
-        this.tasksPer('YYYY-MM', task => task.done, this.doneTasks)
-      },
-      tasksCompletedPerWeek: function () {
-        this.statsType = 'allCompletedTasksPerWeek'
-        this.tasksPer('YYYY-WW', task => task.done, this.doneTasks)
-      },
-      tasksCreatedPerDay: function () {
-        this.statsType = 'allCreatedTasksPerDay'
-        this.tasksPer('YYYY-MM-DD', task => task.created, this.tasks.concat(this.doneTasks))
-      },
-      tasksCreatedPerMonth: function () {
-        this.statsType = 'allCreatedTasksPerMonth'
-        this.tasksPer('YYYY-MM', task => task.created, this.tasks.concat(this.doneTasks))
-      },
-      tasksCreatedPerWeek: function () {
-        this.statsType = 'allCreatedTasksPerWeek'
-        this.tasksPer('YYYY-WW', task => task.created, this.tasks.concat(this.doneTasks))
-      },
-      tasksDurationPerDay: function () {
-        this.statsType = 'allDurationTasksPerDay'
-        this.tasksPer('YYYY-MM-DD', task => task.done, this.doneTasks, true)
-      },
-      tasksDurationPerMonth: function () {
-        this.statsType = 'allDurationTasksPerMonth'
-        this.tasksPer('YYYY-MM', task => task.done, this.doneTasks, true)
-      },
-      tasksDurationPerWeek: function () {
-        this.statsType = 'allDurationTasksPerWeek'
-        this.tasksPer('YYYY-WW', task => task.done, this.doneTasks, true)
-      },
-      tasksCompletedPerMinute: function () {
-        this.statsType = 'allCompletedTasksPerMinute'
-        this.tasksPer('HH:mm', task => task.done, this.doneTasks)
-      },
-      tasksCompletedPerHour: function () {
-        this.statsType = 'allCompletedTasksPerHour'
-        this.tasksPer('HH', task => task.done, this.doneTasks)
-      },
-      tasksCompletedPerDayOfWeek: function () {
-        this.statsType = 'allCompletedTasksPerDayOfWeek'
-        this.tasksPer('E', task => task.done, this.doneTasks)
-      },
-      prettyTotalTimeSpent: function (timeInSeconds) {
-        let totalTimeSpent = 0
-        if (timeInSeconds) {
-          totalTimeSpent = timeInSeconds
-        }
-        const hours = Math.floor(totalTimeSpent / 3600)
-        const minutes = Math.floor((totalTimeSpent - (hours * 3600)) / 60)
-        const seconds = totalTimeSpent - (hours * 3600) - (minutes * 60)
-        return hours + 'h:' + minutes + 'm:' + seconds + 's'
-      }
-    },
-    computed: {
+export default {
+  name: 'Stats',
+  components: {
+    Planntt
+  },
+  data () {
+    return {
+      doneTasks: [],
+      tasks: [],
+      focusedTimeObjects: [],
+      statsType: 'allCompletedTasksPerDay'
     }
+  },
+  created () {
+    // Load the data (note we need the self, cause of the callback scope; we could try using an arrow function here)
+    const self = this
+    // Read the archived tasks:
+    this.$archivedTaskDb.find({}, function (err, docs) {
+      if (err) {
+        console.log(err.stack)
+        return
+      }
+      if (docs && docs.length > 0) {
+        self.doneTasks = docs
+        // Sort doneTasks by date (latest first):
+        self.doneTasks.sort((a, b) => {
+          return b.done - a.done
+        })
+        console.log('read archived task list from db for stats')
+        // Always initialize tasks completed per day
+        self.tasksCompletedPerDay()
+      }
+    })
+    // Read the current tasks:
+    this.$taskDb.find({}, function (err, docs) {
+      if (err) {
+        console.log(err.stack)
+        return
+      }
+      if (docs && docs.length > 0) {
+        self.tasks = docs
+        // Sort tasks by created date (latest first):
+        self.tasks.sort((a, b) => {
+          return b.created - a.created
+        })
+        console.log('read task list from db for stats')
+      }
+    })
+    // Read focused time:
+    this.$focusedTime.find({}, function (err, docs) {
+      if (err) {
+        console.log(err.stack)
+        return
+      }
+      if (!docs || docs.length === 0) {
+        // There is nothing there yet.
+      } else {
+        self.focusedTimeObjects = docs
+        console.log('read focusedTime from db for stats')
+      }
+    })
+  },
+  methods: {
+    focusedTimePer: async function (momentFormat) {
+      // Clear canvas:
+      document.getElementById('canvasStats').innerHTML = ''
+
+      // Now group by format, for example, by day 'YYYY-MM-DD':
+      // Count by day:
+      const focusedTimeBy = []
+      this.focusedTimeObjects.forEach(focusedTimeObject => {
+        const date = focusedTimeObject.date
+        const timeInSeconds = focusedTimeObject.timeInSeconds
+        const transformedDate = this.$moment(date).format(momentFormat)
+        focusedTimeBy.push({ date: transformedDate, timeInSeconds: timeInSeconds })
+      })
+
+      const DataModel = await muze.DataModel.onReady()
+      const schema = [
+        {
+          name: 'date', // Name of the variable
+          type: 'dimension' // Date time is a dimension
+        },
+        {
+          name: 'timeInSeconds',
+          type: 'measure'
+        }
+      ]
+      const formattedData = await DataModel.loadData(focusedTimeBy, schema)
+      const dm = new DataModel(formattedData)
+      const { SUM } = DataModel.AggregationFunctions
+
+      const groupedFn = dm.groupBy(['date'], ['timeInSeconds', SUM])
+      const outputDM = groupedFn.sort([['date', 'ASC']])
+      const env = await muze()
+      const canvas = env.canvas()
+      const html = muze.Operators.html
+
+      const rows = ['timeInSeconds']
+
+      if (focusedTimeBy.length === 0) {
+        document.getElementById('canvasStats').innerHTML = '<i>no time spent in focused mode</i>'
+        return
+      }
+
+      canvas
+        .data(outputDM)
+      // .width(700)
+      // .height(500)
+        .rows(rows) /* Gets plotted on y-axis */
+        .columns(['date']) /* Gets plotted on x-axis */
+        .config({
+          autoGroupBy: { disabled: true },
+          gridLines: {
+            y: { show: true }
+          },
+          border: {
+            showValueBorders: { left: false, bottom: false }
+          },
+          axes: {
+            y: {
+              tickFormat: val => {
+                const xValue = this.prettyTotalTimeSpent(val)
+                return xValue
+              },
+              showAxisName: false
+            },
+            x: {
+              tickFormat: val => {
+                if (momentFormat === 'YYYY-WW') {
+                  const weekNumber = val.substring(val.length - 2, val.length)
+                  const year = val.substr(0, 4)
+                  const mondayOfWeek = this.$moment().day('Monday').week(weekNumber).year(year)
+                  return mondayOfWeek.format('YYYY-MM-DD')
+                }
+                return val
+              },
+              showInnerTicks: true,
+              showAxisName: false
+            }
+          },
+          interaction: {
+            tooltip: {
+              formatter: (dataModel, context) => {
+                const tooltipData = dataModel.getData().data
+
+                let tooltipContent = ''
+                tooltipData.forEach((dataArray, i) => {
+                  const datePoint = dataArray[dataModel.getFieldIndex('date')]
+                  const timeInSecondsPoint = this.prettyTotalTimeSpent(dataArray[dataModel.getFieldIndex('timeInSeconds')])
+
+                  if (momentFormat === 'YYYY-WW') {
+                    const week = datePoint.substring(datePoint.length - 2, datePoint.length)
+                    tooltipContent += `${timeInSecondsPoint} in week ${week}`
+                  } else {
+                    tooltipContent += `${timeInSecondsPoint} on ${datePoint}`
+                  }
+                })
+                return html`${tooltipContent}`
+              }
+            }
+          },
+          legend: {
+            size: { show: false }
+          }
+        })
+        .mount('#canvasStats') /* Attaching the canvas to DOM element */
+    },
+    tasksPer: async function (momentFormat, dateSelector, taskList, durationDoneAndCreated) {
+      // Clear canvas:
+      document.getElementById('canvasStats').innerHTML = ''
+
+      // Now group by format, for example, by day 'YYYY-MM-DD':
+      // Count by day:
+      const countTasksBy = []
+      taskList.forEach(task => {
+        if (dateSelector(task)) {
+          const selectedDay = this.$moment(dateSelector(task)).format(momentFormat)
+          let durationTaskMs = 0
+          if (task.done && task.created) {
+            durationTaskMs = this.$moment(task.done).diff(this.$moment(task.created))
+          }
+          countTasksBy.push({ date: selectedDay, count: 1, duration: durationTaskMs })
+        }
+      })
+
+      const DataModel = await muze.DataModel.onReady()
+      const schema = [
+        {
+          name: 'date', // Name of the variable
+          type: 'dimension' // Date time is a dimension
+        },
+        {
+          name: 'count',
+          type: 'measure'
+        },
+        {
+          name: 'duration',
+          type: 'measure'
+        }
+      ]
+      const formattedData = await DataModel.loadData(countTasksBy, schema)
+      const dm = new DataModel(formattedData)
+      const { AVG, COUNT } = DataModel.AggregationFunctions
+
+      let groupedFn
+      if (durationDoneAndCreated) {
+        groupedFn = dm.groupBy(['date'], ['duration', AVG])
+      } else {
+        groupedFn = dm.groupBy(['date'], ['count', COUNT])
+      }
+      const outputDM = groupedFn.sort([['date', 'ASC']])
+      const env = await muze()
+      const canvas = env.canvas()
+      const html = muze.Operators.html
+
+      let rows = ['count']
+      if (durationDoneAndCreated) {
+        rows = ['duration']
+      }
+
+      canvas
+        .data(outputDM)
+      // .width(700)
+      // .height(500)
+        .rows(rows) /* Gets plotted on y-axis */
+        .columns(['date']) /* Gets plotted on x-axis */
+        .config({
+          autoGroupBy: { disabled: true },
+          gridLines: {
+            y: { show: true }
+          },
+          border: {
+            showValueBorders: { left: false, bottom: false }
+          },
+          axes: {
+            y: {
+              tickFormat: val => {
+                if (durationDoneAndCreated) {
+                  return Math.floor(this.$moment.duration(val).asHours()) + ' hours'
+                }
+                return val
+              },
+              showAxisName: false
+            },
+            x: {
+              tickFormat: val => {
+                if (momentFormat === 'E') {
+                  return this.$moment().weekday(val).format('ddd')
+                }
+                if (momentFormat === 'HH:mm') {
+                  return ''
+                }
+                if (momentFormat === 'YYYY-WW') {
+                  const weekNumber = val.substring(val.length - 2, val.length)
+                  const year = val.substr(0, 4)
+                  const mondayOfWeek = this.$moment().day('Monday').week(weekNumber).year(year)
+                  return mondayOfWeek.format('YYYY-MM-DD')
+                }
+                return val
+              },
+              showInnerTicks: true,
+              showAxisName: false
+            }
+          },
+          interaction: {
+            tooltip: {
+              formatter: (dataModel, config, context) => {
+                const tooltipData = dataModel.getData().data
+
+                let tooltipContent = ''
+                tooltipData.forEach((dataArray, i) => {
+                  const datePoint = dataArray[dataModel.getFieldIndex('date')]
+                  let durationPoint
+                  let countPoint
+                  if (durationDoneAndCreated) {
+                    durationPoint = this.$moment.duration(dataArray[dataModel.getFieldIndex('duration')]).humanize()
+                  } else {
+                    countPoint = dataArray[dataModel.getFieldIndex('count')]
+                  }
+
+                  if (momentFormat === 'YYYY-MM-WW') {
+                    const week = datePoint.substring(datePoint.length - 2, datePoint.length)
+                    tooltipContent += `${countPoint} in week ${week}`
+                  } else if (momentFormat === 'HH:mm') {
+                    tooltipContent += `${countPoint} at ${datePoint}`
+                  } else if (momentFormat === 'HH') {
+                    tooltipContent += `${countPoint} at ${datePoint}h`
+                  } else if (momentFormat === 'E') {
+                    const day = this.$moment().weekday(datePoint).format('ddd')
+                    tooltipContent += `${countPoint} on ${day}`
+                  } else if (momentFormat === 'YYYY-WW') {
+                    const weekNumber = datePoint.substring(datePoint.length - 2, datePoint.length)
+                    const year = datePoint.substr(0, 4)
+                    const mondayOfWeek = this.$moment().day('Monday').week(weekNumber).year(year)
+                    const day = mondayOfWeek.format('YYYY-MM-DD')
+                    if (durationDoneAndCreated) {
+                      tooltipContent += `${durationPoint} in week of ${day}`
+                    } else {
+                      tooltipContent += `${countPoint} in week of ${day}`
+                    }
+                  } else {
+                    if (durationDoneAndCreated) {
+                      tooltipContent += `${durationPoint} on ${datePoint}`
+                    } else {
+                      tooltipContent += `${countPoint} on ${datePoint}`
+                    }
+                  }
+                })
+                return html`${tooltipContent}`
+              }
+            }
+          },
+          legend: {
+            size: { show: false }
+          }
+        })
+        .mount('#canvasStats') /* Attaching the canvas to DOM element */
+    },
+    focusedTimePerDay: function () {
+      this.statsType = 'focusedTimePerDay'
+      this.focusedTimePer('YYYY-MM-DD')
+    },
+    focusedTimePerMonth: function () {
+      this.statsType = 'focusedTimePerMonth'
+      this.focusedTimePer('YYYY-MM')
+    },
+    focusedTimePerWeek: function () {
+      this.statsType = 'focusedTimePerWeek'
+      this.focusedTimePer('YYYY-WW')
+    },
+    tasksCompletedPerDay: function () {
+      this.statsType = 'allCompletedTasksPerDay'
+      this.tasksPer('YYYY-MM-DD', task => task.done, this.doneTasks)
+    },
+    tasksCompletedPerMonth: function () {
+      this.statsType = 'allCompletedTasksPerMonth'
+      this.tasksPer('YYYY-MM', task => task.done, this.doneTasks)
+    },
+    tasksCompletedPerWeek: function () {
+      this.statsType = 'allCompletedTasksPerWeek'
+      this.tasksPer('YYYY-WW', task => task.done, this.doneTasks)
+    },
+    tasksCreatedPerDay: function () {
+      this.statsType = 'allCreatedTasksPerDay'
+      this.tasksPer('YYYY-MM-DD', task => task.created, this.tasks.concat(this.doneTasks))
+    },
+    tasksCreatedPerMonth: function () {
+      this.statsType = 'allCreatedTasksPerMonth'
+      this.tasksPer('YYYY-MM', task => task.created, this.tasks.concat(this.doneTasks))
+    },
+    tasksCreatedPerWeek: function () {
+      this.statsType = 'allCreatedTasksPerWeek'
+      this.tasksPer('YYYY-WW', task => task.created, this.tasks.concat(this.doneTasks))
+    },
+    tasksDurationPerDay: function () {
+      this.statsType = 'allDurationTasksPerDay'
+      this.tasksPer('YYYY-MM-DD', task => task.done, this.doneTasks, true)
+    },
+    tasksDurationPerMonth: function () {
+      this.statsType = 'allDurationTasksPerMonth'
+      this.tasksPer('YYYY-MM', task => task.done, this.doneTasks, true)
+    },
+    tasksDurationPerWeek: function () {
+      this.statsType = 'allDurationTasksPerWeek'
+      this.tasksPer('YYYY-WW', task => task.done, this.doneTasks, true)
+    },
+    tasksCompletedPerMinute: function () {
+      this.statsType = 'allCompletedTasksPerMinute'
+      this.tasksPer('HH:mm', task => task.done, this.doneTasks)
+    },
+    tasksCompletedPerHour: function () {
+      this.statsType = 'allCompletedTasksPerHour'
+      this.tasksPer('HH', task => task.done, this.doneTasks)
+    },
+    tasksCompletedPerDayOfWeek: function () {
+      this.statsType = 'allCompletedTasksPerDayOfWeek'
+      this.tasksPer('E', task => task.done, this.doneTasks)
+    },
+    prettyTotalTimeSpent: function (timeInSeconds) {
+      let totalTimeSpent = 0
+      if (timeInSeconds) {
+        totalTimeSpent = timeInSeconds
+      }
+      const hours = Math.floor(totalTimeSpent / 3600)
+      const minutes = Math.floor((totalTimeSpent - (hours * 3600)) / 60)
+      const seconds = totalTimeSpent - (hours * 3600) - (minutes * 60)
+      return hours + 'h:' + minutes + 'm:' + seconds + 's'
+    }
+  },
+  computed: {
   }
+}
 </script>
 
 <style scoped>
@@ -550,6 +550,5 @@
         text-decoration: underline;
         cursor:pointer;
     }
-
 
 </style>

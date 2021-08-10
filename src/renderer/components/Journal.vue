@@ -42,137 +42,137 @@
 </template>
 
 <script>
-  import JournalEntryList from './JournalEntryList.vue'
-  import Planntt from '../App'
-  const app = require('@electron/remote').app
+import JournalEntryList from './JournalEntryList.vue'
+import Planntt from '../App'
+const app = require('@electron/remote').app
 
-  export default {
-    name: 'Journal',
-    components: {
-      Planntt,
-      JournalEntryList
-    },
-    data () {
-      return {
-        preference: {'dataLocation': app.getPath('userData')},
-        newDataLocation: null,
-        journalType: 'all'
+export default {
+  name: 'Journal',
+  components: {
+    Planntt,
+    JournalEntryList
+  },
+  data () {
+    return {
+      preference: { dataLocation: app.getPath('userData') },
+      newDataLocation: null,
+      journalType: 'all'
+    }
+  },
+  created () {
+    const fs = require('fs')
+    try {
+      const contents = JSON.parse(fs.readFileSync(app.getPath('userData') + '/preferences.db').toString())
+      if (contents) {
+        this.preference = contents
+        console.log('preference file exists and using it: ' + this.preference.dataLocation)
       }
+    } catch (err) {
+      console.log('no preferences.db exists. will create it now')
+      const preference = { dataLocation: app.getPath('userData') }
+      fs.writeFileSync(app.getPath('userData') + '/preferences.db', JSON.stringify(preference))
+    }
+  },
+  methods: {
+    all: function () {
+      this.journalType = 'all'
     },
-    created () {
+    today: function () {
+      this.journalType = 'today'
+    },
+    yesterday: function () {
+      this.journalType = 'yesterday'
+    },
+    openDataLocationChange: function () {
+      this.$modal.show('dataLocationModal')
+    },
+    selectDirectory: function () {
+      const self = this
+      const { dialog } = require('@electron/remote')
+      dialog.showOpenDialog({
+        properties: ['openDirectory', 'createDirectory']
+      }).then((data) => {
+        const selectedDirectories = data.filePaths
+        console.log(data.filePaths)
+        if (selectedDirectories && selectedDirectories.length > 0) {
+          console.log('we selected a directory ' + selectedDirectories[0])
+          self.newDataLocation = selectedDirectories[0]
+        }
+      })
+    },
+    importCsv: function () {
+      const { dialog } = require('@electron/remote')
       const fs = require('fs')
-      try {
-        const contents = JSON.parse(fs.readFileSync(app.getPath('userData') + '/preferences.db').toString())
-        if (contents) {
-          this.preference = contents
-          console.log('preference file exists and using it: ' + this.preference['dataLocation'])
+      const csv = require('csv-parser')
+      dialog.showOpenDialog({
+        properties: ['openFile'],
+        filter: [{ name: 'CSV', extensions: ['csv'] }]
+      }).then((data) => {
+        const selectedFiles = data.filePaths
+        console.log(data.filePaths)
+        if (selectedFiles && selectedFiles.length > 0) {
+          const selectedCsv = selectedFiles[0]
+          console.log('we selected a file to import:  ' + selectedCsv)
+          fs.createReadStream(selectedCsv)
+            .pipe(csv())
+            .on('data', (row) => {
+              const newJournalEntry = { id: this.uuidv4(), name: row.Name, note: row.Note, created: new Date(), journalDate: row.Date }
+              // Check whether a similar note already exists:
+              const self = this
+              this.$journal.find({ name: row.Name, note: row.Note, journalDate: row.Date }, function (err, docs) {
+                if (err) {
+                  console.log(err.stack)
+                  return
+                }
+                if (docs && docs.length > 0) {
+                  console.log('already added journal entry, skipping')
+                } else {
+                  console.log('adding a new entry with name: ' + row.Date)
+                  self.$journal.insert(newJournalEntry)
+                }
+              })
+            })
+            .on('end', () => {
+              console.log('CSV file successfully processed')
+            })
         }
-      } catch (err) {
-        console.log('no preferences.db exists. will create it now')
-        let preference = {'dataLocation': app.getPath('userData')}
-        fs.writeFileSync(app.getPath('userData') + '/preferences.db', JSON.stringify(preference))
-      }
+      })
     },
-    methods: {
-      all: function () {
-        this.journalType = 'all'
-      },
-      today: function () {
-        this.journalType = 'today'
-      },
-      yesterday: function () {
-        this.journalType = 'yesterday'
-      },
-      openDataLocationChange: function () {
-        this.$modal.show('dataLocationModal')
-      },
-      selectDirectory: function () {
-        let self = this
-        const { dialog } = require('@electron/remote')
-        dialog.showOpenDialog({
-          properties: ['openDirectory', 'createDirectory']
-        }).then((data) => {
-          let selectedDirectories = data.filePaths
-          console.log(data.filePaths)
-          if (selectedDirectories && selectedDirectories.length > 0) {
-            console.log('we selected a directory ' + selectedDirectories[0])
-            self.newDataLocation = selectedDirectories[0]
-          }
-        })
-      },
-      importCsv: function () {
-        const { dialog } = require('@electron/remote')
+    resetDirectory: function () {
+      const userDir = app.getPath('userData')
+      this.newDataLocation = userDir
+    },
+    confirmLocationChange: function () {
+      if (this.newDataLocation) {
+        const preference = { dataLocation: this.newDataLocation }
+        console.log('writing new preferences to file')
         const fs = require('fs')
-        const csv = require('csv-parser')
-        dialog.showOpenDialog({
-          properties: ['openFile'],
-          filter: [{name: 'CSV', extensions: ['csv']}]
-        }).then((data) => {
-          let selectedFiles = data.filePaths
-          console.log(data.filePaths)
-          if (selectedFiles && selectedFiles.length > 0) {
-            const selectedCsv = selectedFiles[0]
-            console.log('we selected a file to import:  ' + selectedCsv)
-            fs.createReadStream(selectedCsv)
-              .pipe(csv())
-              .on('data', (row) => {
-                let newJournalEntry = {id: this.uuidv4(), name: row['Name'], note: row['Note'], created: new Date(), journalDate: row['Date']}
-                // Check whether a similar note already exists:
-                let self = this
-                this.$journal.find({name: row['Name'], note: row['Note'], journalDate: row['Date']}, function (err, docs) {
-                  if (err) {
-                    console.log(err.stack)
-                    return
-                  }
-                  if (docs && docs.length > 0) {
-                    console.log('already added journal entry, skipping')
-                  } else {
-                    console.log('adding a new entry with name: ' + row['Date'])
-                    self.$journal.insert(newJournalEntry)
-                  }
-                })
-              })
-              .on('end', () => {
-                console.log('CSV file successfully processed')
-              })
-          }
-        })
-      },
-      resetDirectory: function () {
-        let userDir = app.getPath('userData')
-        this.newDataLocation = userDir
-      },
-      confirmLocationChange: function () {
-        if (this.newDataLocation) {
-          let preference = {'dataLocation': this.newDataLocation}
-          console.log('writing new preferences to file')
-          const fs = require('fs')
-          fs.writeFileSync(app.getPath('userData') + '/preferences.db', JSON.stringify(preference))
-          console.log('done writing new preferences to file')
-          this.preference = preference
-          this.newDataLocation = null
-          this.$modal.hide('dataLocationModal')
-          console.log('user has changed data location to ' + this.preference['dataLocation'])
-          console.log('reloading the app now')
-          const {getCurrentWindow} = require('@electron/remote')
-          getCurrentWindow().reload()
-        }
-      },
-      abortLocationChange: function () {
+        fs.writeFileSync(app.getPath('userData') + '/preferences.db', JSON.stringify(preference))
+        console.log('done writing new preferences to file')
+        this.preference = preference
         this.newDataLocation = null
         this.$modal.hide('dataLocationModal')
-        console.log('user aborted data location change')
-      },
-      // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-      uuidv4: function () {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-          let r = Math.random() * 16 | 0
-          let v = c === 'x' ? r : (r & 0x3 | 0x8)
-          return v.toString(16)
-        })
+        console.log('user has changed data location to ' + this.preference.dataLocation)
+        console.log('reloading the app now')
+        const { getCurrentWindow } = require('@electron/remote')
+        getCurrentWindow().reload()
       }
+    },
+    abortLocationChange: function () {
+      this.newDataLocation = null
+      this.$modal.hide('dataLocationModal')
+      console.log('user aborted data location change')
+    },
+    // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+    uuidv4: function () {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0
+        const v = c === 'x' ? r : (r & 0x3 | 0x8)
+        return v.toString(16)
+      })
     }
   }
+}
 </script>
 
 <style scoped>

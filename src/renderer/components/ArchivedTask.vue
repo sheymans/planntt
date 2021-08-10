@@ -9,21 +9,21 @@ import Vue from 'vue'
 </template>
 
 <script>
-  export default {
-    name: 'ArchivedTask',
-    components: {},
-    props: {
-      task: {
-        type: Object,
-        required: true
-      }
-    },
-    methods: {
-      selectTask: function () {
-        this.$emit('setSelectedTask', this.task)
-      }
+export default {
+  name: 'ArchivedTask',
+  components: {},
+  props: {
+    task: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    selectTask: function () {
+      this.$emit('setSelectedTask', this.task)
     }
   }
+}
 </script>
 
 <style scoped>

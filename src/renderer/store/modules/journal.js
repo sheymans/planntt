@@ -12,18 +12,18 @@ const daysTwentyNine = function () {
 
 const state = {
   journalStructure: [
-    {'month': 'January', 'days': maxCalendarDays()},
-    {'month': 'February', 'days': daysTwentyNine()},
-    {'month': 'March', 'days': maxCalendarDays()},
-    {'month': 'April', 'days': daysThirty()},
-    {'month': 'May', 'days': maxCalendarDays()},
-    {'month': 'June', 'days': daysThirty()},
-    {'month': 'July', 'days': maxCalendarDays()},
-    {'month': 'August', 'days': maxCalendarDays()},
-    {'month': 'September', 'days': daysThirty()},
-    {'month': 'October', 'days': maxCalendarDays()},
-    {'month': 'November', 'days': daysThirty()},
-    {'month': 'December', 'days': maxCalendarDays()}],
+    { month: 'January', days: maxCalendarDays() },
+    { month: 'February', days: daysTwentyNine() },
+    { month: 'March', days: maxCalendarDays() },
+    { month: 'April', days: daysThirty() },
+    { month: 'May', days: maxCalendarDays() },
+    { month: 'June', days: daysThirty() },
+    { month: 'July', days: maxCalendarDays() },
+    { month: 'August', days: maxCalendarDays() },
+    { month: 'September', days: daysThirty() },
+    { month: 'October', days: maxCalendarDays() },
+    { month: 'November', days: daysThirty() },
+    { month: 'December', days: maxCalendarDays() }],
   selectedJournalEntryId: null,
   editingJournalNote: false
 }

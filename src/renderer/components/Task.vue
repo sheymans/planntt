@@ -14,106 +14,106 @@ import Vue from 'vue'
 </template>
 
 <script>
-  import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 
-  export default {
-    name: 'Task',
-    components: {FontAwesomeIcon},
-    props: {
-      task: {
-        type: Object,
-        required: true
+export default {
+  name: 'Task',
+  components: { FontAwesomeIcon },
+  props: {
+    task: {
+      type: Object,
+      required: true
+    }
+  },
+  data: function () {
+    return {
+      editing: false
+    }
+  },
+  computed: {
+    isSelectedTask: function () {
+      const selectedTaskId = this.$store.getters.getSelectedTaskId
+      return selectedTaskId === this.task.id
+    },
+    getProjectName: function () {
+      return this.$store.getters.getProjectName(this.task.project)
+    },
+    isLate: function () {
+      if (this.task.due) {
+        const today = this.$moment()
+        const due = this.$moment(this.task.due)
+        const daysAgo = today.diff(due, 'days')
+        return daysAgo > 0
+      } else {
+        return false
       }
     },
-    data: function () {
-      return {
-        editing: false
+    blocked: function () {
+      return !!this.task.blocked
+    }
+  },
+  created () {
+    // Set the selected task based on the stored selected task.
+    const selectedTaskId = this.$store.getters.getSelectedTaskId
+    if (selectedTaskId === this.task.id) {
+      this.$emit('setSelectedTask', this.task)
+    }
+  },
+  filters: {
+    shorten: function (n) {
+      const nString = n.toString()
+      const l = nString.length
+      if (l > 12) {
+        const shortened = nString.substring(0, 12)
+        return `${shortened}..`
+      }
+      return nString
+    }
+  },
+  methods: {
+    unblockTask: function () {
+      console.log('unblocking task: ' + this.task.name)
+      this.$set(this.task, 'blocked', false)
+      this.$taskDb.update({ id: this.task.id }, this.task, {})
+    },
+    toggleTaskCheckbox: function () {
+      // save the task when checkbox toggled
+      console.log('update task DB for task with id ' + this.task.id + ' to set completed state to ' + this.task.completed)
+      this.$taskDb.update({ id: this.task.id }, { $set: { completed: this.task.completed } }, {})
+      // unselect any selected task to avoid confusion with marking something as 'today', 'thisweek', 'waitingfor'
+      this.unSelectTask()
+    },
+    expandProject: function () {
+      this.$store.commit('setPathFromRootToProjectExpanded', this.task.project)
+    },
+    selectTask: function () {
+      this.$emit('setSelectedTask', this.task)
+      this.$store.commit('setSelectedTaskId', this.task.id)
+    },
+    unSelectTask: function () {
+      this.$emit('unsetSelectedTask')
+    },
+    dragTask: function (event) {
+      this.$store.commit('setProjectTargetTaskDrag', null)
+      event.dataTransfer.setData('text', JSON.stringify(this.task))
+    },
+    dragEndTask: function (event) {
+      const projectTarget = this.$store.getters.getProjectTargetTaskDrag
+      if (projectTarget) {
+        this.task.project = projectTarget.id
+        this.task.projectName = projectTarget.name
       }
     },
-    computed: {
-      isSelectedTask: function () {
-        let selectedTaskId = this.$store.getters.getSelectedTaskId
-        return selectedTaskId === this.task.id
-      },
-      getProjectName: function () {
-        return this.$store.getters.getProjectName(this.task.project)
-      },
-      isLate: function () {
-        if (this.task.due) {
-          let today = this.$moment()
-          let due = this.$moment(this.task.due)
-          let daysAgo = today.diff(due, 'days')
-          return daysAgo > 0
-        } else {
-          return false
-        }
-      },
-      blocked: function () {
-        return !!this.task.blocked
-      }
-    },
-    created () {
-      // Set the selected task based on the stored selected task.
-      let selectedTaskId = this.$store.getters.getSelectedTaskId
-      if (selectedTaskId === this.task.id) {
-        this.$emit('setSelectedTask', this.task)
-      }
-    },
-    filters: {
-      shorten: function (n) {
-        let nString = n.toString()
-        let l = nString.length
-        if (l > 12) {
-          let shortened = nString.substring(0, 12)
-          return `${shortened}..`
-        }
-        return nString
-      }
-    },
-    methods: {
-      unblockTask: function () {
-        console.log('unblocking task: ' + this.task.name)
-        this.$set(this.task, 'blocked', false)
-        this.$taskDb.update({id: this.task.id}, this.task, {})
-      },
-      toggleTaskCheckbox: function () {
-        // save the task when checkbox toggled
-        console.log('update task DB for task with id ' + this.task.id + ' to set completed state to ' + this.task.completed)
-        this.$taskDb.update({id: this.task.id}, {$set: {completed: this.task.completed}}, {})
-        // unselect any selected task to avoid confusion with marking something as 'today', 'thisweek', 'waitingfor'
-        this.unSelectTask()
-      },
-      expandProject: function () {
-        this.$store.commit('setPathFromRootToProjectExpanded', this.task.project)
-      },
-      selectTask: function () {
-        this.$emit('setSelectedTask', this.task)
-        this.$store.commit('setSelectedTaskId', this.task.id)
-      },
-      unSelectTask: function () {
-        this.$emit('unsetSelectedTask')
-      },
-      dragTask: function (event) {
-        this.$store.commit('setProjectTargetTaskDrag', null)
-        event.dataTransfer.setData('text', JSON.stringify(this.task))
-      },
-      dragEndTask: function (event) {
-        let projectTarget = this.$store.getters.getProjectTargetTaskDrag
-        if (projectTarget) {
-          this.task.project = projectTarget.id
-          this.task.projectName = projectTarget.name
-        }
-      },
-      // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-      uuidv4: function () {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-          let r = Math.random() * 16 | 0
-          let v = c === 'x' ? r : (r & 0x3 | 0x8)
-          return v.toString(16)
-        })
-      }
+    // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+    uuidv4: function () {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0
+        const v = c === 'x' ? r : (r & 0x3 | 0x8)
+        return v.toString(16)
+      })
     }
   }
+}
 </script>
 
 <style scoped>
