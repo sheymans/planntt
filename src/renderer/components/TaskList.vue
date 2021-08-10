@@ -85,7 +85,7 @@
 <script>
 import Task from './Task.vue'
 import TaskDetail from './TaskDetail'
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 export default {
   name: 'TaskList',

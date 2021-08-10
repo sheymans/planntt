@@ -60,7 +60,7 @@ import Vue from 'vue'
 </template>
 
 <script>
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import DatePicker from 'vue2-datepicker'
 
 // Markdown transformer

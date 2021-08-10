@@ -13,7 +13,7 @@
 
 <script>
 import Planntt from '../App'
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 // Markdown transformer
 const marked = require('marked')

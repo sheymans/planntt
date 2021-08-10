@@ -33,7 +33,7 @@
 <script>
 import JournalEntry from './JournalEntry.vue'
 import JournalEntryDetail from './JournalEntryDetail.vue'
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 export default {
   name: 'JournalEntryList',

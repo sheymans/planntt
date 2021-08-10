@@ -16,31 +16,20 @@ import 'typeface-jetbrains-mono/dist/index.css'
 import VModal from 'vue-js-modal'
 
 /* Fonts */
-import fontawesome from '@fortawesome/fontawesome'
-import faSpinner from '@fortawesome/fontawesome-free-solid/faSpinner'
-import faFolder from '@fortawesome/fontawesome-free-solid/faFolder'
-import faFolderOpen from '@fortawesome/fontawesome-free-solid/faFolderOpen'
-import faFolderReg from '@fortawesome/fontawesome-free-regular/faFolder'
-import faFolderOpenReg from '@fortawesome/fontawesome-free-regular/faFolderOpen'
-import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
-import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
-import faCaretRight from '@fortawesome/fontawesome-free-solid/faCaretRight'
-import faHeadphones from '@fortawesome/fontawesome-free-solid/faHeadphones'
-import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
-import faClone from '@fortawesome/fontawesome-free-solid/faClone'
-import faBan from '@fortawesome/fontawesome-free-solid/faBan'
-import faCrosshairs from '@fortawesome/fontawesome-free-solid/faCrosshairs'
-import faArrowLeft from '@fortawesome/fontawesome-free-solid/faArrowLeft'
-import faTrashAlt from '@fortawesome/fontawesome-free-solid/faTrashAlt'
-import faCheck from '@fortawesome/fontawesome-free-solid/faCheck'
-import faArrowUp from '@fortawesome/fontawesome-free-solid/faArrowUp'
-import faArrowDown from '@fortawesome/fontawesome-free-solid/faArrowDown'
-import faClipboard from '@fortawesome/fontawesome-free-solid/faClipboard'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import {
+  faSpinner, faFolder, faFolderOpen, faPencilAlt,
+  faCaretDown, faCaretRight, faHeadphones,
+  faTimes, faClone, faBan, faCrosshairs,
+  faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown, faClipboard
+} from '@fortawesome/free-solid-svg-icons'
+import { faFolder as faFolderReg, faFolderOpen as faFolderOpenReg } from '@fortawesome/free-regular-svg-icons'
+
 import '@chartshq/muze/dist/muze.css'
 import Tooltip from 'vue-directive-tooltip'
 import 'vue-directive-tooltip/dist/vueDirectiveTooltip.css'
 
-fontawesome.library.add(faClipboard, faSpinner, faFolder, faFolderOpen, faFolderReg, faFolderOpenReg, faPencilAlt, faCaretDown, faCaretRight, faClone, faBan, faHeadphones, faTimes, faCrosshairs, faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown)
+library.add(faClipboard, faSpinner, faFolder, faFolderOpen, faPencilAlt, faFolderReg, faFolderOpenReg, faCaretDown, faCaretRight, faClone, faBan, faHeadphones, faTimes, faCrosshairs, faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.use(require('vue-moment'))
