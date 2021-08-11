@@ -83,7 +83,7 @@
     "electron-log": "^2.2.14",
     "electron-updater": "^4.2.0",
     "marked": "^0.3.19",
-    "nedb": "^1.8.0",
+    "@seald-io/nedb": "^2.0.4",
     "npm": "^6.14.8",
     "save": "^2.3.2",
     "typeface-jetbrains-mono": "^1.0.5",
