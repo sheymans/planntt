@@ -25,7 +25,7 @@ let webConfig = {
       },
       {
         test: /\.html$/,
-        use: 'vue-html-loader'
+        use: 'vue-loader'
       },
       {
         test: /\.js$/,
