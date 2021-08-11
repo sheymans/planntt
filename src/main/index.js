@@ -25,7 +25,7 @@ const path = require('path')
 
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:9080'
+  ? 'http://localhost:8080'
   : path.join('file://', __dirname, path.sep, 'index.html')
 
 function createWindow () {

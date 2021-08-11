@@ -59,24 +59,24 @@ function startRenderer () {
     const server = new WebpackDevServer(
       compiler,
       {
-        contentBase: path.join(__dirname, '../'),
-        quiet: true,
-        hot: true,
-        compress: true,
-        liveReload: true,
-        watchOptions: {
-          ignored: /node_modules/
-        },
-        before (app, ctx) {
-          app.use(hotMiddleware)
-          ctx.middleware.waitUntilValid(() => {
+        static: [
+          {
+            directory: path.join(__dirname, '../'),
+            watch: true,
+          }
+          ],
+        // https://github.com/webpack/webpack-dev-server/blob/master/migration-v4.md
+        onBeforeSetupMiddleware: function (devServer) {
+          devServer.app.use(hotMiddleware)
+          devServer.middleware.waitUntilValid(() => {
             resolve()
           })
         }
       }
     )
 
-    server.listen(9080)
+    // we default to 8080, which is also set in src/main/index.js
+    server.listen()
   })
 }
 
