@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, dialog } from 'electron'
+import { app, BrowserWindow, dialog, shell } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
 autoUpdater.logger = require('electron-log')
@@ -16,9 +16,6 @@ require('@electron/remote/main').initialize()
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
-
-// Open links using user's preferred application
-const open = require('open')
 
 // Icons
 const path = require('path')
@@ -56,7 +53,7 @@ function createWindow () {
   // Open any new window requests in the browser's window
   mainWindow.webContents.on('new-window', function (event, url) {
     event.preventDefault()
-    open(url)
+    shell.openExternal(url)
   })
 
   // Get in custom menu
