@@ -5,7 +5,6 @@ process.env.BABEL_ENV = 'web'
 const path = require('path')
 const webpack = require('webpack')
 
-const TerserPlugin = require('terser-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -130,7 +129,6 @@ if (process.env.NODE_ENV === 'production') {
   webConfig.devtool = false
 
   webConfig.plugins.push(
-    new TerserPlugin(),
     new CopyWebpackPlugin({
       patterns: [
         {

@@ -6,7 +6,6 @@ const path = require('path')
 const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
-const TerserPlugin = require('terser-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -26,8 +25,7 @@ let rendererConfig = {
   devtool: 'eval-cheap-module-source-map',
   optimization: {
     minimize: true,
-    minimizer: [new TerserPlugin({
-    })],
+    minimizer: [() => ({ terserOptions: {  } })], // TerserPlugin comes out of box with webpack v5
   },
   entry: {
     renderer: path.join(__dirname, '../src/renderer/main.js')
@@ -170,7 +168,6 @@ let rendererConfig = {
  */
 if (process.env.NODE_ENV !== 'production') {
   rendererConfig.plugins.push(
-    new TerserPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
       '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`
@@ -185,7 +182,6 @@ if (process.env.NODE_ENV === 'production') {
   rendererConfig.devtool = false
 
   rendererConfig.plugins.push(
-    new TerserPlugin(),
     new CopyWebpackPlugin({
       patterns: [
         {
