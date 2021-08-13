@@ -29,7 +29,8 @@
                     </div>
                 </div>
             </modal>
-            <div class="dataLocation" href="#" @click="openDataLocationChange">{{preference.dataLocation}}</div>
+          <div class="coffee"><a target="_blank" title="" href="https://www.buymeacoffee.com/stijnh"><img class="coffee-image" v-tooltip.top="{content:'like planntt? buy me a coffee', class:'tooltip', delay: 50}" src="~@/assets/coffee.svg"/></a></div>
+          <div class="dataLocation" href="#" @click="openDataLocationChange" v-tooltip.top="{content:'change your data location', class:'tooltip', delay: 50}">{{preference.dataLocation}}</div>
         </div>
     </div>
 </template>
@@ -185,8 +186,8 @@ export default {
     .footer {
         display: grid;
         grid-area: footer;
-        grid-template-rows: 1fr;
-        grid-template-areas: "dataLocation";
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "coffee dataLocation";
     }
 
     .dataLocation {
@@ -198,6 +199,16 @@ export default {
         text-decoration: underline;
         cursor:pointer;
         margin-right: 5px;
+    }
+
+    .coffee {
+      grid-area: coffee;
+      justify-self: start;
+      cursor:pointer;
+    }
+
+    .coffee-image {
+      height: 15px;
     }
 
     .dataLocationChangeDialog {
