@@ -70,6 +70,15 @@ function createWindow () {
   }
 }
 
+// set About panel options
+app.setAboutPanelOptions({
+  applicationName: 'planntt',
+  version: '', // this is the thing between () after the applicationVersion
+  copyright: '© 2018-2021',
+  authors: ['Stijn Heymans'],
+  website: 'http://planntt.com/CHANGELOG.html'
+})
+
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
