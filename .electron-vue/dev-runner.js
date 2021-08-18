@@ -57,7 +57,6 @@ function startRenderer () {
     })
 
     const server = new WebpackDevServer(
-      compiler,
       {
         static: [
           {
@@ -72,11 +71,12 @@ function startRenderer () {
             resolve()
           })
         }
-      }
+      },
+      compiler
     )
 
     // we default to 8080, which is also set in src/main/index.js
-    server.listen()
+    server.start()
   })
 }
 
