@@ -64,4 +64,23 @@ export default {
     padding-left: 10px;
   }
 
+  .tippy-box[data-theme~='planntt'] {
+    background-color: forestgreen;
+    font-family: 'JetBrains Mono Light';
+    font-size: 8pt;
+  }
+
+  .tippy-box[data-theme~='planntt'][data-placement^='top'] > .tippy-arrow::before {
+    border-top-color: forestgreen;
+  }
+  .tippy-box[data-theme~='planntt'][data-placement^='bottom'] > .tippy-arrow::before {
+    border-bottom-color: forestgreen;
+  }
+  .tippy-box[data-theme~='planntt'][data-placement^='left'] > .tippy-arrow::before {
+    border-left-color: forestgreen;
+  }
+  .tippy-box[data-theme~='planntt'][data-placement^='right'] > .tippy-arrow::before {
+    border-right-color: forestgreen;
+  }
+
 </style>

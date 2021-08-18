@@ -61,7 +61,8 @@ Vue.directive('tipster', {
   bind: function (el, binding, vnode) {
     // call tippy and tell it to put the tooltip with content binding.value (your tooltip text) on the eld.
     tippy(el, {
-      content: binding.value
+      content: binding.value,
+      theme: 'planntt' // theme is defined in App.vue
     })
   }
 })
