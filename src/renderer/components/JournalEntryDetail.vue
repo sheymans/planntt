@@ -5,9 +5,9 @@ import Vue from 'vue'
         <div v-if="Object.keys(journalEntry).length !== 0" class="editJournalEntry">
             <div class="editJournalEntryFirstPart">
                 <div v-show="!editingJournalEntryName" class="journalEntryNameToEdit">
-                    <font-awesome-icon v-tooltip.top="{content:'close detail (ESC)', class:'tooltip', delay: 50}" @click="closeDetail" icon="times" class="iconCloseDetail"/>
+                    <font-awesome-icon v-tipster="'close detail (ESC)'" @click="closeDetail" icon="times" class="iconCloseDetail"/>
                     <b>{{ journalEntry.name }}</b>
-                    <font-awesome-icon v-tooltip.top="{content:'edit journal entry name', class:'tooltip', delay: 50}"
+                    <font-awesome-icon v-tipster="'edit journal entry name'"
                                        @click="startEditJournalEntryName" icon="pencil-alt"
                                        class="iconJournalEntryNameToEdit"/>
                 </div>
@@ -22,8 +22,8 @@ import Vue from 'vue'
                        v-focus="editingJournalEntryName"/>
             </div>
             <div class="journalIcons">
-              <font-awesome-icon v-tooltip.top="{content:'copy to clipboard', class:'tooltip', delay: 50}" @click="copyNoteToClipboard" icon="clipboard" class="iconCopyToClip"/>
-              <router-link class="focusJournalEntry" :to="{ name: 'focusJournalEntry', params: { journalEntry } }"><font-awesome-icon v-tooltip.top="{content:'focus mode (⌘+f)', class:'tooltip', delay: 50}" icon="headphones"/></router-link>
+              <font-awesome-icon v-tipster="'copy to clipboard'" @click="copyNoteToClipboard" icon="clipboard" class="iconCopyToClip"/>
+              <router-link class="focusJournalEntry" :to="{ name: 'focusJournalEntry', params: { journalEntry } }"><font-awesome-icon v-tipster="'focus mode (⌘+f)'" icon="headphones"/></router-link>
             </div>
         </div>
 

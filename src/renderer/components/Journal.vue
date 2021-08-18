@@ -16,7 +16,7 @@
                     <li :class="{'is-active': journalType === 'yesterday'}" class="journalChoice" @click="yesterday">yesterday</li>
                 </ul>
                 <ul>
-                    <li class="journalChoice" @click="importCsv" v-tooltip.top="{content:'1st row of CSV needs to be column headers Date, Name, Note', class:'tooltip', delay: 50}">import your own CSV</li>
+                    <li class="journalChoice" @click="importCsv" v-tipster="'1st row of CSV needs to be column headers Date, Name, Note'">import your own CSV</li>
                 </ul>
             </div>
             <journalEntryList :journalType="journalType"/>

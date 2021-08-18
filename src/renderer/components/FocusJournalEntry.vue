@@ -2,7 +2,7 @@
     <div id="mainPage">
         <div class="header">
             <div></div>
-            <font-awesome-icon v-tooltip.left="{content:'leave focus mode (ESC)', class:'tooltip close', delay: 50}" icon="times" @click="goBack"/>
+            <font-awesome-icon v-tipster="'leave focus mode (ESC)'" icon="times" @click="goBack"/>
         </div>
         <div class="content">
             <div class="name">{{journalEntry.name }}</div>

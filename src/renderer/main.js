@@ -26,22 +26,45 @@ import {
 import { faFolder as faFolderReg, faFolderOpen as faFolderOpenReg } from '@fortawesome/free-regular-svg-icons'
 
 import '@chartshq/muze/dist/muze.css'
-import Tooltip from 'vue-directive-tooltip'
-import 'vue-directive-tooltip/dist/vueDirectiveTooltip.css'
+
+// tooltips
+import tippy from 'tippy.js'
+import 'tippy.js/dist/tippy.css'
 
 library.add(faClipboard, faSpinner, faFolder, faFolderOpen, faPencilAlt, faFolderReg, faFolderOpenReg, faCaretDown, faCaretRight, faClone, faBan, faHeadphones, faTimes, faCrosshairs, faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
+
+// Vue.use statements are used when the packages you want to include are Vue plugins
 Vue.use(require('vue-moment'))
 Vue.use(VModal)
-Vue.use(Tooltip)
-Vue.http = Vue.prototype.$http = axios
-Vue.config.productionTip = false
-Vue.prototype.$projectDb = projectDb
-Vue.prototype.$taskDb = taskDb
-Vue.prototype.$archivedTaskDb = archivedTaskDb
-Vue.prototype.$focusedTime = focusedTime
-Vue.prototype.$journal = journal
+
+// We can include NPM packages directly and make them available in Vue components by this.$http (for example). The $ is
+// just convention for that they are public (not Vue internal).
+// Note that we use Object.defineProperty as the default is then that this.$http (for example) is not re-assignable.
+// see https://vuejsdevelopers.com/2017/04/22/vue-js-libraries-plugins/ for more explanation.
+Object.defineProperty(Vue.prototype, '$http', { value: axios })
+Vue.http = Vue.prototype.$http // I do not know why we assign Vue.http TODO
+
+// What does this do? TODO
+Object.defineProperty(Vue.config, 'productionTip', { value: false })
+
+// Making my stores locally available using this.$projectDB for example
+Object.defineProperty(Vue.prototype, '$projectDb', { value: projectDb })
+Object.defineProperty(Vue.prototype, '$taskDb', { value: taskDb })
+Object.defineProperty(Vue.prototype, '$archivedTaskDb', { value: archivedTaskDb })
+Object.defineProperty(Vue.prototype, '$focusedTime', { value: focusedTime })
+Object.defineProperty(Vue.prototype, '$journal', { value: journal })
+
+// Make v-tippy="the text of the tooltip" available in all components
+Vue.directive('tipster', {
+  bind: function (el, binding, vnode) {
+    // call tippy and tell it to put the tooltip with content binding.value (your tooltip text) on the eld.
+    tippy(el, {
+      content: binding.value
+    })
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({

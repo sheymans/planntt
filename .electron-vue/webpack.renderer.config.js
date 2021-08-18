@@ -141,10 +141,6 @@ let rendererConfig = {
         from: path.resolve("node_modules", "@chartshq/muze/dist"),
         to: '.'
       },
-      {
-        from: path.resolve("node_modules", "vue-directive-tooltip/dist"),
-        to: '.'
-      },
     ]})
   ],
   cache: true,

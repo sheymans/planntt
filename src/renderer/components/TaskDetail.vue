@@ -5,9 +5,9 @@ import Vue from 'vue'
         <div v-if="Object.keys(task).length !== 0" class="editTask">
             <div class="editTaskFirstPart">
                 <div v-show="!editingTaskName" class="taskNameToEdit">
-                    <font-awesome-icon v-tooltip.top="{content:'close detail (ESC)', class:'tooltip', delay: 50}" @click="closeDetail" icon="times" class="iconCloseDetail"/>
+                    <font-awesome-icon v-tipster="'close detail (ESC)'" @click="closeDetail" icon="times" class="iconCloseDetail"/>
                     <b>{{ task.name }}</b>
-                    <font-awesome-icon v-tooltip.top="{content:'edit task name', class:'tooltip', delay: 50}"
+                    <font-awesome-icon v-tipster="'edit task name'"
                                        @click="startEditTaskName" icon="pencil-alt"
                                        class="iconTaskNameToEdit"/>
                 </div>
@@ -22,12 +22,12 @@ import Vue from 'vue'
                        v-focus="editingTaskName"/>
             </div>
             <div class="taskIcons">
-                <font-awesome-icon v-tooltip.top="{content:'move task up (ctrl+⌘+↑)', class:'tooltip', delay: 50}" @click="moveUp" icon="arrow-up"/>
-                <font-awesome-icon v-tooltip.top="{content:'move task down (ctrl+⌘+↓)', class:'tooltip', delay: 50}" @click="moveDown" icon="arrow-down"/>
-                <font-awesome-icon v-tooltip.top="{content:'duplicate task (⌘+d)', class:'tooltip', delay: 50}" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
-                <font-awesome-icon v-tooltip.top="{content:'(un)block task', class:'tooltip', delay: 50}" @click="blockTask" icon="ban" :class="{'blocked': blocked, 'notBlocked': !blocked}"/>
-                <font-awesome-icon v-tooltip.top="{content:'show project (⌘+p)', class:'tooltip', delay: 50}" @click="expandProject" icon="crosshairs"/>
-                <router-link class="focusTask" :to="{ name: 'focusTask', params: { task } }"><font-awesome-icon v-tooltip.top="{content:'focus mode (⌘+f)', class:'tooltip', delay: 50}" icon="headphones"/></router-link>
+                <font-awesome-icon v-tipster="'move task up (ctrl+⌘+↑)'" @click="moveUp" icon="arrow-up"/>
+                <font-awesome-icon v-tipster="'move task down (ctrl+⌘+↓)'" @click="moveDown" icon="arrow-down"/>
+                <font-awesome-icon v-tipster="'duplicate task (⌘+d)'" @click="duplicateTask" icon="clone" class="iconDuplicateTask"/>
+                <font-awesome-icon v-tipster="'(un)block task'" @click="blockTask" icon="ban" :class="{'blocked': blocked, 'notBlocked': !blocked}"/>
+                <font-awesome-icon v-tipster="'show project (⌘+p)'" @click="expandProject" icon="crosshairs"/>
+                <router-link class="focusTask" :to="{ name: 'focusTask', params: { task } }"><font-awesome-icon v-tipster="'focus mode (⌘+f)'" icon="headphones"/></router-link>
             </div>
         </div>
 

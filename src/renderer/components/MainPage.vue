@@ -29,8 +29,12 @@
                     </div>
                 </div>
             </modal>
-          <div class="coffee"><a target="_blank" title="" href="https://www.buymeacoffee.com/stijnh"><img class="coffee-image" v-tooltip.top="{content:'like planntt? buy me a coffee', class:'tooltip', delay: 50}" src="~@/assets/coffee.svg"/></a></div>
-          <div class="dataLocation" href="#" @click="openDataLocationChange" v-tooltip.top="{content:'change your data location', class:'tooltip', delay: 50}">{{preference.dataLocation}}</div>
+          <div class="coffee">
+            <a target="_blank" href="https://www.buymeacoffee.com/stijnh">
+              <img id="coffee-img" v-tipster="'like planntt? buy me a coffee'" class="coffee-image" data-tippy-size="jumbo" src="~@/assets/coffee.svg"/>
+            </a>
+          </div>
+          <div class="dataLocation" href="#" @click="openDataLocationChange" v-tipster="'change your data location'">{{preference.dataLocation}}</div>
         </div>
     </div>
 </template>
