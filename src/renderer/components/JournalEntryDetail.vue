@@ -62,6 +62,7 @@ import Vue from 'vue'
 <script>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import DatePicker from 'vue2-datepicker'
+import 'vue2-datepicker/index.css'
 
 // Markdown transformer
 const marked = require('marked')

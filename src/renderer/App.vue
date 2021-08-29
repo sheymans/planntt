@@ -13,7 +13,7 @@ export default {
 <style>
   /* CSS */
 
-  #app .mx-datepicker {
+  .mx-datepicker-main {
     font: initial;
     font-family: 'JetBrains Mono';
     font-style: normal;
@@ -31,7 +31,11 @@ export default {
     -webkit-font-smoothing: antialiased;
   }
 
-  #app .mx-calendar {
+  #app .mx-input:hover, .mx-input:focus {
+    border-color: #4AD94A;
+  }
+
+  .mx-calendar {
     font: initial;
     font-family: 'JetBrains Mono';
     font-style: normal;
@@ -40,12 +44,20 @@ export default {
     -webkit-font-smoothing: antialiased;
   }
 
-  #app .mx-calendar-content .cell.actived {
+  .mx-calendar-content .mx-table.mx-table-date .cell.active {
     background-color: forestgreen;
   }
 
-  #app .mx-calendar-content .cell:hover {
-    background-color: #4AD94A;
+  .mx-calendar-content .mx-table.mx-table-year .cell.active {
+    background-color: forestgreen;
+  }
+
+  .mx-calendar-content .mx-table.mx-table-month .cell.active {
+    background-color: forestgreen;
+  }
+
+  .mx-calendar-header button {
+    font-family: 'JetBrains Mono';
   }
 
   #app pre {
