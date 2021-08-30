@@ -19,8 +19,8 @@
                 <div class="dataLocationChangeDialog">
                     <div class="dataLocationTitle">Change your Data Location</div>
                     <div class="dataLocationCurrent">Currently, your data is stored at <i>{{preference.dataLocation}}</i></div>
-                    <div class="dataLocationExplanation">You can copy <tt>projects.db</tt>, <tt>tasks.db</tt>, and <tt>archivedTasks.db</tt> to any folder of your choice and tell <tt>planntt</tt> to use that folder to read and write data from.</div>
-                    <div class="dataLocationNew" v-if="newDataLocation">We will start reading and write data from <b>{{newDataLocation}}</b></div>
+                    <div class="dataLocationExplanation">You can copy all <tt>.db</tt> files in that folder to any other folder and tell <tt>planntt</tt> to use that folder to read and write data from.</div>
+                    <div class="dataLocationNew" v-if="newDataLocation">We will use <b>{{newDataLocation}}</b> as the new data store.</div>
                     <div class="dataLocationActions">
                         <div v-show="!newDataLocation" class="directoryAction" @click="selectDirectory">change</div>
                         <div v-show="!newDataLocation" class="directoryAction" @click="resetDirectory">reset</div>
