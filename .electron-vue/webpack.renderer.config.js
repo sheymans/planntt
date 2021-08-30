@@ -68,32 +68,15 @@ let rendererConfig = {
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            name: 'imgs/[name]--[folder].[ext]',
-            esModule: false, // images from assets/ do not display correctly otherwise, see https://stackoverflow.com/questions/59070216/webpack-file-loader-outputs-object-module
-          }
-        }
+        type: 'asset',
       },
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: 'media/[name]--[folder].[ext]'
-        }
+        type: 'asset',
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            name: 'fonts/[name]--[folder].[ext]'
-          }
-        }
+        type: 'asset',
       }
     ]
   },
