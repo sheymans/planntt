@@ -118,7 +118,8 @@ export default {
       console.log('dropped task: ' + task.name + ' in project ' + this.project.name)
       this.$set(task, 'project', this.project.id)
       this.$taskDb.update({ id: task.id }, { $set: { project: task.project, projectName: this.project.name } }, {})
-      this.$store.commit('setProjectTargetTaskDrag', this.project)
+      // we take a copy with Object.assign otherwise vuex thinks we're changing the store directly later, in addSubproject during addChild.
+      this.$store.commit('setProjectTargetTaskDrag', Object.assign({}, this.project))
       this.dragHappening = false
     },
     handleDropProject: function (project) {
