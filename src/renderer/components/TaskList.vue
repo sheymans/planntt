@@ -2,7 +2,7 @@
     <div class="taskList">
         <div :class="{'tasks': isTaskSelected, 'tasksLarge': !isTaskSelected}">
             <div class="taskHeader">
-                    <b>{{selectedProjectName | capitalize}} ({{numberOfProjectTasks}})</b>
+                    <b>capitalize(selectedProjectName) ({{numberOfProjectTasks}})</b>
             </div>
             <input class="taskInput"
                    autofocus autocomplete="off"
@@ -292,17 +292,12 @@ export default {
   destroyed () {
     document.removeEventListener('keydown', this.keyHandler)
   },
-  filters: {
-    pluralize: function (n) {
-      return n === 1 ? 'task' : 'tasks'
-    },
+  methods: {
     capitalize: function (value) {
       if (!value) return ''
       value = value.toString().toUpperCase()
       return value
-    }
-  },
-  methods: {
+    },
     keyHandler: function (event) {
       event.stopImmediatePropagation()
       console.log('executing event listener to unset selection for key: ' + event.keyCode + '/meta: ' + event.metaKey)

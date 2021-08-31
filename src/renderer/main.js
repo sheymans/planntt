@@ -1,9 +1,9 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import axios from 'axios'
 
 import App from './App'
-import router from './router'
-import store from './store'
+import { router } from './router'
+import { store } from './store'
 import projectDb from './datastore/projects'
 import taskDb from './datastore/tasks'
 import archivedTaskDb from './datastore/archivedTasks'
@@ -36,30 +36,36 @@ import moment from 'moment'
 
 library.add(faFolderPlus, faTrash, faClipboard, faSpinner, faFolder, faFolderOpen, faPencilAlt, faFolderReg, faFolderOpenReg, faCaretDown, faCaretRight, faClone, faBan, faHeadphones, faTimes, faCrosshairs, faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown)
 
-if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
+// The Vue app
+const app = createApp(App)
+
+// Use the vue-router
+app.use(router)
+
+// Use the Vuex store
+app.use(store)
 
 // We can include NPM packages directly and make them available in Vue components by this.$http (for example). The $ is
 // just convention for that they are public (not Vue internal).
 // Note that we use Object.defineProperty as the default is then that this.$http (for example) is not re-assignable.
 // see https://vuejsdevelopers.com/2017/04/22/vue-js-libraries-plugins/ for more explanation.
-Object.defineProperty(Vue.prototype, '$http', { value: axios })
-Vue.http = Vue.prototype.$http // I do not know why we assign Vue.http TODO
-
-// What does this do? TODO
-Object.defineProperty(Vue.config, 'productionTip', { value: false })
+Object.defineProperty(app.config.globalProperties, '$http', { value: axios })
+// app.http = app.config.globalProperties.$http // I do not know why we assign app.http TODO
 
 // Making my stores locally available using this.$projectDB for example
-Object.defineProperty(Vue.prototype, '$projectDb', { value: projectDb })
-Object.defineProperty(Vue.prototype, '$taskDb', { value: taskDb })
-Object.defineProperty(Vue.prototype, '$archivedTaskDb', { value: archivedTaskDb })
-Object.defineProperty(Vue.prototype, '$focusedTime', { value: focusedTime })
-Object.defineProperty(Vue.prototype, '$journal', { value: journal })
+Object.defineProperty(app.config.globalProperties, '$projectDb', { value: projectDb })
+Object.defineProperty(app.config.globalProperties, '$taskDb', { value: taskDb })
+Object.defineProperty(app.config.globalProperties, '$archivedTaskDb', { value: archivedTaskDb })
+Object.defineProperty(app.config.globalProperties, '$focusedTime', { value: focusedTime })
+Object.defineProperty(app.config.globalProperties, '$journal', { value: journal })
 
 // Make moment available as this.$moment everywhere.
-Object.defineProperty(Vue.prototype, '$moment', { value: moment })
+Object.defineProperty(app.config.globalProperties, '$moment', { value: moment })
+// yes also in the store where you access it with this.$store then.
+store.$moment = moment
 
 // Make v-tipster="the text of the tooltip" available in all components
-Vue.directive('tipster', {
+app.directive('tipster', {
   bind: function (el, binding, vnode) {
     // call tippy and tell it to put the tooltip with content binding.value (your tooltip text) on the eld.
     if (binding.value) { // if it's empty don't show anything, for use with v-tipster="''"
@@ -72,7 +78,7 @@ Vue.directive('tipster', {
 })
 
 // Tippy context menu v-contextmenu
-Vue.directive('contextmenu', {
+app.directive('contextmenu', {
   bind: function (el, binding, vnode) {
     const tippyInstance = tippy(el, {
       content (reference) {
@@ -100,10 +106,5 @@ Vue.directive('contextmenu', {
   }
 })
 
-/* eslint-disable no-new */
-new Vue({
-  components: { App },
-  router,
-  store,
-  template: '<App/>'
-}).$mount('#app')
+// Mount the app
+app.mount('#app')

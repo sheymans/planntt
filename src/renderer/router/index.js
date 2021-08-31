@@ -1,9 +1,7 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
-Vue.use(Router)
-
-export default new Router({
+export const router = createRouter({
+  history: createWebHashHistory(),
   routes: [
     {
       path: '/',
@@ -49,8 +47,8 @@ export default new Router({
       props: true
     },
     {
-      path: '*',
-      redirect: '/'
+      path: '/:pathMatch(.*)*',
+      redirect: 'nope'
     }
   ]
 })

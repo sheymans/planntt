@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 const state = {
   // All Projects is by default selected
   selected: 2,
@@ -62,12 +60,12 @@ const getters = {
     return state.deletedProjects
   },
   getFocusedTimeToday (state) {
-    const today = Vue.prototype.$moment().format('YYYY-MM-DD')
+    const today = this.$moment().format('YYYY-MM-DD')
     console.log('getting focused time today: ' + today)
     return state.focusedTime[today]
   },
   getFocusedTimeThisWeek (state) {
-    const today = Vue.prototype.$moment()
+    const today = this.$moment()
     return getters.getFocusedTime(state, today)
   },
   getFocusedTime (state, day) {
@@ -106,16 +104,16 @@ const mutations = {
     state.selected = uuid
   },
   setExpanded (state, projectIdOrTaskTab) {
-    Vue.set(state.expanded, projectIdOrTaskTab.what, projectIdOrTaskTab.state)
+    state.expanded[projectIdOrTaskTab.what] = projectIdOrTaskTab.state
   },
   setPathFromRootToProjectExpanded (state, projectId) {
     for (const id in state.subProjects) {
       const subProjects = state.subProjects[id]
       if (subProjects.includes(projectId)) {
-        Vue.set(state.expanded, id, true)
+        state.expanded[id] = true
       } else {
         // and close everything else
-        Vue.set(state.expanded, id, false)
+        state.expanded[id] = false
       }
     }
   },
@@ -141,19 +139,19 @@ const mutations = {
     focusedTime.forEach(focusedTimeObject => {
       const date = focusedTimeObject.date
       const timeInSeconds = focusedTimeObject.timeInSeconds
-      Vue.set(state.focusedTime, date, timeInSeconds)
+      state.focusedTime[date] = timeInSeconds
       console.log('store: set focusedTime for ' + date + ' to ' + timeInSeconds + ' seconds')
     })
   },
   addFocusedTimeToday (state, sessionSeconds) {
-    const today = Vue.prototype.$moment().format('YYYY-MM-DD')
+    const today = this.$moment().format('YYYY-MM-DD')
     let currentSeconds
     if (state.focusedTime[today]) {
       currentSeconds = state.focusedTime[today]
     } else {
       currentSeconds = 0
     }
-    Vue.set(state.focusedTime, today, currentSeconds + sessionSeconds)
+    state.focusedTime[today] = currentSeconds + sessionSeconds
   },
   createProjectDependencies (state, projects) {
     const getDescendantProjectIds = (project) => {
@@ -170,10 +168,10 @@ const mutations = {
     projects.forEach(project => {
       const projectDependencies = state.subProjects[project.id]
       if (!projectDependencies) {
-        Vue.set(state.subProjects, project.id, [])
+        state.subProjects[project.id] = []
       }
       const descendantProjectIds = getDescendantProjectIds(project)
-      Vue.set(state.subProjects, project.id, descendantProjectIds)
+      state.subProjects[project.id] = descendantProjectIds
       // And do the same for all its children:
       if (project.children) {
         mutations.createProjectDependencies(state, project.children)
@@ -183,7 +181,7 @@ const mutations = {
   createProjectNames (state, projects) {
     projects.forEach(project => {
       console.log('setting project name of id ' + project.id + ' to ' + project.name)
-      Vue.set(state.projectNames, project.id, project.name)
+      state.projectNames[project.id] = project.name
       // And do the same for all its children:
       if (project.children) {
         mutations.createProjectNames(state, project.children)
@@ -192,7 +190,7 @@ const mutations = {
   },
   setProjectName (state, project) {
     console.log('setting project name in store ' + project.name)
-    Vue.set(state.projectNames, project.id, project.name)
+    state.projectNames[project.id] = project.name
   }
 }
 
