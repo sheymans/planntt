@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 <template>
     <div class="taskItem">
-        <div class="doneLabel">{{task.done | moment("YYYY-MM-DD hh:mma")}} </div>
+        <div class="doneLabel">{{ prettyMoment(task.done) }} </div>
         <div class="projectLabel">{{ task.projectName }}[{{ task.when }}]</div>
         <div class="taskSummary" @click="selectTask">{{ task.name }}</div>
     </div>
@@ -21,6 +21,9 @@ export default {
   methods: {
     selectTask: function () {
       this.$emit('setSelectedTask', this.task)
+    },
+    prettyMoment: function (t) {
+      return this.$moment(t).format('YYYY-MM-DD hh:mma')
     }
   }
 }

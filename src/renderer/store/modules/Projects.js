@@ -62,12 +62,12 @@ const getters = {
     return state.deletedProjects
   },
   getFocusedTimeToday (state) {
-    const today = Vue.moment().format('YYYY-MM-DD')
+    const today = Vue.prototype.$moment().format('YYYY-MM-DD')
     console.log('getting focused time today: ' + today)
     return state.focusedTime[today]
   },
   getFocusedTimeThisWeek (state) {
-    const today = Vue.moment()
+    const today = Vue.prototype.$moment()
     return getters.getFocusedTime(state, today)
   },
   getFocusedTime (state, day) {
@@ -146,7 +146,7 @@ const mutations = {
     })
   },
   addFocusedTimeToday (state, sessionSeconds) {
-    const today = Vue.moment().format('YYYY-MM-DD')
+    const today = Vue.prototype.$moment().format('YYYY-MM-DD')
     let currentSeconds
     if (state.focusedTime[today]) {
       currentSeconds = state.focusedTime[today]

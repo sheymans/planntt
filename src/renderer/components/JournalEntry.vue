@@ -5,7 +5,7 @@ import Vue from 'vue'
         <div class="journalEntryCheckbox">
             <input type="checkbox" v-model="journalEntry.checked" @change="toggleJournalEntryCheckbox">
         </div>
-        <div class="journalEntryLabel">{{ journalEntry.journalDate | moment("YYYY-MM-DD")}}</div>
+        <div class="journalEntryLabel">{{ prettyMoment(journalEntry.journalDate) }}</div>
         <div :class="{selected: isSelectedJournalEntry}" @click="selectJournalEntry" class="journalEntrySummary">
             {{ journalEntry.name }}</div>
     </div>
@@ -44,6 +44,9 @@ export default {
   filters: {
   },
   methods: {
+    prettyMoment: function (t) {
+      return this.$moment(t).format('YYYY-MM-DD')
+    },
     toggleJournalEntryCheckbox: function () {
       this.$journal.update({ id: this.journalEntry.id }, { $set: { checked: this.journalEntry.checked } }, {})
       this.unSelectedJournalEntry()

@@ -31,12 +31,14 @@ import '@chartshq/muze/dist/muze.css'
 import tippy from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 
+// moment (for time)
+import moment from 'moment'
+
 library.add(faClipboard, faSpinner, faFolder, faFolderOpen, faPencilAlt, faFolderReg, faFolderOpenReg, faCaretDown, faCaretRight, faClone, faBan, faHeadphones, faTimes, faCrosshairs, faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 
 // Vue.use statements are used when the packages you want to include are Vue plugins
-Vue.use(require('vue-moment'))
 Vue.use(VModal)
 
 // We can include NPM packages directly and make them available in Vue components by this.$http (for example). The $ is
@@ -55,6 +57,9 @@ Object.defineProperty(Vue.prototype, '$taskDb', { value: taskDb })
 Object.defineProperty(Vue.prototype, '$archivedTaskDb', { value: archivedTaskDb })
 Object.defineProperty(Vue.prototype, '$focusedTime', { value: focusedTime })
 Object.defineProperty(Vue.prototype, '$journal', { value: journal })
+
+// Make moment available as this.$moment everywhere.
+Object.defineProperty(Vue.prototype, '$moment', { value: moment })
 
 // Make v-tippy="the text of the tooltip" available in all components
 Vue.directive('tipster', {

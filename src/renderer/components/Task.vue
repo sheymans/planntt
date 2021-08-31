@@ -8,7 +8,7 @@ import Vue from 'vue'
         <div class="projectLabel" @click="expandProject">{{ getProjectName}}</div>
         <div :class="{selected: isSelectedTask}" @click="selectTask" draggable="true" @dragstart="dragTask" @dragend="dragEndTask" class="taskSummary">
             <span v-if="blocked"><font-awesome-icon @click="unblockTask" icon="ban" class="blocked"/></span>
-            <span v-if="task.due"  :class="{'is-late': isLate}">[ {{task.due | moment("YYYY-MM-DD")}} ]</span>
+            <span v-if="task.due"  :class="{'is-late': isLate}">[ {{ prettyMoment(task.due) }} ]</span>
             {{ task.name }}</div>
     </div>
 </template>
@@ -71,6 +71,9 @@ export default {
     }
   },
   methods: {
+    prettyMoment: function (t) {
+      return this.$moment(t).format('YYYY-MM-DD')
+    },
     unblockTask: function () {
       console.log('unblocking task: ' + this.task.name)
       this.$set(this.task, 'blocked', false)

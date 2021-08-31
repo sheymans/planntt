@@ -54,7 +54,7 @@ import Vue from 'vue'
                     <textarea class="noteInput" placeholder="add your note here" v-model="journalEntry.note"></textarea>
                 </div>
         </div>
-        <div class="timers">created: {{ journalEntry.created | moment("YYYY-MM-DD hh:mma")}}
+        <div class="timers">created: {{ prettyMoment(journalEntry.created) }}
         </div>
     </div>
 </template>
@@ -100,6 +100,9 @@ export default {
   filters: {
   },
   methods: {
+    prettyMoment: function (t) {
+      return this.$moment(t).format('YYYY-MM-DD hh:mma')
+    },
     changeDate: function (currentValue) {
       this.saveJournalEntry()
     },

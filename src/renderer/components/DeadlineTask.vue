@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 <template>
     <div class="taskItem">
-        <div class="dueLabel">{{task.due | moment("YYYY-MM-DD")}} </div>
+        <div class="dueLabel">{{ prettyMoment(task.due) }} </div>
         <div class="projectLabel">{{ task.projectName }}</div>
         <div class="taskSummary">{{ task.name }}</div>
     </div>
@@ -19,6 +19,9 @@ export default {
     }
   },
   methods: {
+    prettyMoment: function (t) {
+      return this.$moment(t).format('YYYY-MM-DD')
+    }
   }
 }
 </script>

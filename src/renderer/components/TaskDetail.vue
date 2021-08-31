@@ -68,7 +68,7 @@ import Vue from 'vue'
                     <textarea class="noteInput" placeholder="add your note here" v-model="task.note"></textarea>
                 </div>
         </div>
-        <div class="timers">#sessions: {{numberOfSessions}} | total time: {{prettyTotalTimeSpent}}  | created: {{ task.created | moment("YYYY-MM-DD hh:mma")}}
+        <div class="timers">#sessions: {{numberOfSessions}} | total time: {{prettyTotalTimeSpent}}  | created: {{ prettyMoment(task.created) }}
         </div>
     </div>
 </template>
@@ -154,6 +154,9 @@ export default {
     }
   },
   methods: {
+    prettyMoment: function (t) {
+      return this.$moment(t).format('YYYY-MM-DD hh:mma')
+    },
     expandProject: function () {
       this.$store.commit('setPathFromRootToProjectExpanded', this.task.project)
     },
