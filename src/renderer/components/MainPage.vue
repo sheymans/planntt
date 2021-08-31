@@ -176,7 +176,7 @@ export default {
     .content {
         display: grid;
         grid-template-rows: 1fr;
-        grid-template-columns: 200px 1fr;
+        grid-template-columns: 340px 1fr;
         grid-template-areas: "projectList   taskList";
         height: 89vh;
         min-height: 89vh;

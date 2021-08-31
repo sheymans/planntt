@@ -21,7 +21,8 @@ import {
   faSpinner, faFolder, faFolderOpen, faPencilAlt,
   faCaretDown, faCaretRight, faHeadphones,
   faTimes, faClone, faBan, faCrosshairs,
-  faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown, faClipboard
+  faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown, faClipboard,
+  faTrash, faFolderPlus
 } from '@fortawesome/free-solid-svg-icons'
 import { faFolder as faFolderReg, faFolderOpen as faFolderOpenReg } from '@fortawesome/free-regular-svg-icons'
 
@@ -34,7 +35,7 @@ import 'tippy.js/dist/tippy.css'
 // moment (for time)
 import moment from 'moment'
 
-library.add(faClipboard, faSpinner, faFolder, faFolderOpen, faPencilAlt, faFolderReg, faFolderOpenReg, faCaretDown, faCaretRight, faClone, faBan, faHeadphones, faTimes, faCrosshairs, faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown)
+library.add(faFolderPlus, faTrash, faClipboard, faSpinner, faFolder, faFolderOpen, faPencilAlt, faFolderReg, faFolderOpenReg, faCaretDown, faCaretRight, faClone, faBan, faHeadphones, faTimes, faCrosshairs, faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 
@@ -65,10 +66,12 @@ Object.defineProperty(Vue.prototype, '$moment', { value: moment })
 Vue.directive('tipster', {
   bind: function (el, binding, vnode) {
     // call tippy and tell it to put the tooltip with content binding.value (your tooltip text) on the eld.
-    tippy(el, {
-      content: binding.value,
-      theme: 'planntt' // theme is defined in App.vue
-    })
+    if (binding.value) { // if it's empty don't show anything, for use with v-tipster="''"
+      tippy(el, {
+        content: binding.value,
+        theme: 'planntt' // theme is defined in App.vue
+      })
+    }
   }
 })
 

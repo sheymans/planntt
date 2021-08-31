@@ -6,8 +6,12 @@ import Vue from 'vue'
             <span @click="toggle" :class="{selected: isSelectedProject, dragReady: dragHappening}">
                 <font-awesome-icon :icon="getFolderIcon"/>
             </span>
+          <span v-if="showControls" class="projectEdits">
+            [<font-awesome-icon v-if="!isSpecialProject()" class="iconProjectEdits" v-tipster="'edit project'" @click="startEdit" icon="pencil-alt"/>
+            <font-awesome-icon class="iconProjectEdits" v-tipster="'add subproject'" @click="addSubProject" icon="folder-plus"/>
+            <font-awesome-icon v-if="!isSpecialProject()" class="iconProjectEdits" v-tipster="'delete project'" @click="$emit('remove', project.id)" icon="trash"/>]
+          </span>
             <span v-show="!editing"
-                  @contextmenu.prevent="$refs.ctxMenu.open"
                   @click="selectProject"
                   @dblclick="toggle"
                   class="hasContextMenu"
@@ -17,7 +21,8 @@ import Vue from 'vue'
                   @dragover="handleDragOver"
                   @dragleave="handleDragLeave"
                   :class="{selected: isSelectedProject, dragReady: dragHappening}">
-                {{ project.name }}</span>
+                {{ project.name }}
+            </span>
             <input v-show="editing"
                    type="text"
                    :class="{selected: isSelectedProject}"
@@ -29,7 +34,7 @@ import Vue from 'vue'
                    @focus="$event.target.select()"
                    v-focus="editing"/>
         </div>
-        <ul v-show="open" v-if="isNonEmptyFolder">
+      <ul v-show="open" v-if="isNonEmptyFolder">
             <Project
                     class="project"
                     v-for="(project, index) in project.children"
@@ -40,22 +45,15 @@ import Vue from 'vue'
                     @updateProjects="updateProjects">
             </Project>
         </ul>
-        <context-menu id="context-menu" ref="ctxMenu">
-    <li v-if="!isSpecialProject()" @click="startEdit">Rename</li>
-    <li @click="addSubProject">Add subfolder</li>
-    <li v-if="!isSpecialProject()" @click="$emit('remove', project.id)">Delete</li>
-    </context-menu>
     </li>
 </template>
 
 <script>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-import contextMenu from 'vue-context-menu'
-
 export default {
   name: 'Project',
-  components: { FontAwesomeIcon, contextMenu },
+  components: { FontAwesomeIcon },
   props: {
     project: {
       type: Object,
@@ -88,6 +86,9 @@ export default {
     },
     open: function () {
       return this.$store.getters.isExpanded(this.project.id)
+    },
+    showControls: function () {
+      return this.isSelectedProject && !this.isInbox()
     }
   },
   methods: {
@@ -265,10 +266,6 @@ export default {
         color: forestgreen;
     }
 
-    .hasContextMenu {
-        cursor: context-menu;
-    }
-
     input {
         font: inherit;
     }
@@ -285,16 +282,13 @@ export default {
         background-color: #4AD94A;
     }
 
-    #context-menu {
-        cursor: default;
+    .projectEdits {
+      color: forestgreen;
     }
 
-    #context-menu li {
-        padding-left: 5px;
-    }
-
-    #context-menu li:hover {
-        background-color: #4AD94A;
+    .iconProjectEdits {
+      height: 10px;
+      opacity: 0.7;
     }
 
 </style>
