@@ -15,26 +15,12 @@
             <TaskList/>
         </div>
         <div class="footer">
-            <modal name="dataLocationModal">
-                <div class="dataLocationChangeDialog">
-                    <div class="dataLocationTitle">Change your Data Location</div>
-                    <div class="dataLocationCurrent">Currently, your data is stored at <i>{{preference.dataLocation}}</i></div>
-                    <div class="dataLocationExplanation">You can copy all <tt>.db</tt> files in that folder to any other folder and tell <tt>planntt</tt> to use that folder to read and write data from.</div>
-                    <div class="dataLocationNew" v-if="newDataLocation">We will use <b>{{newDataLocation}}</b> as the new data store.</div>
-                    <div class="dataLocationActions">
-                        <div v-show="!newDataLocation" class="directoryAction" @click="selectDirectory">change</div>
-                        <div v-show="!newDataLocation" class="directoryAction" @click="resetDirectory">reset</div>
-                        <div v-show="newDataLocation" class="directoryAction" @click="confirmLocationChange">confirm</div>
-                        <div class="directoryAction cancelAction" @click="abortLocationChange">cancel</div>
-                    </div>
-                </div>
-            </modal>
           <div class="coffee">
             <a target="_blank" href="https://www.buymeacoffee.com/stijnh">
               <img id="coffee-img" v-tipster="'like planntt? buy me a coffee'" class="coffee-image" data-tippy-size="jumbo" src="~@/assets/coffee.svg"/>
             </a>
           </div>
-          <div class="dataLocation" href="#" @click="openDataLocationChange" v-tipster="'change your data location'">{{preference.dataLocation}}</div>
+          <router-link v-tipster="'your data'" class="dataLocation" :to="{ name: 'preferences', params: { } }">{{preference.dataLocation}}</router-link>
         </div>
     </div>
 </template>
@@ -54,8 +40,7 @@ export default {
   },
   data () {
     return {
-      preference: { dataLocation: app.getPath('userData') },
-      newDataLocation: null
+      preference: { dataLocation: app.getPath('userData') }
     }
   },
   created () {
@@ -72,50 +57,7 @@ export default {
       fs.writeFileSync(app.getPath('userData') + '/preferences.db', JSON.stringify(preference))
     }
   },
-  methods: {
-    openDataLocationChange: function () {
-      this.$modal.show('dataLocationModal')
-    },
-    selectDirectory: function () {
-      const self = this
-      const { dialog } = require('@electron/remote')
-      dialog.showOpenDialog({
-        properties: ['openDirectory', 'createDirectory']
-      }).then((data) => {
-        const selectedDirectories = data.filePaths
-        console.log(data.filePaths)
-        if (selectedDirectories && selectedDirectories.length > 0) {
-          console.log('we selected a directory ' + selectedDirectories[0])
-          self.newDataLocation = selectedDirectories[0]
-        }
-      })
-    },
-    resetDirectory: function () {
-      const userDir = app.getPath('userData')
-      this.newDataLocation = userDir
-    },
-    confirmLocationChange: function () {
-      if (this.newDataLocation) {
-        const preference = { dataLocation: this.newDataLocation }
-        console.log('writing new preferences to file')
-        const fs = require('fs')
-        fs.writeFileSync(app.getPath('userData') + '/preferences.db', JSON.stringify(preference))
-        console.log('done writing new preferences to file')
-        this.preference = preference
-        this.newDataLocation = null
-        this.$modal.hide('dataLocationModal')
-        console.log('user has changed data location to ' + this.preference.dataLocation)
-        console.log('reloading the app now')
-        const { getCurrentWindow } = require('@electron/remote')
-        getCurrentWindow().reload()
-      }
-    },
-    abortLocationChange: function () {
-      this.newDataLocation = null
-      this.$modal.hide('dataLocationModal')
-      console.log('user aborted data location change')
-    }
-  }
+  methods: {}
 }
 </script>
 
@@ -203,6 +145,7 @@ export default {
         text-decoration: underline;
         cursor:pointer;
         margin-right: 5px;
+        color: black;
     }
 
     .coffee {

@@ -13,7 +13,6 @@ import 'typeface-roboto/index.css'
 import 'typeface-roboto-mono/index.css'
 import 'typeface-raleway/index.css'
 import 'typeface-jetbrains-mono/dist/index.css'
-import VModal from 'vue-js-modal'
 
 /* Fonts */
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -38,9 +37,6 @@ import moment from 'moment'
 library.add(faFolderPlus, faTrash, faClipboard, faSpinner, faFolder, faFolderOpen, faPencilAlt, faFolderReg, faFolderOpenReg, faCaretDown, faCaretRight, faClone, faBan, faHeadphones, faTimes, faCrosshairs, faArrowLeft, faTrashAlt, faCheck, faArrowUp, faArrowDown)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
-
-// Vue.use statements are used when the packages you want to include are Vue plugins
-Vue.use(VModal)
 
 // We can include NPM packages directly and make them available in Vue components by this.$http (for example). The $ is
 // just convention for that they are public (not Vue internal).

@@ -11,7 +11,7 @@ import Vue from 'vue'
             <font-awesome-icon class="iconProjectEdits" v-tipster="'add subproject'" @click="addSubProject" icon="folder-plus"/>
             <font-awesome-icon v-if="!isSpecialProject()" class="iconProjectEdits" v-tipster="'delete project'" @click="trashIt" icon="trash"/>
           </div>
-            <span v-show="!editing"
+              <span v-show="!editing"
                   @click="selectProject"
                   @dblclick="toggle"
                   draggable="true"
@@ -24,7 +24,7 @@ import Vue from 'vue'
                   class="hasContextMenu"
                   :class="{selected: isSelectedProject, dragReady: dragHappening}">
                 {{ project.name }}
-            </span>
+              </span>
             <input v-show="editing"
                    type="text"
                    :class="{selected: isSelectedProject}"
