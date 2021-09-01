@@ -6,20 +6,22 @@ import Vue from 'vue'
             <span @click="toggle" :class="{selected: isSelectedProject, dragReady: dragHappening}">
                 <font-awesome-icon :icon="getFolderIcon"/>
             </span>
-          <span v-if="showControls" class="projectEdits">
-            [<font-awesome-icon v-if="!isSpecialProject()" class="iconProjectEdits" v-tipster="'edit project'" @click="startEdit" icon="pencil-alt"/>
+          <div hidden ref="projectMenu" class="projectEdits">
+            <font-awesome-icon v-if="!isSpecialProject()" class="iconProjectEdits" v-tipster="'edit project'" @click="startEdit" icon="pencil-alt"/>
             <font-awesome-icon class="iconProjectEdits" v-tipster="'add subproject'" @click="addSubProject" icon="folder-plus"/>
-            <font-awesome-icon v-if="!isSpecialProject()" class="iconProjectEdits" v-tipster="'delete project'" @click="$emit('remove', project.id)" icon="trash"/>]
-          </span>
+            <font-awesome-icon v-if="!isSpecialProject()" class="iconProjectEdits" v-tipster="'delete project'" @click="trashIt" icon="trash"/>
+          </div>
             <span v-show="!editing"
                   @click="selectProject"
                   @dblclick="toggle"
-                  class="hasContextMenu"
                   draggable="true"
                   @dragstart="dragProject"
                   @drop="handleDrop"
                   @dragover="handleDragOver"
                   @dragleave="handleDragLeave"
+                  v-contextmenu
+                  ref="projectName"
+                  class="hasContextMenu"
                   :class="{selected: isSelectedProject, dragReady: dragHappening}">
                 {{ project.name }}
             </span>
@@ -86,12 +88,13 @@ export default {
     },
     open: function () {
       return this.$store.getters.isExpanded(this.project.id)
-    },
-    showControls: function () {
-      return this.isSelectedProject && !this.isInbox()
     }
   },
   methods: {
+    trashIt: function () {
+      this.closeMenu()
+      this.$emit('remove', this.project.id)
+    },
     toggle: function () {
       if (this.isNonEmptyFolder) {
         this.$store.commit('setExpanded', { what: this.project.id, state: !this.open })
@@ -165,6 +168,7 @@ export default {
       this.$store.commit('setSelectedProjectName', this.project.name)
     },
     addSubProject: function () {
+      this.closeMenu()
       if (this.isNonEmptyFolder) {
         this.addChild()
       } else {
@@ -191,6 +195,7 @@ export default {
       this.$emit('removeFromRoot', uuid)
     },
     startEdit: function () {
+      this.closeMenu()
       // You can't edit special projects
       if (this.isSpecialProject()) {
         console.log('you cannot edit special project: ' + this.project.id)
@@ -199,6 +204,11 @@ export default {
       console.log('starting to edit: ' + this.project.name)
       this.projectNameBeforeEdit = this.project.name
       this.editing = true
+    },
+    closeMenu: function () {
+      // close the tippy
+      const tippyInstance = this.$refs.projectName._tippy
+      tippyInstance.hide()
     },
     doneEdit: function () {
       if (!this.editing) {
@@ -283,12 +293,16 @@ export default {
     }
 
     .projectEdits {
-      color: forestgreen;
+      color: #4AD94A;
     }
 
     .iconProjectEdits {
       height: 10px;
       opacity: 0.7;
+    }
+
+    .hasContextMenu {
+      cursor: context-menu;
     }
 
 </style>

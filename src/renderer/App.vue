@@ -95,4 +95,10 @@ export default {
     border-right-color: forestgreen;
   }
 
+  .tippy-box[data-theme~='planntt-menu'] {
+    color: forestgreen;
+    font-family: 'JetBrains Mono Light';
+    font-size: 8pt;
+  }
+
 </style>

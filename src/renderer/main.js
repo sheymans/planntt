@@ -62,7 +62,7 @@ Object.defineProperty(Vue.prototype, '$journal', { value: journal })
 // Make moment available as this.$moment everywhere.
 Object.defineProperty(Vue.prototype, '$moment', { value: moment })
 
-// Make v-tippy="the text of the tooltip" available in all components
+// Make v-tipster="the text of the tooltip" available in all components
 Vue.directive('tipster', {
   bind: function (el, binding, vnode) {
     // call tippy and tell it to put the tooltip with content binding.value (your tooltip text) on the eld.
@@ -72,6 +72,35 @@ Vue.directive('tipster', {
         theme: 'planntt' // theme is defined in App.vue
       })
     }
+  }
+})
+
+// Tippy context menu v-contextmenu
+Vue.directive('contextmenu', {
+  bind: function (el, binding, vnode) {
+    const tippyInstance = tippy(el, {
+      content (reference) {
+        // pick up the icons
+        const icons = vnode.context.$refs.projectMenu
+        // if you do not unhide it, events like clicking on icons will not be present
+        icons.removeAttribute('hidden')
+        // return icons rather than icons.innerHTML cause that'd lose the events on the icons.
+        return icons
+      },
+      placement: 'bottom',
+      trigger: 'manual',
+      interactive: true,
+      arrow: false,
+      offset: [0, 0],
+      allowHTML: true,
+      theme: 'planntt-menu'
+    })
+
+    // listen to right-click and open the context menu (the tippy)
+    el.addEventListener('contextmenu', (event) => {
+      event.preventDefault()
+      tippyInstance.show()
+    })
   }
 })
 
