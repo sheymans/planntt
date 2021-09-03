@@ -12,3 +12,4 @@ thumbs.db
 !.gitkeep
 .env
 package-lock.json
+CHANGELOG.html
