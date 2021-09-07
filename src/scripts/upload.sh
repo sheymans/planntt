@@ -2,10 +2,13 @@
 
 version=$1
 
-echo "copying apps with version ${version}.."
-scp ~/Workspaces/planntt/build/planntt-${version}.dmg \
-    ~/Workspaces/planntt/build/planntt-${version}-mac.zip \
-    ~/Workspaces/planntt/build/*.yml \
-    ~/Workspaces/planntt/build/*.yaml \
-    iwokeupthismorning.net@s88322.gridserver.com:~/domains/planntt.com/html/downloads/
+# get all environment variables
+export $(cat .env | xargs)
+
+echo "copying apps with version ${version} to " $PLANNTT_DOWNLOADS
+scp ./build/planntt-${version}.dmg \
+    ./build/planntt-${version}-mac.zip \
+    ./planntt/build/*.yml \
+    ./planntt/build/*.yaml \
+    $PLANNTT_DOWNLOADS
 echo "done copying apps"
