@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # get all environment variables
-export $(cat .env | xargs)
+export $(cat ../.env | xargs)
 
 echo "generating changelog..."
 pandoc -s CHANGELOG.md -o CHANGELOG.html
