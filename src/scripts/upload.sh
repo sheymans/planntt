@@ -8,7 +8,7 @@ export $(cat .env | xargs)
 echo "copying apps with version ${version} to " $PLANNTT_DOWNLOADS
 scp ./build/planntt-${version}.dmg \
     ./build/planntt-${version}-mac.zip \
-    ./planntt/build/*.yml \
-    ./planntt/build/*.yaml \
+    ./build/*.yml \
+    ./build/*.yaml \
     $PLANNTT_DOWNLOADS
 echo "done copying apps"
