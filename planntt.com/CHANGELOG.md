@@ -2,6 +2,10 @@
 
 **Planntt Changelog**
 
+**[1.5.1]** - _2021-09-08_
+
+- Remove `webpack.web.config.js` -- non-user facing.
+ 
 **[1.5.0]** - _2021-09-01_
 
 - Remove `vue-js-modal` in preparation for Vue 3.x
