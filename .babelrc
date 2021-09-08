@@ -13,14 +13,7 @@
       "presets": [
         ["@babel/preset-env", {
           "modules": false
-        }],
-      ]
-    },
-    "web": {
-      "presets": [
-        ["@babel/preset-env", {
-          "modules": false
-        }],
+        }]
       ]
     }
   },
