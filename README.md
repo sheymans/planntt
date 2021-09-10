@@ -4,7 +4,7 @@
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 ![Apple](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=apple&logoColor=white)
 
-<a href="http://planntt.com"><img src="./planntt.com/images/planntt.png"/></a>
+<a href="http://planntt.com"><img src="./planntt.com/images/planntt.png" width="300px"/></a>
 
 # planntt
 
@@ -45,7 +45,8 @@ npm run build
 ```
 
 Note that the build step (`npm run build`) will require an `APPLEID` and an `APPLEIDPASS`. Official releases will appear
-on <a href="http://planntt.com">plannt.com</a>.
+on <a href="http://planntt.com">plannt.com</a> so this build step can probably be skipped in most cases when trying out 
+planntt locally.
 
 ## Changelog
 
