@@ -53,7 +53,13 @@ planntt locally.
 The changelog can be found in the [repository](./planntt.com/CHANGELOG.md) or at 
 <a href="http://planntt.com/CHANGELOG.html">planntt.com/CHANGELOG</a>.
 
-# Acknowledgements
+## License
+
+planntt is [free software](https://www.gnu.org/philosophy/free-sw.en.html), licensed under the [GPLv3](./LICENSE).
+
+## Acknowledgements
 
 The first version of this project was originally generated in 2018 with
 [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[7c4e3e9](https://github.com/SimulatedGREG/electron-vue/tree/7c4e3e90a772bd4c27d2dd4790f61f09bae0fcef).
+
+See [package.json](./package.json) for a list of software used by planntt.
