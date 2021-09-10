@@ -1,8 +1,14 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+![Electron.js](https://img.shields.io/badge/Electron-2B2E3A?style=for-the-badge&logo=electron&logoColor=9FEAF9)
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
+![Apple](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=apple&logoColor=white)
+
+<a href="http://planntt.com"><img src="./planntt.com/images/planntt.png"/></a>
+
 # planntt
 
-Planntt is a todo-application with a focus on keeping all your data on your computer at all times.
+[Planntt](http://planntt.com) is a todo-application with a focus on keeping all your data on your computer at all times.
 
 ## Features
 
@@ -21,6 +27,10 @@ Planntt is a todo-application with a focus on keeping all your data on your comp
 - search your tasks, your archived (done) tasks, your journal notes
 - `statistics` for your completed tasks, created tasks, time spent in focus mode, and much more.
 
+## Download for Mac OS X
+
+The latest version can be downloaded at <a href="http://planntt.com">planntt.com</a>.
+
 ## Development
 
 ```
@@ -30,9 +40,17 @@ npm install
 # Run planntt locally
 npm run dev
 
-# Build planntt for production
+# Build planntt
 npm run build
 ```
+
+Note that the build step (`npm run build`) will require an `APPLEID` and an `APPLEIDPASS`. Official releases will appear
+on <a href="http://planntt.com">plannt.com</a>.
+
+## Changelog
+
+The changelog can be found in the [repository](./planntt.com/CHANGELOG.md) or at 
+<a href="http://planntt.com/CHANGELOG.html">planntt.com/CHANGELOG</a>.
 
 # Acknowledgements
 
