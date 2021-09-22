@@ -29,7 +29,8 @@
 
 ## Download for Mac OS X
 
-The latest version can be downloaded at <a href="http://planntt.com">planntt.com</a>.
+The latest version can be downloaded at <a href="http://planntt.com">planntt.com</a> or download the latest `dmg` from 
+the [github releases](https://github.com/sheymans/planntt/releases/).
 
 ## Development
 
