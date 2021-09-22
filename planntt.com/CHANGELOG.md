@@ -2,6 +2,14 @@
 
 **Planntt Changelog**
 
+**[1.5.3]** - _2021-09-22_
+
+- Bump the version to test [github releases](https://github.com/sheymans/planntt/releases/)
+
+**[1.5.2]** - _2021-09-22_
+
+- Publish releases to github (this version will publish still to the old location so that auto-updates do not break).
+
 **[1.5.1]** - _2021-09-08_
 
 - Remove `webpack.web.config.js` -- non-user facing.
