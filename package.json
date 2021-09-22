@@ -1,15 +1,13 @@
 {
   "name": "planntt",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "author": "Stijn Heymans <stijn.heymans@gmail.com>",
   "description": "A Simple ToDo Application",
   "homepage": "http://planntt.com",
-  "license": "UNLICENSED",
+  "license": "GPLV3",
   "main": "./dist/electron/main.js",
   "scripts": {
-    "build": "node .electron-vue/build.js && electron-builder",
-    "buildwin": "./src/scripts/win_cert.sh",
-    "buildlin": "node .electron-vue/build.js && electron-builder -l",
+    "build": "node .electron-vue/build.js && electron-builder --publish always",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "dev": "node .electron-vue/dev-runner.js",
@@ -30,8 +28,9 @@
     "afterSign": "scripts/notarize.js",
     "publish": [
       {
-        "provider": "generic",
-        "url": "http://planntt.com/downloads"
+        "provider": "github",
+        "owner": "sheymans",
+        "repo": "planntt"
       }
     ],
     "files": [
