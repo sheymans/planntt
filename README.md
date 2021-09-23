@@ -41,6 +41,9 @@ npm install
 # Run planntt locally
 npm run dev
 
+# Run integration tests
+npm run test
+
 # Build planntt
 npm run build
 ```
