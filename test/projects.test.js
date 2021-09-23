@@ -27,6 +27,11 @@ describe('planntt projects', function () {
     return assert.strictEqual(count, 1)
   })
 
+  it('has title planntt', async () => {
+    const title = await app.client.getTitle()
+    return assert.strictEqual(title, 'planntt')
+  })
+
   it('has an input field to add tasks', async () => {
     const taskInputs = await app.client.$$('.taskInput')
     return assert.strictEqual(taskInputs.length, 1)

@@ -49,9 +49,8 @@ npm run test
 npm run build
 ```
 
-Note that the build step (`npm run build`) will require an `APPLEID` and an `APPLEIDPASS`. Official releases will appear
-on <a href="http://planntt.com">plannt.com</a> so this build step can probably be skipped in most cases when trying out 
-planntt locally.
+Note that the build step (`npm run build`) will require an `APPLEID` and an `APPLEIDPASS` as well as permissions to create releases
+for this repository, aka you'll probably want to avoid running `npm run build` yourself.
 
 ## Changelog
 
