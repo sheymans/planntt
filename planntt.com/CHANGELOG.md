@@ -2,6 +2,10 @@
 
 **Planntt Changelog**
 
+**[1.5.4]** - _2021-09-24_
+
+- Add integration test framework ([Spectron](https://www.electronjs.org/spectron) and [mocha](https://mochajs.org/)) with initial tests
+
 **[1.5.3]** - _2021-09-22_
 
 - Bump the version to test [github releases](https://github.com/sheymans/planntt/releases/)

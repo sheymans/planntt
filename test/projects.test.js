@@ -24,22 +24,37 @@ describe('planntt projects', function () {
 
   it('shows an initial window', async () => {
     const count = await app.client.getWindowCount()
-    return assert.strictEqual(count, 1)
+    assert.strictEqual(count, 1)
   })
 
   it('has title planntt', async () => {
     const title = await app.client.getTitle()
-    return assert.strictEqual(title, 'planntt')
+    assert.strictEqual(title, 'planntt')
   })
 
   it('has an input field to add tasks', async () => {
     const taskInputs = await app.client.$$('.taskInput')
-    return assert.strictEqual(taskInputs.length, 1)
+    assert.strictEqual(taskInputs.length, 1)
   })
 
   it('has an input field to add tasks with correct placeholder', async () => {
     const taskInput = await app.client.$('.taskInput')
     const placeholder = await taskInput.getAttribute('placeholder')
-    return assert.strictEqual(placeholder, 'Filter tasks/press enter to add a new task')
+    assert.strictEqual(placeholder, 'Filter tasks/press enter to add a new task')
+  })
+
+  it('can add a new task that appears by default in Someday list', async () => {
+    // Add a task name in the input field and click enter
+    const taskInput = await app.client.$('.taskInput')
+    const taskName = 'this is a test task name ' + Date.now()
+    await taskInput.setValue(taskName)
+    await app.client.keys('Enter')
+
+    // It should appear in the some day list now:
+    const somedayTasks = await app.client.$$('.somedayList .tasksInTab')
+    assert.strictEqual(somedayTasks.length, 1)
+    const addedTask = somedayTasks[0]
+    const taskSummary = await addedTask.$('.taskSummary')
+    assert.strictEqual(await taskSummary.getText(), taskName)
   })
 })
