@@ -639,6 +639,10 @@ export default {
           // Archive Task
           const archivedTask = Object.assign({}, task)
           archivedTask.done = new Date()
+          // Make sure to set the projectName of this task to what the project name currently actually is.
+          // We do want to freeze the projectName in time, as the project may be renamed after the project is done (at which point we want
+          // to keep the old name before renaming).
+          archivedTask.projectName = this.$store.getters.getProjectName(task.project)
           this.$archivedTaskDb.insert(archivedTask)
         }
       })
