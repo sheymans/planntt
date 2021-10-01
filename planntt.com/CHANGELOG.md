@@ -2,6 +2,11 @@
 
 **Planntt Changelog**
 
+
+**[1.5.5]** - _2021-10-01_
+
+- Fix that an archived task of a renamed project had the old name ([#1](https://github.com/sheymans/planntt/issues/1))
+
 **[1.5.4]** - _2021-09-24_
 
 - Add integration test framework ([Spectron](https://www.electronjs.org/spectron) and [mocha](https://mochajs.org/)) with initial tests
