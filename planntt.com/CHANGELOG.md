@@ -3,6 +3,10 @@
 **Planntt Changelog**
 
 
+**[1.5.6]** - _2021-10-05_
+
+- Fix wrong week being shown due to US weeks starting Sunday per `moment`. Using `isoWeek` now to have weeks in US also start on Monday.
+
 **[1.5.5]** - _2021-10-01_
 
 - Fix that an archived task of a renamed project had the old name ([#1](https://github.com/sheymans/planntt/issues/1))
