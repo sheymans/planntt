@@ -181,7 +181,7 @@ export default {
                 if (momentFormat === 'YYYY-WW') {
                   const weekNumber = val.substring(val.length - 2, val.length)
                   const year = val.substr(0, 4)
-                  const mondayOfWeek = this.$moment().day('Monday').week(weekNumber).year(year)
+                  const mondayOfWeek = this.$moment().day('Monday').isoWeek(weekNumber).year(year)
                   return mondayOfWeek.format('YYYY-MM-DD')
                 }
                 return val
@@ -305,7 +305,7 @@ export default {
                 if (momentFormat === 'YYYY-WW') {
                   const weekNumber = val.substring(val.length - 2, val.length)
                   const year = val.substr(0, 4)
-                  const mondayOfWeek = this.$moment().day('Monday').week(weekNumber).year(year)
+                  const mondayOfWeek = this.$moment().day('Monday').isoWeek(weekNumber).year(year)
                   return mondayOfWeek.format('YYYY-MM-DD')
                 }
                 return val
@@ -343,7 +343,7 @@ export default {
                   } else if (momentFormat === 'YYYY-WW') {
                     const weekNumber = datePoint.substring(datePoint.length - 2, datePoint.length)
                     const year = datePoint.substr(0, 4)
-                    const mondayOfWeek = this.$moment().day('Monday').week(weekNumber).year(year)
+                    const mondayOfWeek = this.$moment().day('Monday').isoWeek(weekNumber).year(year)
                     const day = mondayOfWeek.format('YYYY-MM-DD')
                     if (durationDoneAndCreated) {
                       tooltipContent += `${durationPoint} in week of ${day}`
