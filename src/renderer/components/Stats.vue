@@ -14,23 +14,21 @@
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerDay'}" class="statsChoice" @click="tasksCompletedPerDay">completed tasks/day</li>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerWeek'}" class="statsChoice" @click="tasksCompletedPerWeek">completed tasks/week</li>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerMonth'}" class="statsChoice" @click="tasksCompletedPerMonth">completed tasks/month</li>
+                    <li :class="{'is-active': statsType === 'allCompletedTasksPerYear'}" class="statsChoice" @click="tasksCompletedPerYear">completed tasks/year</li>
                 </ul>
                 <ul>
                     <li :class="{'is-active': statsType === 'focusedTimePerDay'}" class="statsChoice" @click="focusedTimePerDay">focused time/day</li>
                     <li :class="{'is-active': statsType === 'focusedTimePerWeek'}" class="statsChoice" @click="focusedTimePerWeek">focused time/week</li>
                     <li :class="{'is-active': statsType === 'focusedTimePerMonth'}" class="statsChoice" @click="focusedTimePerMonth">focused time/month</li>
+                    <li :class="{'is-active': statsType === 'focusedTimePerYear'}" class="statsChoice" @click="focusedTimePerYear">focused time/year</li>
                 </ul>
                 <ul>
                     <li :class="{'is-active': statsType === 'allCreatedTasksPerDay'}" class="statsChoice" @click="tasksCreatedPerDay">created tasks/day</li>
                     <li :class="{'is-active': statsType === 'allCreatedTasksPerWeek'}" class="statsChoice" @click="tasksCreatedPerWeek">created tasks/week</li>
                     <li :class="{'is-active': statsType === 'allCreatedTasksPerMonth'}" class="statsChoice" @click="tasksCreatedPerMonth">created tasks/month</li>
+                    <li :class="{'is-active': statsType === 'allCreatedTasksPerYear'}" class="statsChoice" @click="tasksCreatedPerYear">created tasks/year</li>
                 </ul>
-                <ul>
-                    <li :class="{'is-active': statsType === 'allDurationTasksPerDay'}" class="statsChoice" @click="tasksDurationPerDay">duration tasks/day</li>
-                    <li :class="{'is-active': statsType === 'allDurationTasksPerWeek'}" class="statsChoice" @click="tasksDurationPerWeek">duration tasks/week</li>
-                    <li :class="{'is-active': statsType === 'allDurationTasksPerMonth'}" class="statsChoice" @click="tasksDurationPerMonth">duration tasks/month</li>
-                </ul>
-                <ul>
+              <ul>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerMinute'}" class="statsChoice" @click="tasksCompletedPerMinute">productive minutes</li>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerHour'}" class="statsChoice" @click="tasksCompletedPerHour">productive hours</li>
                     <li :class="{'is-active': statsType === 'allCompletedTasksPerDayOfWeek'}" class="statsChoice" @click="tasksCompletedPerDayOfWeek">productive days</li>
@@ -203,6 +201,8 @@ export default {
                   if (momentFormat === 'YYYY-WW') {
                     const week = datePoint.substring(datePoint.length - 2, datePoint.length)
                     tooltipContent += `${timeInSecondsPoint} in week ${week}`
+                  } else if (momentFormat === 'YYYY' || momentFormat === 'YYYY-MM') {
+                    tooltipContent += `${timeInSecondsPoint} in ${datePoint}`
                   } else {
                     tooltipContent += `${timeInSecondsPoint} on ${datePoint}`
                   }
@@ -350,6 +350,12 @@ export default {
                     } else {
                       tooltipContent += `${countPoint} in week of ${day}`
                     }
+                  } else if (momentFormat === 'YYYY' || momentFormat === 'YYYY-MM') {
+                    if (durationDoneAndCreated) {
+                      tooltipContent += `${durationPoint} in ${datePoint}`
+                    } else {
+                      tooltipContent += `${countPoint} in ${datePoint}`
+                    }
                   } else {
                     if (durationDoneAndCreated) {
                       tooltipContent += `${durationPoint} on ${datePoint}`
@@ -380,6 +386,10 @@ export default {
       this.statsType = 'focusedTimePerWeek'
       this.focusedTimePer('YYYY-WW')
     },
+    focusedTimePerYear: function () {
+      this.statsType = 'focusedTimePerYear'
+      this.focusedTimePer('YYYY')
+    },
     tasksCompletedPerDay: function () {
       this.statsType = 'allCompletedTasksPerDay'
       this.tasksPer('YYYY-MM-DD', task => task.done, this.doneTasks)
@@ -392,6 +402,10 @@ export default {
       this.statsType = 'allCompletedTasksPerWeek'
       this.tasksPer('YYYY-WW', task => task.done, this.doneTasks)
     },
+    tasksCompletedPerYear: function () {
+      this.statsType = 'allCompletedTasksPerYear'
+      this.tasksPer('YYYY', task => task.done, this.doneTasks)
+    },
     tasksCreatedPerDay: function () {
       this.statsType = 'allCreatedTasksPerDay'
       this.tasksPer('YYYY-MM-DD', task => task.created, this.tasks.concat(this.doneTasks))
@@ -403,6 +417,10 @@ export default {
     tasksCreatedPerWeek: function () {
       this.statsType = 'allCreatedTasksPerWeek'
       this.tasksPer('YYYY-WW', task => task.created, this.tasks.concat(this.doneTasks))
+    },
+    tasksCreatedPerYear: function () {
+      this.statsType = 'allCreatedTasksPerYear'
+      this.tasksPer('YYYY', task => task.created, this.tasks.concat(this.doneTasks))
     },
     tasksDurationPerDay: function () {
       this.statsType = 'allDurationTasksPerDay'
