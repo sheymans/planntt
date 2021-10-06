@@ -5,7 +5,7 @@
 
 **[1.5.6]** - _2021-10-05_
 
-- Fix wrong week being shown due to US weeks starting Sunday per `moment`. Using `isoWeek` now to have weeks in US also start on Monday.
+- Fix wrong week being shown due to US weeks starting Sunday per `moment`. Using `isoWeek` now to have weeks in US also start on Monday ([#4](https://github.com/sheymans/planntt/issues/4)
 
 **[1.5.5]** - _2021-10-01_
 
