@@ -3,6 +3,11 @@
 **Planntt Changelog**
 
 
+**[1.6.0]** - _2021-10-06_
+
+- Add `per year` stats ([#6](https://github.com/sheymans/planntt/issues/6))
+- Remove `duration` stats -- not clear what they contribute.
+
 **[1.5.6]** - _2021-10-05_
 
 - Fix wrong week being shown due to US weeks starting Sunday per `moment`. Using `isoWeek` now to have weeks in US also start on Monday ([#4](https://github.com/sheymans/planntt/issues/4))
