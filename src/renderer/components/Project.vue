@@ -52,6 +52,7 @@ import Vue from 'vue'
 
 <script>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'Project',
@@ -178,7 +179,7 @@ export default {
       this.$store.commit('setExpanded', { what: this.project.id, state: true })
     },
     addChild: function () {
-      const newChildProject = { name: 'new project', id: this.uuidv4() }
+      const newChildProject = { name: 'new project', id: uuidv4() }
       this.project.children.push(newChildProject)
       this.$store.commit('setProjectName', newChildProject)
       this.updateProjects()
@@ -233,14 +234,6 @@ export default {
       // Saves stuff to DB on any change
       console.log('project with id ' + this.project.id + ' emitted an updateProjects save to DB')
       this.$emit('updateProjects')
-    },
-    // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-    uuidv4: function () {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        const r = Math.random() * 16 | 0
-        const v = c === 'x' ? r : (r & 0x3 | 0x8)
-        return v.toString(16)
-      })
     }
   },
   // https://vuejs.org/v2/guide/custom-directive.html

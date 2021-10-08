@@ -29,6 +29,7 @@
 <script>
 import JournalEntryList from './JournalEntryList.vue'
 import Planntt from '../App'
+import { v4 as uuidv4 } from 'uuid'
 const app = require('@electron/remote').app
 
 export default {
@@ -84,7 +85,7 @@ export default {
           fs.createReadStream(selectedCsv)
             .pipe(csv())
             .on('data', (row) => {
-              const newJournalEntry = { id: this.uuidv4(), name: row.Name, note: row.Note, created: new Date(), journalDate: row.Date }
+              const newJournalEntry = { id: uuidv4(), name: row.Name, note: row.Note, created: new Date(), journalDate: row.Date }
               // Check whether a similar note already exists:
               const self = this
               this.$journal.find({ name: row.Name, note: row.Note, journalDate: row.Date }, function (err, docs) {
@@ -126,14 +127,6 @@ export default {
       this.newDataLocation = null
       this.$modal.hide('dataLocationModal')
       console.log('user aborted data location change')
-    },
-    // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-    uuidv4: function () {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        const r = Math.random() * 16 | 0
-        const v = c === 'x' ? r : (r & 0x3 | 0x8)
-        return v.toString(16)
-      })
     }
   }
 }
