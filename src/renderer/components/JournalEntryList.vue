@@ -34,6 +34,7 @@
 import JournalEntry from './JournalEntry.vue'
 import JournalEntryDetail from './JournalEntryDetail.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'JournalEntryList',
@@ -243,7 +244,7 @@ export default {
       if (!journalEntryName) {
         return
       }
-      const newJournalEntry = { id: this.uuidv4(), name: journalEntryName, created: new Date(), journalDate: new Date() }
+      const newJournalEntry = { id: uuidv4(), name: journalEntryName, created: new Date(), journalDate: new Date() }
       this.journalEntries.push(newJournalEntry)
       this.newJournalEntryText = ''
       // Add it to the DB as well
@@ -269,14 +270,6 @@ export default {
     },
     closeDetail: function (task) {
       this.unsetSelectedJournalEntry()
-    },
-    // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-    uuidv4: function () {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        const r = Math.random() * 16 | 0
-        const v = c === 'x' ? r : (r & 0x3 | 0x8)
-        return v.toString(16)
-      })
     },
     exportToMarkdown: function () {
       console.log('copying selected journal entries to Markdown on clipboard')

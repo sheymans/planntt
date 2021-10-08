@@ -86,6 +86,7 @@
 import Task from './Task.vue'
 import TaskDetail from './TaskDetail'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'TaskList',
@@ -401,7 +402,7 @@ export default {
       if (!taskName) {
         return
       }
-      const newTask = { id: this.uuidv4(), name: taskName, project: this.selectedProject, projectName: this.selectedProjectName, when: this.activeTab, created: new Date() }
+      const newTask = { id: uuidv4(), name: taskName, project: this.selectedProject, projectName: this.selectedProjectName, when: this.activeTab, created: new Date() }
       // Set the order
       // The order where to add it is after the last order of this tab. For example, if last today item has index 6, we're adding at 7.
       const whereToAddIndex = this.findLastIndex(this.activeTab) + 1
@@ -678,7 +679,7 @@ export default {
     },
     duplicateTask: function (task) {
       const newTask = {}
-      newTask.id = this.uuidv4()
+      newTask.id = uuidv4()
       newTask.created = new Date()
       newTask.name = task.name
       newTask.due = task.due
@@ -752,14 +753,6 @@ export default {
     },
     setWhenStatusOpen: function (when) {
       this.$store.commit('setExpanded', { what: when, state: true })
-    },
-    // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-    uuidv4: function () {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        const r = Math.random() * 16 | 0
-        const v = c === 'x' ? r : (r & 0x3 | 0x8)
-        return v.toString(16)
-      })
     }
   }
 }
