@@ -5,7 +5,7 @@
 
 **[1.6.1]** - _2021-10-08_
 
-- Replace hardcoded `uuid` function by [uuid library](https://github.com/uuidjs/uuid) ([#3](https://github.com/sheymans/planntt/issues/3) by [@fgkolf](https://github.com/fgkolf))
+- Replace hardcoded `uuid` function by [uuid library](https://github.com/uuidjs/uuid) ([#3](https://github.com/sheymans/planntt/issues/3) by [fgkolf](https://github.com/fgkolf) )
 
 **[1.6.0]** - _2021-10-06_
 
