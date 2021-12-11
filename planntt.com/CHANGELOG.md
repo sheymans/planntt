@@ -1,7 +1,12 @@
+
 <meta charset="utf-8" lang="en">
 
 **Planntt Changelog**
 
+
+**[1.6.2]** - _2021-12-11_
+
+- Refactored use of [marked](https://github.com/markedjs/marked) and upgraded to `4.0.7`
 
 **[1.6.1]** - _2021-10-08_
 
