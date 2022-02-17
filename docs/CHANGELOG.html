@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CHANGELOG</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<meta charset="utf-8" lang="en">
+<p><strong>Planntt Changelog</strong></p>
+<p><strong>[1.6.2]</strong> - <em>2021-12-11</em></p>
+<ul>
+<li>Refactored use of <a href="https://github.com/markedjs/marked">marked</a> and upgraded to <code>4.0.7</code></li>
+</ul>
+<p><strong>[1.6.1]</strong> - <em>2021-10-08</em></p>
+<ul>
+<li>Replace hardcoded <code>uuid</code> function by <a href="https://github.com/uuidjs/uuid">uuid library</a> (<a href="https://github.com/sheymans/planntt/issues/3">#3</a> by <a href="https://github.com/fgkolf">fgkolf</a> )</li>
+</ul>
+<p><strong>[1.6.0]</strong> - <em>2021-10-06</em></p>
+<ul>
+<li>Add <code>per year</code> stats (<a href="https://github.com/sheymans/planntt/issues/6">#6</a>)</li>
+<li>Remove <code>duration</code> stats – not clear what they contribute.</li>
+</ul>
+<p><strong>[1.5.6]</strong> - <em>2021-10-05</em></p>
+<ul>
+<li>Fix wrong week being shown due to US weeks starting Sunday per <code>moment</code>. Using <code>isoWeek</code> now to have weeks in US also start on Monday (<a href="https://github.com/sheymans/planntt/issues/4">#4</a>)</li>
+</ul>
+<p><strong>[1.5.5]</strong> - <em>2021-10-01</em></p>
+<ul>
+<li>Fix that an archived task of a renamed project had the old name (<a href="https://github.com/sheymans/planntt/issues/1">#1</a>)</li>
+</ul>
+<p><strong>[1.5.4]</strong> - <em>2021-09-24</em></p>
+<ul>
+<li>Add integration test framework (<a href="https://www.electronjs.org/spectron">Spectron</a> and <a href="https://mochajs.org/">mocha</a>) with initial tests</li>
+</ul>
+<p><strong>[1.5.3]</strong> - <em>2021-09-22</em></p>
+<ul>
+<li>Bump the version to test <a href="https://github.com/sheymans/planntt/releases/">github releases</a></li>
+</ul>
+<p><strong>[1.5.2]</strong> - <em>2021-09-22</em></p>
+<ul>
+<li>Publish releases to github (this version will publish still to the old location so that auto-updates do not break).</li>
+</ul>
+<p><strong>[1.5.1]</strong> - <em>2021-09-08</em></p>
+<ul>
+<li>Remove <code>webpack.web.config.js</code> – non-user facing.</li>
+</ul>
+<p><strong>[1.5.0]</strong> - <em>2021-09-01</em></p>
+<ul>
+<li>Remove <code>vue-js-modal</code> in preparation for Vue 3.x</li>
+<li>Context menu for projects is now based on <a href="https://atomiks.github.io/tippyjs/">tippy</a>, which I also use for tooltips</li>
+</ul>
+<p><strong>[1.4.0]</strong> - <em>2021-08-31</em></p>
+<ul>
+<li>Replace <code>vue-moment</code> by <code>momentjs</code> in preparation for Vue 3.x</li>
+<li>Remove <code>vue-context-menu</code> and do context items for projects visually (delete/add/edit project) in preparation for Vue 3.x</li>
+</ul>
+<p><strong>[1.3.2]</strong> - <em>2021-08-30</em></p>
+<ul>
+<li>Upgrade <code>vue-js-modal</code> from <code>1.3.35</code> to <code>2.0.1</code></li>
+<li>Upgrade <code>css-loader</code> from <code>5.2.7</code> to <code>6.2.0</code></li>
+<li>Deprecate <code>url-loader</code> and <code>file-loader</code>. The upgrade of <code>css-loader</code> requires deprecating <code>url-loader</code> and <code>file-loader</code>, see the <code>css-loader</code> <a href="https://github.com/webpack-contrib/css-loader/releases/tag/v6.0.0">v6 release notes</a></li>
+<li>Upgrade <code>vuex</code> from <code>3.1.2</code> to <code>3.6.2</code></li>
+</ul>
+<p><strong>[1.3.1]</strong> - <em>2021-08-29</em></p>
+<ul>
+<li>Upgrade <code>vue2-datepicker</code> from v2 to <code>3.9.2</code></li>
+</ul>
+<p><strong>[1.3.0]</strong> - <em>2021-08-18</em></p>
+<ul>
+<li>As <code>vue-directive-tooltip</code> relies on a deprecated <a href="https://popper.js.org/">Popper</a> (v1), I upgraded to use <a href="https://atomiks.github.io/tippyjs/">tippy</a> for tooltips. I also updated the existing style, hence the minor version bump.</li>
+</ul>
+<p><strong>[1.2.0]</strong> - <em>2021-08-14</em></p>
+<ul>
+<li>Update <code>About planntt</code> menu item with link to Changelog (this page).</li>
+</ul>
+<p><strong>[1.1.0]</strong> - <em>2021-08-13</em></p>
+<ul>
+<li>Add a <a href="https://www.buymeacoffee.com/stijnh">buy me a coffee</a> support button.</li>
+</ul>
+<p><strong>[1.0.2]</strong> - <em>2021-08-12</em></p>
+<ul>
+<li>Bugfix for same issue as in 1.0.1</li>
+</ul>
+<p><strong>[1.0.1]</strong> - <em>2021-08-12</em></p>
+<ul>
+<li>Bugfix with initial loading (resulting in blank screen).</li>
+</ul>
+<p><strong>[1.0.0]</strong> - <em>2021-08-12</em></p>
+<p>First version after 97 alpha releases. A note on the versioning going forward: Versions will have the form <code>x.y.z</code> where:</p>
+<ul>
+<li><code>x</code> is the major release version and will only increase with backward incompatible versions. For an app like planntt, this would only occur if you’d have to either manual re-install planntt or you would have to change underlying files manually based on instructions. Aka, if this happens it’ll be an embarrassment that will be known far and wide but probably mostly in Merchtem.</li>
+<li><code>y</code> is the minor release version and will increase for every feature added, deleted, or changed. In other words, anything that you, the user, will notice and that is hopefully good. Not an embarrassment.</li>
+<li><code>z</code> are patch releases. Any bug fixes will go here as well as upgrades to underlying packages.</li>
+</ul>
+<p>This is loosely inspired by <a href="https://docs.npmjs.com/about-semantic-versioning">npm’s write-up of semantic versioning</a>.</p>
+<p>With that out of the way, this first version 1.0.0 mostly had underlying package upgrades:</p>
+<ul>
+<li><code>webpack</code> from 3 to 5</li>
+<li><code>babel-core</code> (and related) to <code>@babel/core 7.15.0</code></li>
+<li><code>nedb</code> is no longer maintained it seems, so we moved to a maintained fork: <a href="https://github.com/seald/nedb"><code>@seald-io/nedb</code></a>.</li>
+<li>replaced <code>open</code> with electron’s <a href="https://www.electronjs.org/docs/api/shell#shellopenexternalurl-options"><code>shell.openExternalUrl</code></a> (critical vulnerability)</li>
+</ul>
+<p><strong>[0.0.97]</strong> - <em>2021-08-08</em></p>
+<ul>
+<li><em>migrated</em> any use of <code>remote</code> to <code>@electron/remote</code></li>
+<li><em>upgraded</em> electron-builder: from 21.2.0 to 22.11.7</li>
+<li><em>upgraded</em> muze: from 1.3.2 to 2.0.0</li>
+<li><em>upgraded</em> copy-webpack-plugin: from 4.0.1 to 4.6.0</li>
+<li><em>upgraded</em> electron: from 7.1.3 to 13.1.7</li>
+<li><em>upgraded</em> electron-debug: from 1.4.0 to 1.5.0</li>
+<li><em>upgraded</em> axios: from 0.16.1 to 0.21.1</li>
+<li><em>upgraded</em> vue-directive-tooltop: from 1.5.1 to 1.6.3</li>
+<li><em>removed</em> electron-devtools-installer and vue-devtools</li>
+</ul>
+<p><strong>[0.0.96]</strong> - <em>2021-02-06</em></p>
+<ul>
+<li>Full screen for reading journal notes.</li>
+</ul>
+<p><strong>[0.0.95]</strong> - <em>2020-11-04</em></p>
+<ul>
+<li>Doing ⌘+e in the Journal view will copy your (possibly filtered) journal entries to your clipboard. So if you then do a paste (⌘+v) in your favorite editor, you’ll have a summary of those journal entries, formatted in Markdown. For now this is without any other UI elements, so you’d have to <em>know</em> to do ⌘+e. I may or may not make this a regular feature, but for now this is your one and only heads-up.</li>
+</ul>
+<p><strong>[0.0.94]</strong> - <em>2020-10-17</em></p>
+<ul>
+<li>fix <code>null</code> when hovering over links (well, that took a while)</li>
+<li><em>copy to clipboard</em> of raw markdown for journal items</li>
+</ul>
+<p><strong>[0.0.93]</strong> - <em>2020-05-08</em></p>
+<ul>
+<li>fix breaking words in notes/journal</li>
+<li>reduce font size in notes/journal</li>
+</ul>
+<p><strong>[0.0.92]</strong> - <em>2020-04-09</em></p>
+<ul>
+<li>fix spacing today/thisweek/waitingfor/someday</li>
+</ul>
+<p><strong>[0.0.91]</strong> - <em>2020-04-09</em></p>
+<ul>
+<li>move from Raleway font to <a href="https://www.jetbrains.com/lp/mono/">Jetbrains Mono</a> for better readability</li>
+</ul>
+<p><strong>[0.0.90]</strong> - <em>2020-03-29</em></p>
+<ul>
+<li>add styling for blockquote/reply in markdown (things preceded by <code>&gt;</code> in your notes)</li>
+</ul>
+<p><strong>[0.0.89]</strong> - <em>2020-03-21</em></p>
+<ul>
+<li>increase size of stats graphs</li>
+<li>improve journal entry title overflow when journal entry is selected</li>
+</ul>
+<p><strong>[0.0.88]</strong> - <em>2020-03-13</em></p>
+<ul>
+<li>fix broken stats (tasks per month) by upgrading <a href="https://muzejs.org/">muze</a> to <code>1.3.2</code></li>
+</ul>
+<p><strong>[0.0.87]</strong> - <em>2020-03-08</em></p>
+<ul>
+<li>improve formatting of code snippets in task details/journal entries</li>
+</ul>
+<p><strong>[0.0.86]</strong> - <em>2020-02-13</em></p>
+<ul>
+<li>break words in notes at any character to prevent overflow</li>
+</ul>
+<p><strong>[0.0.85]</strong> - <em>2020-02-13</em></p>
+<ul>
+<li>up and down arrows can now navigate through journal list as well as task list</li>
+<li>journal entry editing is moved to side from bottom to create more space for editing journal entries</li>
+</ul>
+<p><strong>[0.0.84]</strong> - <em>2020-02-12</em></p>
+<ul>
+<li>code snippets in notes are properly wrapped now rather than expanding width of note</li>
+</ul>
+<p><strong>[0.0.83]</strong> - <em>2020-02-11</em></p>
+<ul>
+<li>fix paragraph styling for notes</li>
+</ul>
+<p><strong>[0.0.82]</strong> - <em>2020-02-09</em></p>
+<ul>
+<li>allow you to import any CSV into your journal, provided the first row of the CSV is <code>Date,Note,Name</code></li>
+</ul>
+<p><strong>[0.0.81]</strong> - <em>2020-02-06</em></p>
+<ul>
+<li>add searchable journal/log capability</li>
+</ul>
+<p><strong>[0.0.80]</strong> - <em>2020-01-21</em></p>
+<ul>
+<li>fix bug with up and down arrow while editing note.</li>
+</ul>
+<p><strong>[0.0.79]</strong> - <em>2020-01-10</em></p>
+<ul>
+<li>fix dates in stats by updating to <code>vue-moment</code> 4.1.0</li>
+<li>pressing up or down arrow when no task is selected now selects the last or first task respectively</li>
+</ul>
+<p><strong>[0.0.78]</strong> - <em>2019-12-25</em></p>
+<ul>
+<li>change keyboard short cut from ⌘+↑ to ctrl+⌘+↑ and from ⌘+↓ to ctrl-⌘+↓ for re-ordering tasks</li>
+</ul>
+<p><strong>[0.0.77]</strong> - <em>2019-12-23</em></p>
+<ul>
+<li>add ability to change the default order of tasks via up command-key + up arrow (⌘+↑) and command-key + down arrow (⌘+↓)</li>
+<li>add ability to quickly select tasks using up and down arrows</li>
+</ul>
+<p><strong>[0.0.76]</strong> - <em>2019-12-20</em></p>
+<ul>
+<li>move editing pencil closer to task name</li>
+<li>replace close detail arrow with an x</li>
+<li>move note editing controls to the left for easier access</li>
+<li>add shortcuts ctrl-f for focus mode, ctrl-d for duplicating a task, ctrl-p for opening a project</li>
+</ul>
+<p><strong>[0.0.75]</strong> - <em>2019-12-17</em></p>
+<ul>
+<li>move task details back to bottom</li>
+<li>add icons to mark done and remove selected buttons</li>
+</ul>
+<p><strong>[0.0.74]</strong> - <em>2019-12-15</em></p>
+<ul>
+<li>add number of sessions and total time spent columns to exported CSV from archive</li>
+<li>bug fix: when closing detail for a task and navigating out to projects and coming back to main Projects, the details of the task should still be closed.</li>
+<li>bug fix: changing location for saving file after update to electron</li>
+<li>bug fix: <code>dialog.showMessageBox</code> returns a <code>Promise</code> after update to electron; modified the auto-updater to do this properly.</li>
+</ul>
+<p><strong>[0.0.73]</strong> - <em>2019-12-13</em></p>
+<ul>
+<li>bug fix: do not show scrollbars when there’s nothing to scroll</li>
+<li>dialog that informs that there is an upgrade available just asks to restarts rather than attempting to restart</li>
+<li>task in focus mode has improved alignment when the title of the task is long</li>
+</ul>
+<p><strong>[0.0.72]</strong> - <em>2019-12-13</em></p>
+<ul>
+<li>Moved task details to left hand rather than below task list.</li>
+</ul>
+<p><strong>[0.0.71]</strong> - <em>2019-12-11</em></p>
+<ul>
+<li>Removed vertical divider</li>
+<li>Notarized Mac OS X app and removed Linux app</li>
+</ul>
+<p><strong>[0.0.70]</strong> - <em>2019-12-08</em></p>
+<ul>
+<li>Bug fix for changing task selection while editing task and then pressing cancel, cancelled the description of the previously selected task</li>
+</ul>
+<p><strong>[0.0.69]</strong> - <em>2019-12-08</em></p>
+<ul>
+<li>Changed hovering color as well as background color task detail.</li>
+<li>Improved layout of task detail.</li>
+</ul>
+<p><strong>[0.0.68]</strong> - <em>2019-12-06</em></p>
+<ul>
+<li>Clicking on project name in task list, opens up that project in the project tree.</li>
+<li>Made font weights of number of sessions and other counters less light.</li>
+</ul>
+<p><strong>[0.0.67]</strong> - <em>2019-11-22</em></p>
+<ul>
+<li>Improve position of focus pop-over on task list.</li>
+<li>Upgraded <code>electron-builder</code> to <code>21.2.0</code> for Mac OS X 10.15 building.</li>
+</ul>
+<p><strong>[0.0.66]</strong> - <em>2019-08-01</em></p>
+<ul>
+<li>Task list is taking more space when no task is selected. You can press ESC to unselect task.</li>
+</ul>
+<p><strong>[0.0.65]</strong> - <em>2019-07-31</em></p>
+<ul>
+<li>Fixes for focused time spent.</li>
+</ul>
+<p><strong>[0.0.64]</strong> - <em>2019-07-25</em></p>
+<ul>
+<li>Show hours on focused task: so instead of <em>this session: 5m10s</em> correctly show <em>this session: 1h5m10s</em> if you have been in focus mode for longer than 1 hour</li>
+</ul>
+<p><strong>[0.0.63]</strong> - <em>2019-07-21</em></p>
+<ul>
+<li>Removed confusion around selection a task and marking as today/thisweek/waitingfor, and checking a task’s checkbox.</li>
+</ul>
+<p><strong>[0.0.62]</strong> - <em>2019-06-25</em></p>
+<ul>
+<li>Fix for showing statistics when no focused time was spent</li>
+</ul>
+<p><strong>[0.0.61]</strong> - <em>2019-06-25</em></p>
+<ul>
+<li>Add statistics for focused time per day/ per week/ per month on <em>statistics</em> page.</li>
+</ul>
+<p><strong>[0.0.60]</strong> - <em>2019-06-25</em></p>
+<ul>
+<li>Bugfix: Show focused time this week also when there are gaps in focused time for certain days (e.g., Tuesday no focused time logged)</li>
+</ul>
+<p><strong>[0.0.59]</strong> - <em>2019-06-25</em></p>
+<ul>
+<li>Add focused time total for this week (since Monday).</li>
+</ul>
+<p><strong>[0.0.58]</strong> - <em>2019-06-24</em></p>
+<ul>
+<li>Cleaner showing of focused time spent today.</li>
+</ul>
+<p><strong>[0.0.57]</strong> - <em>2019-06-24</em></p>
+<ul>
+<li>Do not show time spent in focus mode today if you’ve not spent any time in focus mode.</li>
+</ul>
+<p><strong>[0.0.56]</strong> - <em>2019-06-24</em></p>
+<ul>
+<li>Track how much time you’ve spent in <em>focus mode</em> today. Ideally, as much as possible of your time is spent in this mode.</li>
+<li>Show seconds passing by in focus mode cause that’s what you want to be doing in focus mode: stare at time passing by.</li>
+<li>Removed average time per session: there is such a thing as too much statistics.</li>
+</ul>
+<p><strong>[0.0.55]</strong> - <em>2019-06-20</em></p>
+<ul>
+<li>Bugfix: show number of sessions correctly as 0 rather than as 1 in task details</li>
+</ul>
+<p><strong>[0.0.54]</strong> - <em>2019-06-19</em></p>
+<ul>
+<li>Add timers to task when your in <em>focused task</em> mode:
+<ul>
+<li>how many sessions you had with this task</li>
+<li>how long this session is going</li>
+<li>what your total time spent on the task is</li>
+<li>what your average time spent on the task is</li>
+</ul></li>
+</ul>
+<p><strong>[0.0.53]</strong> - <em>2019-06-16</em></p>
+<ul>
+<li>Added more margin around closing <em>X</em> for a focused task</li>
+<li>Enabled closing a focused task with the Escape key.</li>
+</ul>
+<p><strong>[0.0.52]</strong> - <em>2019-06-06</em></p>
+<ul>
+<li>Added a focus mode for tasks, showing only task title and note when clicking headphones icon</li>
+</ul>
+<p><strong>[0.0.51]</strong> - <em>2019-06-04</em></p>
+<ul>
+<li>Fixed allowing tasks to be blocked; hopefully.</li>
+</ul>
+<p><strong>[0.0.50]</strong> - <em>2019-06-03</em></p>
+<ul>
+<li>Backing out allowing tasks to be marked as blocked; it’s very broken.</li>
+</ul>
+<p><strong>[0.0.49]</strong> - <em>2019-06-03</em></p>
+<ul>
+<li>Allow tasks to be marked as blocked.</li>
+</ul>
+<p><strong>[0.0.48]</strong> - <em>2019-05-26</em></p>
+<ul>
+<li>Adding new task input field now has dual purpose of also filtering tasks in project view.</li>
+</ul>
+<p><strong>[0.0.47]</strong> - <em>2019-04-07</em></p>
+<ul>
+<li>Case-insensitive search in <em>Archive</em> (searching for “stuff” or “StuFF” will return same results)</li>
+<li>Showing counter for Archived tasks</li>
+</ul>
+<p><strong>[0.0.46]</strong> - <em>2019-04-01</em></p>
+<ul>
+<li>Bugfix for archiving of duplicated tasks</li>
+</ul>
+<p><strong>[0.0.45]</strong> - <em>2019-03-26</em></p>
+<ul>
+<li>Added statistics for average duration of tasks (from creation to completion)</li>
+<li>Bugfix for statistics per week crossing a year (2018 to 2019)</li>
+</ul>
+<p><strong>[0.0.44]</strong> - <em>2019-03-24</em></p>
+<ul>
+<li>Bugfix for deleting of duplicated tasks</li>
+</ul>
+<p><strong>[0.0.43]</strong> - <em>2019-03-24</em></p>
+<ul>
+<li>Increase space between different statistics types</li>
+<li>Added <em>duplicate task</em> functionality</li>
+<li>Added tooltips for pencil (edit task name) and clone (duplicate task) symbols on task details</li>
+</ul>
+<p><strong>[0.0.42]</strong> - <em>2019-03-20</em></p>
+<ul>
+<li>Added <em>created</em> date information on task details</li>
+<li>Added stats for created tasks per day, per week, and per month.</li>
+</ul>
+<p><strong>[0.0.41]</strong> - <em>2018-11-27</em></p>
+<ul>
+<li>Export archived tasks to CSV (Excel).</li>
+</ul>
+<p><strong>[0.0.40]</strong> - <em>2018-11-01</em></p>
+<ul>
+<li>Bug fix for stats completed tasks per week.</li>
+</ul>
+<p><strong>[0.0.39]</strong> - <em>2018-10-27</em></p>
+<ul>
+<li>Added stats for completed tasks per minute, per hour, and per weekday to see what times of the day and week you are most productive.</li>
+</ul>
+<p><strong>[0.0.38]</strong> - <em>2018-10-27</em></p>
+<ul>
+<li>Added stats for completed tasks per week.</li>
+</ul>
+<p><strong>[0.0.37]</strong> - <em>2018-10-22</em></p>
+<ul>
+<li>Added stats, for now only completed tasks per day and per month. Work in Progress.</li>
+</ul>
+<p><strong>[0.0.36]</strong> - <em>2018-10-17</em></p>
+<ul>
+<li>Added filter functionality to <em>Archive</em>. Currently limited to exact phrases only. Can filter on date, project name, task name, description, and when the task happened (<em>today</em>, <em>thisweek</em>, <em>waitingfor</em>, <em>someday</em>).</li>
+</ul>
+<p><strong>[0.0.35]</strong> - <em>2018-10-01</em></p>
+<ul>
+<li>Add extra margin to data location in bottom right.</li>
+<li>Fix bug when adding task on first run of planntt as well as when adding task to newly created project that has still its default name.</li>
+</ul>
+<p><strong>[0.0.34]</strong> - <em>2018-09-25</em></p>
+<ul>
+<li>Allow to change folder where your data gets saved. This way you can make, for example, a Dropbox folder your data folder.</li>
+</ul>
+<p><strong>[0.0.33]</strong> - <em>2018-09-18</em></p>
+<ul>
+<li>Add deadlines page, which summarizes any task with a due date.</li>
+</ul>
+<p><strong>[0.0.32]</strong> - <em>2018-09-17</em></p>
+<ul>
+<li>Fix fonts for due date selector.</li>
+</ul>
+<p><strong>[0.0.31]</strong> - <em>2018-09-16</em></p>
+<ul>
+<li>Open <em>All Projects</em> by default as well as expand <em>today</em> and <em>this week</em>.</li>
+</ul>
+<p><strong>[0.0.30]</strong> - <em>2018-09-15</em></p>
+<ul>
+<li>Add <em>due date</em> to tasks</li>
+</ul>
+<p><strong>[0.0.29]</strong> - <em>2018-08-31</em></p>
+<ul>
+<li>Sort tasks with oldest creation date on top</li>
+</ul>
+<p><strong>[0.0.28]</strong> - <em>2018-08-27</em></p>
+<ul>
+<li>Add <em>when</em> label to archive.</li>
+</ul>
+<p><strong>[0.0.27]</strong> - <em>2018-08-24</em></p>
+<ul>
+<li>Show notes on archived tasks when selected.</li>
+</ul>
+<p><strong>[0.0.26]</strong> - <em>2018-08-20</em></p>
+<ul>
+<li>Keep state of selected task to edit when moving from <em>Archive</em> back to <em>Projects</em>.</li>
+</ul>
+<p><strong>[0.0.25]</strong> - <em>2018-08-18</em></p>
+<ul>
+<li>Keep state of project expanded/collapsed and state of task tab (today, this week, …) while moving from <em>Archive</em> to <em>Projects</em> view and back.</li>
+</ul>
+<p><strong>[0.0.24]</strong> - <em>2018-08-16</em></p>
+<ul>
+<li>Distinguish between marking a task as done versus removing it. When you mark it as done, it will be listed in the <em>Archive</em>.</li>
+</ul>
+<p><strong>[0.0.23]</strong> - <em>2018-08-13</em></p>
+<ul>
+<li>Fix for when adding task to keep corresponding tab (<em>today</em>, <em>this week</em>, etc) open rather than open and close.</li>
+</ul>
+<p><strong>[0.0.22]</strong> - <em>2018-08-11</em></p>
+<ul>
+<li>Changed font family from <em>Roboto Mono</em> to <em>Raleway</em> for notes.</li>
+<li>Adding a task to a selected <em>when</em> (for example, <em>someday</em>) will expand that section so you can easily see what you added.</li>
+<li>Expand <em>when</em> task when clicking; only clicking a triangle expands.</li>
+</ul>
+<p><strong>[0.0.21]</strong> - <em>2018-07-01</em></p>
+<p><strong>[0.0.20]</strong> - <em>2018-06-21</em></p>
+<p><strong>[0.0.17-0.0.19]</strong> - <em>2018-06-20</em></p>
+<p><strong>[0.0.16]</strong> - <em>2018-05-31</em></p>
+<p><strong>[0.0.15]</strong> - <em>2018-05-30</em></p>
+<p><strong>[0.0.14]</strong> - <em>2018-05-25</em></p>
+<p><strong>[0.0.012-0.0.13]</strong> - <em>2018-05-24</em></p>
+<p><strong>[0.0.11]</strong> - <em>2018-05-23</em></p>
+<p><strong>[0.0.8-0.0.10]</strong> - <em>2018-05-22</em></p>
+<p><strong>[0.0.2-0.0.7]</strong> - <em>2018-05-21</em></p>
+<p><strong>[0.0.1]</strong> - <em>2018-05-17</em></p>
+<link rel="stylesheet" href="https://casual-effects.com/markdeep/latest/latex.css?"> <!-- Markdeep: -->
+<style class="fallback">body{visibility:hidden}</style>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script>
+</body>
+</html>

@@ -17,7 +17,7 @@
     "pack:main": "cross-env NODE_ENV=production webpack --progress --color --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --color --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "npm run lint:fix",
-    "website": "./planntt.com/upload.sh",
+    "website": "pandoc -s ./docs/CHANGELOG.md -o ./docs/CHANGELOG.html",
     "test": "npm run pack && mocha"
   },
   "build": {
