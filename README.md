@@ -54,7 +54,7 @@ for this repository, aka you'll probably want to avoid running `npm run build` y
 
 ## Changelog
 
-The changelog can be found in the [repository](./planntt.com/CHANGELOG.md).
+The changelog can be found in the [repository](./docs/CHANGELOG.md).
 
 ## License
 
