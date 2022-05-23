@@ -5,11 +5,11 @@
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 ![Apple](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=apple&logoColor=white)
 
-<a href="http://planntt.com"><img src="./planntt.com/images/planntt.png" width="300px"/></a>
+<a href="https://stijnheymans.net/planntt"><img src="https://stijnheymans.net/planntt/images/planntt.png" width="300px"/></a>
 
 # planntt
 
-[Planntt](http://planntt.com) is a todo-application with a focus on keeping all your data on your computer at all times.
+[Planntt](https://stijnheymans.net/planntt/) is a todo-application with a focus on keeping all your data on your computer at all times.
 
 ## Features
 
@@ -30,7 +30,7 @@
 
 ## Download for Mac OS X
 
-The latest version can be downloaded at <a href="http://planntt.com">planntt.com</a> or download the latest `dmg` from 
+The latest version can be downloaded from 
 the [github releases](https://github.com/sheymans/planntt/releases/).
 
 ## Development
@@ -54,8 +54,7 @@ for this repository, aka you'll probably want to avoid running `npm run build` y
 
 ## Changelog
 
-The changelog can be found in the [repository](./planntt.com/CHANGELOG.md) or at 
-<a href="http://planntt.com/CHANGELOG.html">planntt.com/CHANGELOG</a>.
+The changelog can be found in the [repository](./planntt.com/CHANGELOG.md).
 
 ## License
 
